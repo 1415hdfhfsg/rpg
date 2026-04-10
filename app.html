@@ -10,8 +10,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" media="print" onload="this.media='all'" />
   <style>
 :root{--surface:#0e0e0e;--surface-dim:#0a0a0a;--surface-container-lowest:#0b0b0b;--surface-container-low:#131313;--surface-container:#191a1a;--surface-container-high:#1f1f1f;--surface-container-highest:#262626;--surface-elevated:#2a2a2a;--primary:#ffe792;--primary-container:#ffd709;--primary-dim:#c9a84c;--on-primary-container:#5b4b00;--secondary:#fd8b00;--secondary-container:#904d00;--on-secondary-container:#ffe0b2;--surface-tint:rgba(255,231,146,0.10);--on-surface:#e6e1d9;--on-surface-variant:#b0a896;--on-surface-dim:#7a7468;--on-surface-faint:#4a4640;--outline-variant:rgba(72,72,72,0.15);--error:#ff6b6b;--success:#6bdb8a;--info:#6bb8ff;--font-display:'Black Han Sans','Noto Serif KR',sans-serif;--font-body:'Pretendard',-apple-system,sans-serif;--font-mono:'JetBrains Mono',monospace;--radius-sm:0.25rem;--radius-md:0.75rem;--radius-lg:1rem;--radius-xl:1.5rem;--radius-full:9999px}
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth;background:#0e0e0e;min-height:100%}body{font-family:var(--font-body);background:#0e0e0e;color:var(--on-surface);line-height:1.6;min-height:100vh;overflow-x:clip;display:flex;justify-content:center}::selection{background:rgba(255,231,146,0.25)}a{color:var(--primary);text-decoration:none}
-body.is-home{background:radial-gradient(ellipse 200% 100% at 50% -10%,#201c14 0%,#131110 40%,#0e0e0e 70%) #0e0e0e}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth;background:radial-gradient(ellipse 200% 100% at 50% -10%,#201c14 0%,#131110 40%,#0e0e0e 70%) #0e0e0e;min-height:100%}body{font-family:var(--font-body);background:radial-gradient(ellipse 200% 100% at 50% -10%,#201c14 0%,#131110 40%,#0e0e0e 70%) #0e0e0e;color:var(--on-surface);line-height:1.6;min-height:100vh;overflow-x:clip;display:flex;justify-content:center}::selection{background:rgba(255,231,146,0.25)}a{color:var(--primary);text-decoration:none}
 
 /* APP SHELL */
 #app-shell{display:flex;min-height:100vh;width:100%;max-width:1200px;padding:0 0 0 6px}
@@ -738,7 +737,6 @@ function go(page) {
     const el = document.getElementById('page-' + p);
     if (el) el.classList.toggle('active', p === page);
   });
-  document.body.classList.toggle('is-home', page === 'home');
   // sidenav active state
   ['builds','bosses','upgrade','weapons','armor','crafting','progression','explore'].forEach(p => {
     const el = document.getElementById('snav-' + p);
