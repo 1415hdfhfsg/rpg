@@ -207,123 +207,6 @@
 .translate-drop:hover{border-color:rgba(255,231,146,0.5);background:var(--surface-container-high)}
 @media(min-width:768px){.translate-panel{border-radius:var(--radius-xl);bottom:5rem;right:1.5rem;width:420px}}
 </style>
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-  <script>
-// ========== SCREENSHOT TRANSLATOR ==========
-function openTranslateModal(){
-  document.getElementById('translateOverlay').style.display='block';
-  document.getElementById('translatePanel').classList.add('active');
-}
-function closeTranslateModal(){
-  document.getElementById('translateOverlay').style.display='none';
-  document.getElementById('translatePanel').classList.remove('active');
-}
-function handleImageUpload(event){
-  const file=event.target.files[0];
-  if(!file)return;
-  const preview=document.getElementById('translatePreview');
-  const dropContent=document.getElementById('translateDropContent');
-  const reader=new FileReader();
-  reader.onload=e=>{preview.src=e.target.result;preview.style.display='block';dropContent.style.display='none';};
-  reader.readAsDataURL(file);
-  document.getElementById('translateProgress').style.display='block';
-  document.getElementById('translateResults').style.display='none';
-  document.getElementById('translateError').style.display='none';
-  document.getElementById('translateReset').style.display='none';
-  runOCR(file);
-}
-async function runOCR(file){
-  const status=document.getElementById('translateStatus');
-  const bar=document.getElementById('translateProgressBar');
-  try{
-    status.textContent='언어 데이터 로딩 중...';
-    bar.style.width='5%';
-    const worker=await Tesseract.createWorker('eng',1,{
-      logger:m=>{
-        if(m.status==='recognizing text'){
-          bar.style.width=(Math.round(m.progress*75)+10)+'%';
-          status.textContent='텍스트 인식 중... '+Math.round(m.progress*100)+'%';
-        } else if(m.status==='loading language traineddata'){
-          bar.style.width='15%';
-          status.textContent='언어 데이터 로딩 중...';
-        } else if(m.status==='initializing api'){
-          bar.style.width='25%';
-          status.textContent='OCR 엔진 초기화 중...';
-        }
-      }
-    });
-    const {data:{text}}=await worker.recognize(file);
-    await worker.terminate();
-    const cleaned=text.trim().replace(/\f/g,'').replace(/[ \t]+/g,' ').trim();
-    if(!cleaned||cleaned.length<3){showTranslateError('텍스트를 인식할 수 없습니다. 더 선명한 이미지를 사용해 보세요.');return;}
-    bar.style.width='90%';
-    status.textContent='번역 중...';
-    const translated=await translateText(cleaned);
-    bar.style.width='100%';
-    setTimeout(()=>{
-      document.getElementById('translateProgress').style.display='none';
-      document.getElementById('translateOriginal').textContent=cleaned;
-      document.getElementById('translateKorean').textContent=translated;
-      document.getElementById('translateResults').style.display='block';
-      document.getElementById('translateReset').style.display='block';
-    },300);
-  } catch(err){
-    showTranslateError('오류: '+err.message);
-  }
-}
-async function translateText(text){
-  const maxLen=450;
-  const chunks=[];
-  const lines=text.split('\n');
-  let cur='';
-  for(const line of lines){
-    if((cur+line).length>maxLen){if(cur)chunks.push(cur.trim());cur=line+'\n';}
-    else cur+=line+'\n';
-  }
-  if(cur.trim())chunks.push(cur.trim());
-  const results=[];
-  for(const chunk of chunks){
-    try{
-      const res=await fetch('https://api.mymemory.translated.net/get?q='+encodeURIComponent(chunk)+'&langpair=en|ko');
-      const json=await res.json();
-      results.push(json.responseData?.translatedText||chunk);
-    } catch{results.push(chunk);}
-  }
-  return results.join('\n');
-}
-function showTranslateError(msg){
-  document.getElementById('translateProgress').style.display='none';
-  document.getElementById('translateError').style.display='block';
-  document.getElementById('translateError').textContent=msg;
-  document.getElementById('translateReset').style.display='block';
-}
-function resetTranslate(){
-  document.getElementById('translateFile').value='';
-  document.getElementById('translatePreview').style.display='none';
-  document.getElementById('translateDropContent').style.display='block';
-  document.getElementById('translateProgress').style.display='none';
-  document.getElementById('translateResults').style.display='none';
-  document.getElementById('translateError').style.display='none';
-  document.getElementById('translateReset').style.display='none';
-  document.getElementById('translateProgressBar').style.width='0%';
-}
-function copyTranslation(){
-  const text=document.getElementById('translateKorean').textContent;
-  const btn=document.getElementById('copyBtn');
-  navigator.clipboard.writeText(text).then(()=>{btn.textContent='복사됨!';setTimeout(()=>btn.textContent='복사',1500);});
-}
-// Drag & Drop
-const _tDrop=document.getElementById('translateDrop');
-_tDrop.addEventListener('dragover',e=>{e.preventDefault();_tDrop.style.borderColor='var(--primary)';});
-_tDrop.addEventListener('dragleave',()=>{_tDrop.style.borderColor='';});
-_tDrop.addEventListener('drop',e=>{
-  e.preventDefault();_tDrop.style.borderColor='';
-  const file=e.dataTransfer.files[0];
-  if(file&&file.type.startsWith('image/')){
-    handleImageUpload({target:{files:[file]}});
-  }
-});
-</script>
 </head>
 <body>
 
@@ -987,5 +870,123 @@ document.querySelectorAll('.quick-tag').forEach(t=>t.addEventListener('click',()
     <div style="font-size:0.68rem;color:var(--on-surface-faint);text-align:center">Tesseract.js OCR + MyMemory 번역 (무료, 하루 5000자)</div>
   </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script>
+// ========== SCREENSHOT TRANSLATOR ==========
+function openTranslateModal(){
+  document.getElementById('translateOverlay').style.display='block';
+  document.getElementById('translatePanel').classList.add('active');
+}
+function closeTranslateModal(){
+  document.getElementById('translateOverlay').style.display='none';
+  document.getElementById('translatePanel').classList.remove('active');
+}
+function handleImageUpload(event){
+  const file=event.target.files[0];
+  if(!file)return;
+  const preview=document.getElementById('translatePreview');
+  const dropContent=document.getElementById('translateDropContent');
+  const reader=new FileReader();
+  reader.onload=e=>{preview.src=e.target.result;preview.style.display='block';dropContent.style.display='none';};
+  reader.readAsDataURL(file);
+  document.getElementById('translateProgress').style.display='block';
+  document.getElementById('translateResults').style.display='none';
+  document.getElementById('translateError').style.display='none';
+  document.getElementById('translateReset').style.display='none';
+  runOCR(file);
+}
+async function runOCR(file){
+  const status=document.getElementById('translateStatus');
+  const bar=document.getElementById('translateProgressBar');
+  try{
+    status.textContent='언어 데이터 로딩 중...';
+    bar.style.width='5%';
+    const worker=await Tesseract.createWorker('eng',1,{
+      logger:m=>{
+        if(m.status==='recognizing text'){
+          bar.style.width=(Math.round(m.progress*75)+10)+'%';
+          status.textContent='텍스트 인식 중... '+Math.round(m.progress*100)+'%';
+        } else if(m.status==='loading language traineddata'){
+          bar.style.width='15%';
+          status.textContent='언어 데이터 로딩 중...';
+        } else if(m.status==='initializing api'){
+          bar.style.width='25%';
+          status.textContent='OCR 엔진 초기화 중...';
+        }
+      }
+    });
+    const {data:{text}}=await worker.recognize(file);
+    await worker.terminate();
+    const cleaned=text.trim().replace(/\f/g,'').replace(/[ \t]+/g,' ').trim();
+    if(!cleaned||cleaned.length<3){showTranslateError('텍스트를 인식할 수 없습니다. 더 선명한 이미지를 사용해 보세요.');return;}
+    bar.style.width='90%';
+    status.textContent='번역 중...';
+    const translated=await translateText(cleaned);
+    bar.style.width='100%';
+    setTimeout(()=>{
+      document.getElementById('translateProgress').style.display='none';
+      document.getElementById('translateOriginal').textContent=cleaned;
+      document.getElementById('translateKorean').textContent=translated;
+      document.getElementById('translateResults').style.display='block';
+      document.getElementById('translateReset').style.display='block';
+    },300);
+  } catch(err){
+    showTranslateError('오류: '+err.message);
+  }
+}
+async function translateText(text){
+  const maxLen=450;
+  const chunks=[];
+  const lines=text.split('\n');
+  let cur='';
+  for(const line of lines){
+    if((cur+line).length>maxLen){if(cur)chunks.push(cur.trim());cur=line+'\n';}
+    else cur+=line+'\n';
+  }
+  if(cur.trim())chunks.push(cur.trim());
+  const results=[];
+  for(const chunk of chunks){
+    try{
+      const res=await fetch('https://api.mymemory.translated.net/get?q='+encodeURIComponent(chunk)+'&langpair=en|ko');
+      const json=await res.json();
+      results.push(json.responseData?.translatedText||chunk);
+    } catch{results.push(chunk);}
+  }
+  return results.join('\n');
+}
+function showTranslateError(msg){
+  document.getElementById('translateProgress').style.display='none';
+  document.getElementById('translateError').style.display='block';
+  document.getElementById('translateError').textContent=msg;
+  document.getElementById('translateReset').style.display='block';
+}
+function resetTranslate(){
+  document.getElementById('translateFile').value='';
+  document.getElementById('translatePreview').style.display='none';
+  document.getElementById('translateDropContent').style.display='block';
+  document.getElementById('translateProgress').style.display='none';
+  document.getElementById('translateResults').style.display='none';
+  document.getElementById('translateError').style.display='none';
+  document.getElementById('translateReset').style.display='none';
+  document.getElementById('translateProgressBar').style.width='0%';
+}
+function copyTranslation(){
+  const text=document.getElementById('translateKorean').textContent;
+  const btn=document.getElementById('copyBtn');
+  navigator.clipboard.writeText(text).then(()=>{btn.textContent='복사됨!';setTimeout(()=>btn.textContent='복사',1500);});
+}
+// Drag & Drop — DOM is ready here (script is at end of body)
+const _tDrop=document.getElementById('translateDrop');
+_tDrop.addEventListener('dragover',e=>{e.preventDefault();_tDrop.style.borderColor='var(--primary)';});
+_tDrop.addEventListener('dragleave',()=>{_tDrop.style.borderColor='';});
+_tDrop.addEventListener('drop',e=>{
+  e.preventDefault();_tDrop.style.borderColor='';
+  const file=e.dataTransfer.files[0];
+  if(file&&file.type.startsWith('image/')){
+    handleImageUpload({target:{files:[file]}});
+  }
+});
+</script>
 </body>
 </html>
