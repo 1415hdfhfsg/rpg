@@ -1029,7 +1029,7 @@ document.querySelectorAll('.quick-tag').forEach(t=>t.addEventListener('click',()
   function tick(){
     var delta = scrollY - lastScrollY;
     lastScrollY = scrollY;
-    velocity += delta * 0.18;   // 매우 느리게
+    velocity += delta * 0.38;   // 시작 속도 빠르게
     velocity *= 0.88;           // 속도 감쇠
     offset += velocity;
     offset *= 0.93;             // 스프링 빠르게 시작+빠르게 복귀
