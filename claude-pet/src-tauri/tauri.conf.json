@@ -1,0 +1,34 @@
+{
+  "$schema": "https://raw.githubusercontent.com/nicegui/tauri/v2.0.0/crates/tauri-schema-generator/schemas/config.schema.json",
+  "productName": "Claude Pet",
+  "version": "1.0.0",
+  "identifier": "com.claude.pet",
+  "build": {
+    "frontendDist": "../src",
+    "devUrl": "http://localhost:1420"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "title": "Claude Pet",
+        "width": 200,
+        "height": 220,
+        "resizable": false,
+        "decorations": false,
+        "transparent": true,
+        "alwaysOnTop": true,
+        "skipTaskbar": true,
+        "x": 100,
+        "y": 100
+      }
+    ],
+    "security": {
+      "csp": null
+    },
+    "trayIcon": {
+      "iconPath": "icons/icon.png",
+      "iconAsTemplate": true
+    }
+  }
+}

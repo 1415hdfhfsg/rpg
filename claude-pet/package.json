@@ -1,0 +1,17 @@
+{
+  "name": "claude-pet",
+  "version": "1.0.0",
+  "description": "Claude Desktop Pet - a desktop mascot that reacts to Claude Desktop activity",
+  "private": true,
+  "scripts": {
+    "tauri": "tauri",
+    "dev": "tauri dev",
+    "build": "tauri build"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.0.0"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.0.0"
+  }
+}
