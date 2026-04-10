@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cisco's Medieval RPG — The Champion's Codex</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Serif+KR:wght@700;900&family=JetBrains+Mono:wght@400;500&display=optional" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" media="print" onload="this.media='all'" />
+  <style>
+:root{--surface:#0e0e0e;--surface-dim:#0a0a0a;--surface-container-lowest:#0b0b0b;--surface-container-low:#131313;--surface-container:#191a1a;--surface-container-high:#1f1f1f;--surface-container-highest:#262626;--surface-elevated:#2a2a2a;--primary:#ffe792;--primary-container:#ffd709;--primary-dim:#c9a84c;--on-primary-container:#5b4b00;--secondary:#fd8b00;--secondary-container:#904d00;--on-secondary-container:#ffe0b2;--surface-tint:rgba(255,231,146,0.10);--on-surface:#e6e1d9;--on-surface-variant:#b0a896;--on-surface-dim:#7a7468;--on-surface-faint:#4a4640;--outline-variant:rgba(72,72,72,0.15);--error:#ff6b6b;--success:#6bdb8a;--info:#6bb8ff;--font-display:'Black Han Sans','Noto Serif KR',sans-serif;--font-body:'Pretendard',-apple-system,sans-serif;--font-mono:'JetBrains Mono',monospace;--radius-sm:0.25rem;--radius-md:0.75rem;--radius-lg:1rem;--radius-xl:1.5rem;--radius-full:9999px}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}body{font-family:var(--font-body);background:var(--surface);color:var(--on-surface);line-height:1.6;min-height:100vh;overflow-x:hidden}::selection{background:rgba(255,231,146,0.25)}a{color:var(--primary);text-decoration:none}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:rgba(14,14,14,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--outline-variant);display:none}
+.nav.visible{display:block}
+.nav__inner{max-width:1100px;margin:0 auto;padding:0 1.5rem;height:52px;display:flex;align-items:center;justify-content:space-between}
+.nav__logo{font-family:var(--font-display);font-size:0.9rem;font-weight:700;color:var(--on-surface);display:flex;align-items:center;gap:8px;cursor:pointer}
+.nav__logo img{width:28px;height:28px;border-radius:4px;image-rendering:pixelated}
+.nav__links{display:flex;gap:0.5rem;flex-wrap:wrap}
+.nav__link{font-size:0.75rem;font-weight:500;color:var(--on-surface-dim);padding:4px 10px;border-radius:var(--radius-full);transition:all 0.2s;cursor:pointer}
+.nav__link:hover{color:var(--primary);background:var(--surface-container)}
+.nav__link--active{color:var(--primary);background:rgba(255,231,146,0.08)}
+
+/* BLUR BG */
+.blur-bg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.blur-bg__img{position:absolute;top:50%;left:50%;transform:translate(-50%,-55%);width:700px;height:700px;object-fit:cover;filter:blur(80px) saturate(1.4);opacity:0.18}
+.blur-bg__overlay{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(14,14,14,0.3) 0%,rgba(14,14,14,0.85) 70%,rgba(14,14,14,1) 100%)}
+.pixel-bg{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:0.12;background-size:16px 16px;background-image:linear-gradient(rgba(255,231,146,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,231,146,0.03) 1px,transparent 1px)}
+.vignette{position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,0.7) 100%)}
+
+/* PAGE SECTIONS */
+.page{display:none}
+.page.active{display:block}
+
+/* LANDING */
+.landing{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:2rem}
+.hero-glow{position:absolute;top:8%;left:50%;transform:translateX(-50%);width:800px;height:500px;background:radial-gradient(circle,rgba(253,139,0,0.06) 0%,rgba(255,231,146,0.03) 30%,transparent 65%);pointer-events:none}
+.logo-area{text-align:center;margin-bottom:2rem}
+.logo-area__img{width:120px;height:120px;border-radius:var(--radius-md);image-rendering:pixelated;border:2px solid var(--surface-container-highest);box-shadow:0 0 40px rgba(253,139,0,0.08),0 4px 20px rgba(0,0,0,0.5);transition:transform 0.3s,box-shadow 0.3s;cursor:pointer}
+.logo-area__img:hover{transform:scale(1.05);box-shadow:0 0 60px rgba(253,139,0,0.15),0 8px 30px rgba(0,0,0,0.5)}
+.brand{text-align:center;margin-bottom:2.5rem}
+.brand__eyebrow{font-family:var(--font-mono);font-size:0.6875rem;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--on-surface-faint);margin-bottom:0.75rem}
+.brand__eyebrow span{color:var(--secondary)}
+.brand__title{font-family:var(--font-display);font-size:clamp(2.2rem,6.5vw,3.5rem);font-weight:900;letter-spacing:-0.02em;line-height:1.15;background:linear-gradient(135deg,var(--primary) 0%,var(--secondary) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.25rem}
+.brand__subtitle{font-family:var(--font-display);font-size:clamp(1.2rem,3vw,1.8rem);font-weight:600;color:var(--on-surface-variant)}
+.brand__desc{font-size:0.875rem;color:var(--on-surface-dim);margin-top:1.25rem}
+
+/* SEARCH */
+.search-area{width:100%;max-width:620px;margin-bottom:2.5rem}
+.search-box{position:relative;width:100%}
+.search-box__input{width:100%;background:var(--surface-container-low);border:none;border-bottom:2px solid var(--outline-variant);border-radius:var(--radius-md) var(--radius-md) 0 0;padding:18px 56px 18px 52px;font-family:var(--font-body);font-size:1rem;color:var(--on-surface);outline:none;transition:all 0.25s}
+.search-box__input::placeholder{color:var(--on-surface-faint);font-weight:300}
+.search-box__input:focus{background:var(--surface-container);border-image:linear-gradient(90deg,var(--primary),var(--secondary)) 1}
+.search-box__icon{position:absolute;left:18px;top:50%;transform:translateY(-50%);color:var(--on-surface-dim);pointer-events:none;transition:color 0.25s}
+.search-box__input:focus~.search-box__icon{color:var(--primary)}
+.search-box__icon svg{width:20px;height:20px}
+.search-box__kbd{position:absolute;right:18px;top:50%;transform:translateY(-50%);display:flex;gap:4px;pointer-events:none}
+.search-box__kbd kbd{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 6px;background:var(--surface-container);border-radius:var(--radius-sm);font-family:var(--font-mono);font-size:0.625rem;color:var(--on-surface-faint);border:1px solid var(--outline-variant)}
+.search-results{position:absolute;top:100%;left:0;right:0;background:var(--surface-container);border-radius:0 0 var(--radius-md) var(--radius-md);display:none;z-index:10;box-shadow:0 20px 40px rgba(253,139,0,0.05),0 8px 20px rgba(0,0,0,0.4);max-height:400px;overflow-y:auto}
+.search-results.active{display:block}
+.sr-group{font-family:var(--font-mono);font-size:0.625rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--on-surface-faint);padding:12px 18px 4px}
+.sr-item{display:flex;align-items:center;gap:12px;padding:8px 18px;cursor:pointer;transition:background 0.15s;text-decoration:none;color:inherit}
+.sr-item:hover{background:var(--surface-container-high)}
+.sr-item__icon{width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:var(--surface-container-highest);border-radius:var(--radius-sm);flex-shrink:0}
+.sr-item__icon img{width:24px;height:24px;image-rendering:pixelated}
+.sr-item__text{flex:1;min-width:0}
+.sr-item__title{font-size:0.8125rem;font-weight:500;color:var(--on-surface)}
+.sr-item__title mark{background:none;color:var(--secondary);font-weight:600}
+.sr-item__meta{font-size:0.6875rem;color:var(--on-surface-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sr-chip{font-family:var(--font-mono);font-size:0.5rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:2px 8px;border-radius:var(--radius-full);flex-shrink:0}
+
+/* QUICK TAGS */
+.quick-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:14px}
+.quick-tag{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:var(--surface-container);border-radius:var(--radius-full);font-size:0.75rem;font-weight:500;color:var(--on-surface-variant);cursor:pointer;transition:all 0.2s;border:1px solid transparent}
+.quick-tag:hover{background:var(--surface-container-high);border-color:var(--outline-variant);color:var(--primary)}
+.qt-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+
+/* STATS */
+.stats-row{display:flex;justify-content:center;gap:2.5rem;margin-bottom:2.5rem;flex-wrap:wrap}
+.stat{text-align:center}
+.stat__value{font-family:var(--font-mono);font-size:1.5rem;font-weight:700;color:var(--primary);line-height:1}
+.stat__label{font-size:0.6875rem;color:var(--on-surface-dim);margin-top:4px}
+
+/* BENTO */
+.bento{width:100%;max-width:780px;display:grid;grid-template-columns:1.2fr 1fr 1fr;grid-template-rows:auto auto;gap:12px;margin-bottom:2rem}
+.bento__card{background:var(--surface-container-low);border-radius:var(--radius-xl);padding:1.25rem;cursor:pointer;transition:all 0.25s;border:1px solid transparent;display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit}
+.bento__card:hover{background:var(--surface-container);border-color:var(--outline-variant);transform:translateY(-2px)}
+.bento__card--hero{grid-row:span 2;padding:1.5rem}
+.bento__card-visual{width:100%;aspect-ratio:16/9;border-radius:var(--radius-md);overflow:hidden;background:var(--surface-container);position:relative}
+.bento__card-visual img{width:100%;height:100%;object-fit:cover;opacity:0.85;transition:opacity 0.3s,transform 0.5s}
+.bento__card:hover .bento__card-visual img{opacity:1;transform:scale(1.03)}
+.bento__card-visual__overlay{position:absolute;bottom:0;left:0;right:0;padding:1.5rem 1rem 0.75rem;background:linear-gradient(transparent,rgba(14,14,14,0.95))}
+.bento__card-icon{width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:var(--surface-container-highest);border-radius:var(--radius-md);flex-shrink:0}
+.bento__card-icon img{width:20px;height:20px;image-rendering:pixelated}
+.bento__card-label{font-family:var(--font-mono);font-size:0.5625rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--on-surface-faint)}
+.bento__card-title{font-size:0.9375rem;font-weight:600;color:var(--on-surface)}
+.bento__card-desc{font-size:0.75rem;color:var(--on-surface-dim);line-height:1.5}
+.bento__card-arrow{font-size:0.75rem;color:var(--on-surface-faint);margin-top:auto;transition:color 0.2s,transform 0.2s}
+.bento__card:hover .bento__card-arrow{color:var(--primary);transform:translateX(4px)}
+
+/* FOOTER */
+.footer{padding:1.5rem 2rem;text-align:center;font-size:0.6875rem;color:var(--on-surface-faint)}
+.footer a{color:var(--on-surface-dim);margin:0 0.75rem}
+
+/* ========== SUB PAGE SHARED ========== */
+.sub-page{max-width:1100px;margin:0 auto;padding:2rem}
+.page-header{text-align:center;margin-bottom:2rem;padding-top:1rem}
+.page-header__eyebrow{font-family:var(--font-mono);font-size:0.6875rem;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.5rem}
+.page-header__title{font-family:var(--font-display);font-size:clamp(1.5rem,4vw,2.2rem);font-weight:900;margin-bottom:0.5rem}
+.page-header__desc{font-size:0.875rem;color:var(--on-surface-dim);max-width:520px;margin:0 auto}
+.section{padding:1.5rem 0}
+.section__label{font-family:var(--font-mono);font-size:0.625rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--on-surface-faint);margin-bottom:1rem}
+
+/* CARD SYSTEMS */
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
+.grid-1{display:grid;grid-template-columns:1fr;gap:0.75rem}
+.card{background:var(--surface-container-low);border-radius:var(--radius-xl);padding:1.5rem;border:1px solid transparent;transition:all 0.25s}
+.card:hover{background:var(--surface-container);border-color:var(--outline-variant)}
+.card--sm{padding:1rem;border-radius:var(--radius-md)}
+.card__num{font-family:var(--font-mono);font-size:3rem;font-weight:700;color:var(--surface-container-highest);position:absolute;top:-0.5rem;right:1rem;line-height:1}
+.card__label{font-family:var(--font-mono);font-size:0.625rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.25rem}
+.card__title{font-size:1.0625rem;font-weight:700;color:var(--on-surface);margin-bottom:0.5rem}
+.card__desc{font-size:0.8rem;color:var(--on-surface-dim);line-height:1.7}
+.card__items{display:flex;flex-wrap:wrap;gap:6px;margin-top:0.75rem}
+.chip{padding:4px 10px;background:var(--surface-container-high);border-radius:var(--radius-full);font-size:0.6875rem;font-weight:500;color:var(--on-surface-variant);cursor:pointer;transition:all 0.2s}
+.chip:hover{background:var(--secondary-container);color:var(--on-secondary-container)}
+.chip--sm{padding:2px 8px;font-family:var(--font-mono);font-size:0.5625rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase}
+
+/* STAT BARS */
+.stat-bar{display:flex;gap:2px}
+.pip{width:14px;height:6px;border-radius:1px;background:var(--surface-container-highest)}
+.pip--gold{background:var(--primary-dim)}
+.pip--red{background:var(--error)}
+
+/* TIMELINE */
+.timeline{position:relative;padding-left:40px}
+.timeline::before{content:'';position:absolute;left:15px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--success),var(--primary),var(--secondary),var(--error));opacity:0.4}
+.tl-step{position:relative;padding-bottom:1.5rem}
+.tl-step:last-child{padding-bottom:0}
+.tl-step__dot{position:absolute;left:-40px;top:4px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:var(--surface-container-high);border:2px solid var(--surface-container-highest);border-radius:var(--radius-sm);font-family:var(--font-mono);font-size:0.625rem;font-weight:700;z-index:1}
+.tl-step__card{background:var(--surface-container-low);border-radius:var(--radius-xl);padding:1.25rem 1.5rem;border:1px solid transparent;transition:all 0.2s}
+.tl-step__card:hover{background:var(--surface-container);border-color:var(--outline-variant)}
+.tl-step__phase{font-family:var(--font-mono);font-size:0.5625rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.25rem}
+.tl-step__title{font-size:1rem;font-weight:700;color:var(--on-surface);margin-bottom:0.5rem}
+.tl-step__desc{font-size:0.8rem;color:var(--on-surface-dim);line-height:1.7}
+.tl-step__tip{margin-top:0.75rem;padding:0.75rem;background:var(--surface-container-high);border-radius:var(--radius-md);font-size:0.75rem;color:var(--on-surface-variant);border-left:2px solid var(--secondary)}
+.tl-step__tip strong{color:var(--secondary)}
+
+/* POTION FLOW */
+.flow{display:flex;align-items:center;justify-content:center;gap:0.5rem;flex-wrap:wrap;padding:1.5rem;background:var(--surface-container-low);border-radius:var(--radius-xl)}
+.flow__step{text-align:center;padding:0.75rem 1rem;background:var(--surface-container-high);border-radius:var(--radius-md);min-width:100px}
+.flow__step-name{font-size:0.8125rem;font-weight:600;color:var(--on-surface)}
+.flow__step-desc{font-size:0.6875rem;color:var(--on-surface-dim)}
+.flow__arrow{font-size:1.25rem;color:var(--primary-dim)}
+
+/* WEAPON ITEM */
+.wpn{display:grid;grid-template-columns:auto 1fr;gap:1rem;padding:1.5rem}
+.wpn__icon{width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:var(--surface-container-highest);border-radius:var(--radius-md);flex-shrink:0}
+.wpn__icon img{width:32px;height:32px;image-rendering:pixelated}
+.wpn__header{display:flex;align-items:center;gap:8px;margin-bottom:0.25rem;flex-wrap:wrap}
+.wpn__name{font-size:1.0625rem;font-weight:700;color:var(--on-surface)}
+.wpn__source{font-family:var(--font-mono);font-size:0.5625rem;color:var(--on-surface-faint);margin-bottom:0.5rem}
+.wpn__skills{margin-top:0.5rem}
+.wpn__skill{font-size:0.75rem;color:var(--on-surface-variant);padding-left:1rem;position:relative;margin-bottom:0.25rem}
+.wpn__skill::before{content:'▸';position:absolute;left:0;color:var(--secondary)}
+.wpn__tip{margin-top:0.75rem;padding:0.75rem;background:var(--surface-container-high);border-radius:var(--radius-md);font-size:0.75rem;color:var(--on-surface-variant);border-left:2px solid var(--secondary)}
+
+/* GEM TIER VISUAL */
+.gem-tiers{display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem}
+.gtv{text-align:center;padding:0.75rem 1rem;background:var(--surface-container-low);border-radius:var(--radius-md);min-width:80px}
+.gtv__name{font-size:0.75rem;font-weight:600}
+.gtv__rank{font-family:var(--font-mono);font-size:0.5rem;color:var(--on-surface-faint);margin-top:2px}
+
+/* DEFENSE */
+.formula{font-family:var(--font-mono);font-size:0.875rem;color:var(--primary);padding:1rem;background:var(--surface-container-highest);border-radius:var(--radius-md);text-align:center;margin-bottom:1rem}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .bento{grid-template-columns:1fr 1fr;max-width:500px}
+  .bento__card--hero{grid-row:span 1;grid-column:span 2}
+  .grid-3{grid-template-columns:1fr}
+  .grid-2{grid-template-columns:1fr}
+  .nav__links{gap:0.25rem}
+  .nav__link{font-size:0.65rem;padding:3px 6px}
+  .flow{flex-direction:column}
+  .flow__arrow{transform:rotate(90deg)}
+}
+@media(max-width:480px){
+  .bento{grid-template-columns:1fr}
+  .bento__card--hero{grid-column:span 1}
+  .search-box__kbd{display:none}
+  .stats-row{gap:1.5rem}
+}
+  
+/* SCREENSHOT TRANSLATOR */
+.translate-fab{position:fixed;bottom:1.5rem;right:1.5rem;z-index:900;display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#0e0e0e;border:none;border-radius:var(--radius-full);padding:10px 18px;font-family:var(--font-body);font-weight:700;font-size:0.875rem;cursor:pointer;box-shadow:0 4px 20px rgba(255,231,146,0.25);transition:all 0.2s}
+.translate-fab:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(255,231,146,0.35)}
+.translate-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:950;backdrop-filter:blur(4px)}
+.translate-panel{position:fixed;bottom:0;right:0;z-index:960;width:100%;max-width:440px;background:var(--surface-container-low);border-radius:var(--radius-xl) var(--radius-xl) 0 0;padding:1.5rem;transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);max-height:90vh;overflow-y:auto}
+.translate-panel.active{transform:translateY(0)}
+.translate-panel__header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.25rem}
+.translate-panel__body{display:flex;flex-direction:column;gap:1rem}
+.translate-drop{display:flex;align-items:center;justify-content:center;flex-direction:column;background:var(--surface-container);border-radius:var(--radius-lg);padding:1.5rem;cursor:pointer;text-align:center;border:1.5px dashed rgba(255,231,146,0.2);transition:border-color 0.2s,background 0.2s;min-height:120px}
+.translate-drop:hover{border-color:rgba(255,231,146,0.5);background:var(--surface-container-high)}
+@media(min-width:768px){.translate-panel{border-radius:var(--radius-xl);bottom:5rem;right:1.5rem;width:420px}}
+</style>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js">
+
+// ========== SCREENSHOT TRANSLATOR ==========
+function openTranslateModal(){
+  document.getElementById('translateOverlay').style.display='block';
+  document.getElementById('translatePanel').classList.add('active');
+}
+function closeTranslateModal(){
+  document.getElementById('translateOverlay').style.display='none';
+  document.getElementById('translatePanel').classList.remove('active');
+}
+function handleImageUpload(event){
+  const file=event.target.files[0];
+  if(!file)return;
+  const preview=document.getElementById('translatePreview');
+  const dropContent=document.getElementById('translateDropContent');
+  const reader=new FileReader();
+  reader.onload=e=>{preview.src=e.target.result;preview.style.display='block';dropContent.style.display='none';};
+  reader.readAsDataURL(file);
+  document.getElementById('translateProgress').style.display='block';
+  document.getElementById('translateResults').style.display='none';
+  document.getElementById('translateError').style.display='none';
+  document.getElementById('translateReset').style.display='none';
+  runOCR(file);
+}
+async function runOCR(file){
+  const status=document.getElementById('translateStatus');
+  const bar=document.getElementById('translateProgressBar');
+  try{
+    status.textContent='언어 데이터 로딩 중...';
+    bar.style.width='5%';
+    const worker=await Tesseract.createWorker('eng',1,{
+      logger:m=>{
+        if(m.status==='recognizing text'){
+          bar.style.width=(Math.round(m.progress*75)+10)+'%';
+          status.textContent='텍스트 인식 중... '+Math.round(m.progress*100)+'%';
+        } else if(m.status==='loading language traineddata'){
+          bar.style.width='15%';
+          status.textContent='언어 데이터 로딩 중...';
+        } else if(m.status==='initializing api'){
+          bar.style.width='25%';
+          status.textContent='OCR 엔진 초기화 중...';
+        }
+      }
+    });
+    const {data:{text}}=await worker.recognize(file);
+    await worker.terminate();
+    const cleaned=text.trim().replace(/\f/g,'').replace(/[ \t]+/g,' ').trim();
+    if(!cleaned||cleaned.length<3){showTranslateError('텍스트를 인식할 수 없습니다. 더 선명한 이미지를 사용해 보세요.');return;}
+    bar.style.width='90%';
+    status.textContent='번역 중...';
+    const translated=await translateText(cleaned);
+    bar.style.width='100%';
+    setTimeout(()=>{
+      document.getElementById('translateProgress').style.display='none';
+      document.getElementById('translateOriginal').textContent=cleaned;
+      document.getElementById('translateKorean').textContent=translated;
+      document.getElementById('translateResults').style.display='block';
+      document.getElementById('translateReset').style.display='block';
+    },300);
+  } catch(err){
+    showTranslateError('오류: '+err.message);
+  }
+}
+async function translateText(text){
+  const maxLen=450;
+  const chunks=[];
+  const lines=text.split('\n');
+  let cur='';
+  for(const line of lines){
+    if((cur+line).length>maxLen){if(cur)chunks.push(cur.trim());cur=line+'\n';}
+    else cur+=line+'\n';
+  }
+  if(cur.trim())chunks.push(cur.trim());
+  const results=[];
+  for(const chunk of chunks){
+    try{
+      const res=await fetch('https://api.mymemory.translated.net/get?q='+encodeURIComponent(chunk)+'&langpair=en|ko');
+      const json=await res.json();
+      results.push(json.responseData?.translatedText||chunk);
+    } catch{results.push(chunk);}
+  }
+  return results.join('\n');
+}
+function showTranslateError(msg){
+  document.getElementById('translateProgress').style.display='none';
+  document.getElementById('translateError').style.display='block';
+  document.getElementById('translateError').textContent=msg;
+  document.getElementById('translateReset').style.display='block';
+}
+function resetTranslate(){
+  document.getElementById('translateFile').value='';
+  document.getElementById('translatePreview').style.display='none';
+  document.getElementById('translateDropContent').style.display='block';
+  document.getElementById('translateProgress').style.display='none';
+  document.getElementById('translateResults').style.display='none';
+  document.getElementById('translateError').style.display='none';
+  document.getElementById('translateReset').style.display='none';
+  document.getElementById('translateProgressBar').style.width='0%';
+}
+function copyTranslation(){
+  const text=document.getElementById('translateKorean').textContent;
+  const btn=document.getElementById('copyBtn');
+  navigator.clipboard.writeText(text).then(()=>{btn.textContent='복사됨!';setTimeout(()=>btn.textContent='복사',1500);});
+}
+// Drag & Drop
+const _tDrop=document.getElementById('translateDrop');
+_tDrop.addEventListener('dragover',e=>{e.preventDefault();_tDrop.style.borderColor='var(--primary)';});
+_tDrop.addEventListener('dragleave',()=>{_tDrop.style.borderColor='';});
+_tDrop.addEventListener('drop',e=>{
+  e.preventDefault();_tDrop.style.borderColor='';
+  const file=e.dataTransfer.files[0];
+  if(file&&file.type.startsWith('image/')){
+    handleImageUpload({target:{files:[file]}});
+  }
+});
+</script>
+</head>
+<body>
+
+<!-- ==================== NAV (hidden on home) ==================== -->
+<nav class="nav" id="nav">
+  <div class="nav__inner">
+    <div class="nav__logo" onclick="go('home')">
+      <img src="https://media.forgecdn.net/avatars/thumbnails/1347/122/256/256/638875340907659040.png" alt="" />
+      Champion's Codex
+    </div>
+    <div class="nav__links" id="navLinks"></div>
+  </div>
+</nav>
+
+<!-- ==================== HOME ==================== -->
+<div class="page active" id="page-home">
+  <div class="blur-bg">
+    <img class="blur-bg__img" src="https://media.forgecdn.net/avatars/thumbnails/1347/122/256/256/638875340907659040.png" alt="" />
+    <div class="blur-bg__overlay"></div>
+  </div>
+  <div class="pixel-bg"></div>
+  <div class="vignette"></div>
+  <main class="landing">
+    <div class="hero-glow"></div>
+    <div class="logo-area"><img class="logo-area__img" src="https://media.forgecdn.net/avatars/thumbnails/1347/122/256/256/638875340907659040.png" alt="Cisco's Medieval RPG" width="120" height="120" /></div>
+    <div class="brand">
+      <p class="brand__eyebrow">THE CHAMPION'S CODEX &middot; <span>ULTIMATE V8B</span></p>
+      <h1 class="brand__title">Cisco's Medieval RPG</h1>
+      <p class="brand__subtitle">Ultimate Guide</p>
+      <p class="brand__desc">빌드, 보스, 강화, 퀘스트, 조합법 — 무엇이든 검색하세요</p>
+    </div>
+    <div class="search-area">
+      <div class="search-box">
+        <input type="text" class="search-box__input" placeholder="검색 (예: 크리 빌드, Tier 2 보스, 젬 소켓팅...)" id="searchInput" autocomplete="off" spellcheck="false" />
+        <span class="search-box__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+        <span class="search-box__kbd"><kbd>Ctrl</kbd><kbd>K</kbd></span>
+        <div class="search-results" id="searchResults"></div>
+      </div>
+      <div class="quick-tags">
+        <span class="quick-tag"><span class="qt-dot" style="background:var(--primary-dim)"></span>크리 빌드</span>
+        <span class="quick-tag"><span class="qt-dot" style="background:var(--error)"></span>보스 공략</span>
+        <span class="quick-tag"><span class="qt-dot" style="background:var(--success)"></span>초보 가이드</span>
+        <span class="quick-tag"><span class="qt-dot" style="background:var(--info)"></span>강화 시스템</span>
+        <span class="quick-tag"><span class="qt-dot" style="background:var(--secondary)"></span>파밍 루트</span>
+        <span class="quick-tag"><span class="qt-dot" style="background:var(--primary)"></span>조합법</span>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat__value">200+</div><div class="stat__label">퀘스트</div></div>
+      <div class="stat"><div class="stat__value">4</div><div class="stat__label">퀘스트라인</div></div>
+      <div class="stat"><div class="stat__value">3 TIER</div><div class="stat__label">보스 시스템</div></div>
+      <div class="stat"><div class="stat__value">41</div><div class="stat__label">큐리오 슬롯</div></div>
+    </div>
+    <div class="bento">
+      <div class="bento__card bento__card--hero" onclick="go('builds')">
+        <div class="bento__card-visual"><img src="https://stickypiston.co/wp-content/uploads/adventurerpg-ultimate.jpg" alt="" loading="lazy" /><div class="bento__card-visual__overlay"><div class="bento__card-label">CHAPTER 01</div></div></div>
+        <div class="bento__card-title">빌드 & 캐릭터</div>
+        <div class="bento__card-desc">Origin × Blessing × Class</div>
+        <span class="bento__card-arrow">→ 가이드 보기</span>
+      </div>
+      <div class="bento__card" onclick="go('bosses')">
+        <div class="bento__card-icon"><img src="https://minecraft.wiki/images/Invicon_Skeleton_Skull.png" alt="" /></div>
+        <div class="bento__card-label">BOSSES</div>
+        <div class="bento__card-title">보스 대백과</div>
+        <div class="bento__card-desc">3티어 + 게이트키퍼</div>
+        <span class="bento__card-arrow">→</span>
+      </div>
+      <div class="bento__card" onclick="go('upgrade')">
+        <div class="bento__card-icon"><img src="https://minecraft.wiki/images/Invicon_Diamond.png" alt="" /></div>
+        <div class="bento__card-label">UPGRADE</div>
+        <div class="bento__card-title">강화 시스템</div>
+        <div class="bento__card-desc">인챈트 · 리포지 · 젬</div>
+        <span class="bento__card-arrow">→</span>
+      </div>
+      <div class="bento__card" onclick="go('progression')">
+        <div class="bento__card-icon"><img src="https://minecraft.wiki/images/Invicon_Writable_Book.png" alt="" /></div>
+        <div class="bento__card-label">PROGRESSION</div>
+        <div class="bento__card-title">진행 공략</div>
+        <div class="bento__card-desc">4대 퀘스트라인</div>
+        <span class="bento__card-arrow">→</span>
+      </div>
+      <div class="bento__card" onclick="go('crafting')">
+        <div class="bento__card-icon"><img src="https://minecraft.wiki/images/Invicon_Anvil.png" alt="" /></div>
+        <div class="bento__card-label">CRAFTING</div>
+        <div class="bento__card-title">조합법 & 제작</div>
+        <div class="bento__card-desc">Tinkers · 포션 · 요리</div>
+        <span class="bento__card-arrow">→</span>
+      </div>
+      <div class="bento__card" onclick="go('explore')">
+        <div class="bento__card-icon"><img src="https://minecraft.wiki/images/Invicon_Ender_Eye.png" alt="" /></div>
+        <div class="bento__card-label">EXPLORE</div>
+        <div class="bento__card-title">차원 & 던전</div>
+        <div class="bento__card-desc">Twilight · Aether · End</div>
+        <span class="bento__card-arrow">→</span>
+      </div>
+    </div>
+    <div class="footer"><a href="https://www.curseforge.com/minecraft/modpacks/ciscos-adventure-rpg-ultimate" target="_blank">CurseForge</a><a href="https://ciscos-rpg.fandom.com/wiki/Guides" target="_blank">Wiki</a><span style="font-family:var(--font-mono);font-size:0.625rem;padding:3px 8px;background:var(--surface-container-low);border-radius:var(--radius-sm)">V8B · 2026</span></div>
+  </main>
+</div>
+
+<!-- ==================== BUILDS ==================== -->
+<div class="page" id="page-builds"><div class="sub-page">
+  <header class="page-header"><p class="page-header__eyebrow" style="color:var(--secondary)">CHAPTER 01 — CHARACTER</p><h1 class="page-header__title" style="background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">캐릭터 생성</h1><p class="page-header__desc">종족(Origin) · 축복(Blessing) · 직업(Class) — 영문 / 한글 병기</p></header>
+
+  <!-- TAB SWITCHER -->
+  <div style="display:flex;gap:6px;justify-content:center;margin-bottom:2rem;flex-wrap:wrap">
+    <div class="chip" style="padding:8px 20px;font-weight:600" onclick="showTab('origins')" id="tab-origins">종족 (Origins)</div>
+    <div class="chip" style="padding:8px 20px;font-weight:600" onclick="showTab('blessings')" id="tab-blessings">축복 (Blessings)</div>
+    <div class="chip" style="padding:8px 20px;font-weight:600" onclick="showTab('classes')" id="tab-classes">직업 (Classes)</div>
+  </div>
+
+  <!-- ===== ORIGINS ===== -->
+  <div id="tab-content-origins">
+  <section class="section"><div class="section__label" style="color:var(--secondary)">종족 (Origins) — 기본 능력과 패시브 결정. 게임 시작 시 선택, 변경 불가.</div>
+  <div style="background:var(--surface-container-low);border-radius:var(--radius-md);padding:1rem;margin-bottom:0.75rem;font-size:0.75rem;color:var(--on-surface-dim)">
+    <strong style="color:var(--success)">🔄 종족 변경 가능:</strong> <strong style="color:var(--primary)">Orb of Origin</strong> — Champions Trials 2번째 퀘스트 보상 또는 직접 제작(JEI 확인). 종족 선택은 영구가 아닙니다.
+  </div>
+  <div style="background:var(--surface-container-low);border-radius:var(--radius-md);padding:1rem;margin-bottom:1.5rem;font-size:0.75rem;color:var(--on-surface-dim)">
+    <strong style="color:var(--secondary)">비활성화된 종족 (V4e/15c 이후):</strong> Elf, Yeti, Arachnae, Honeybee, Dwarf ×2, Apostle of Umvuthi, Troll, Gorgon, Minotaur, Demon, Adapted Raccoon
+  </div>
+  <div class="grid-2">
+    <!-- Human -->
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Player_Head_(Steve).png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Human <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 인간</span></div></div><span class="chip--sm" style="background:rgba(255,255,255,0.05);color:var(--on-surface-faint)">영향 없음</span></div><div class="card__desc">일반 인간. 바닐라 마인크래프트 경험. 특수 능력 없음.</div></div>
+    <!-- Feline -->
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_String.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Feline <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 고양이</span></div></div><span class="chip--sm" style="background:rgba(253,139,0,0.12);color:var(--secondary)">중간 영향</span></div><div class="card__desc" style="margin-bottom:0.5rem">고양이 외형. 크리퍼가 먼저 공격하지 않으면 폭발 안 함.</div><div style="font-size:0.75rem;line-height:1.6;color:var(--on-surface-variant)"><span style="color:var(--success)">▸ 곡예 (Acrobatics):</span> 어떤 높이에서도 낙하 피해 없음<br/><span style="color:var(--success)">▸ 강한 발목 (Strong Ankles):</span> 달리기+점프로 높이 점프<br/><span style="color:var(--success)">▸ 벨벳 발 (Velvet Paws):</span> 발소리 진동 없음<br/><span style="color:var(--success)">▸ 고양이 외형 (Catlike Appearance):</span> 크리퍼 공포<br/><span style="color:var(--error)">▸ 허약 (Fragile):</span> 최대 체력 하트 3개 감소</div></div>
+    <!-- Plantaemancer -->
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Oak_Sapling.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Plantaemancer <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 식물 마법사</span></div></div><span class="chip--sm" style="background:rgba(253,139,0,0.12);color:var(--secondary)">중간 영향</span></div><div class="card__desc" style="margin-bottom:0.5rem">식물의 힘을 사용하는 자연 마법사.</div><div style="font-size:0.75rem;line-height:1.6;color:var(--on-surface-variant)"><span style="color:var(--success)">▸ 독 덩굴 (Poison Ivy Vines):</span> 대상에게 독 적용 (액티브)<br/><span style="color:var(--success)">▸ 식물 관리인 (Plant Caretaker):</span> Shift+우클릭으로 식물 성장<br/><span style="color:var(--success)">▸ 재생 (Regrowth):</span> 물속에서 체력 회복<br/><span style="color:var(--error)">▸ 화염 약점:</span> 불/용암 추가 피해<br/><span style="color:var(--error)">▸ 어둠 약점:</span> 낮은 밝기에서 나약함</div></div>
+    <!-- Thief -->
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Iron_Nugget.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Thief <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 도적</span></div></div><span class="chip--sm" style="background:rgba(253,139,0,0.12);color:var(--secondary)">중간 영향</span></div><div class="card__desc" style="margin-bottom:0.5rem">은밀한 도둑. 시작 보너스와 이동 특화.</div><div style="font-size:0.75rem;line-height:1.6;color:var(--on-surface-variant)"><span style="color:var(--success)">▸ 은밀 (Cloak and Dagger):</span> 전리품 가방 + 다이아몬드 3개 지급<br/><span style="color:var(--success)">▸ 금전욕 (Money Lover):</span> 다이아몬드 손에 들면 이동속도 II<br/><span style="color:var(--success)">▸ 야행성 (Night Owl):</span> 어둠 속 야간 투시</div></div>
+    <!-- Elytrian -->
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Elytra.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Elytrian <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 겉날개족</span></div></div><span class="chip--sm" style="background:rgba(255,107,107,0.12);color:var(--error)">높은 영향</span></div><div class="card__desc" style="margin-bottom:0.5rem">장비 없이 겉날개 비행 가능.</div><div style="font-size:0.75rem;line-height:1.6;color:var(--on-surface-variant)"><span style="color:var(--success)">▸ 비행:</span> 겉날개 장착 불필요 — 기본 보유<br/><span style="color:var(--success)">▸ 발사 (Launch):</span> 30초마다 ~20블록 상승 가능</div></div>
+    <!-- Merling -->
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Heart_of_the_Sea.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Merling <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 인어</span></div></div><span class="chip--sm" style="background:rgba(255,107,107,0.12);color:var(--error)">높은 영향</span></div><div class="card__desc">수중 호흡, 수중 채굴 속도 증가, 수중 시야. 지상에서 제한적.</div></div>
+    <!-- Enderian -->
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Ender_Pearl.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Enderian <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 엔더인</span></div></div><span class="chip--sm" style="background:rgba(253,139,0,0.12);color:var(--secondary)">중간 영향</span></div><div class="card__desc" style="margin-bottom:0.5rem">엔더 드래곤의 후예. 엔더펄 텔레포트.</div><div style="font-size:0.75rem;line-height:1.6;color:var(--on-surface-variant)"><span style="color:var(--success)">▸ 텔레포트:</span> 엔더펄 던지기 — 피해 없음<br/><span style="color:var(--error)">▸ 물 약점:</span> 물에 닿으면 피해</div></div>
+    <!-- Blazeborn -->
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Blaze_Powder.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Blazeborn <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 블레이즈 혈통</span></div></div><span class="chip--sm" style="background:rgba(255,107,107,0.12);color:var(--error)">높은 영향</span></div><div class="card__desc" style="margin-bottom:0.5rem">블레이즈의 후손. 네더 면역.</div><div style="font-size:0.75rem;line-height:1.6;color:var(--on-surface-variant)"><span style="color:var(--success)">▸ 화염 면역:</span> 모든 화염 피해 무효<br/><span style="color:var(--success)">▸ 네더 안전:</span> 네더 위험 요소 면역<br/><span style="color:var(--error)">▸ 물 약점:</span> 물에 닿으면 피해</div></div>
+    <!-- Phantom -->
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Phantom_Membrane.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Phantom <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 팬텀</span></div></div><span class="chip--sm" style="background:rgba(255,107,107,0.12);color:var(--error)">높은 영향</span></div><div class="card__desc" style="margin-bottom:0.5rem">반인반팬텀. 유령 모드 전환 가능.</div><div style="font-size:0.75rem;line-height:1.6;color:var(--on-surface-variant)"><span style="color:var(--success)">▸ 팬텀 폼:</span> 유령 모드 전환 (포만감 필요)<br/><span style="color:var(--success)">▸ 투명 통과:</span> 팬텀 상태에서 블록 통과</div></div>
+    <!-- Shulk -->
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Shulker_Shell.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Shulk <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 셜커</span></div></div><span class="chip--sm" style="background:rgba(253,139,0,0.12);color:var(--secondary)">중간 영향</span></div><div class="card__desc" style="margin-bottom:0.5rem">셜커와 친족. 보호 껍질과 추가 인벤토리.</div><div style="font-size:0.75rem;line-height:1.6;color:var(--on-surface-variant)"><span style="color:var(--success)">▸ 수집가 (Hoarder):</span> 추가 인벤토리 9칸<br/><span style="color:var(--success)">▸ 껍질 보호:</span> 자연 방어력</div></div>
+    <!-- Paladin -->
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Iron_Sword.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Paladin <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 성기사</span></div></div><span class="chip--sm" style="background:rgba(253,139,0,0.12);color:var(--secondary)">중간 영향</span></div><div class="card__desc" style="margin-bottom:0.5rem">선과 질서를 위해 성전하는 신성 기사. 신성 주문 시전자.</div><div style="font-size:0.75rem;line-height:1.6;color:var(--on-surface-variant)"><span style="color:var(--success)">▸ 언데드 퇴치 (Protection From Undead):</span> 접촉 시 언데드에 화염 부여<br/><span style="color:var(--success)">▸ 태양을 찬양하라 (Fraise the Sun):</span> 10초간 힐 + 저항 + 재생 부여<br/><span style="color:var(--success)">▸ 듀란달 (Durendal):</span> 전설의 팔라딘 검 지급 — 공격력 +1.5 보너스<br/><span style="color:var(--on-surface-faint)">(파손된 Durendal로 시작, 사서 주민 스크롤로 수리 가능)</span></div></div>
+    <!-- Knight -->
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Shield.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Knight <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 기사</span></div></div><span class="chip--sm" style="background:rgba(253,139,0,0.12);color:var(--secondary)">중간 영향</span></div><div class="card__desc">근접 전투 특화. 방어와 공격 밸런스.</div></div>
+    <!-- Priest -->
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Enchanted_Book.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Priest <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 사제</span></div></div><span class="chip--sm" style="background:rgba(253,139,0,0.12);color:var(--secondary)">중간 영향</span></div><div class="card__desc">신성 마법 사용. 힐/서포트 특화.</div></div>
+    <!-- Siren -->
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Nautilus_Shell.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Siren <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 세이렌</span></div></div><span class="chip--sm" style="background:rgba(253,139,0,0.12);color:var(--secondary)">중간 영향</span></div><div class="card__desc">바다의 매혹자. 수중 능력과 매혹 효과.</div></div>
+    <!-- Slimefolk -->
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Slime_Ball.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Slimefolk <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 슬라임족</span></div></div><span class="chip--sm" style="background:rgba(253,139,0,0.12);color:var(--secondary)">중간 영향</span></div><div class="card__desc">슬라임 기반 종족. 탄력 있는 이동.</div></div>
+    <!-- Deer -->
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Leather.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Deer <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 사슴</span></div></div><span class="chip--sm" style="background:rgba(255,255,255,0.05);color:var(--on-surface-faint)">낮은 영향</span></div><div class="card__desc">자연 친화적 종족.</div></div>
+    <!-- Wild Cat -->
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Tropical_Fish.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Wild Cat <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 야생 고양이</span></div></div><span class="chip--sm" style="background:rgba(253,139,0,0.12);color:var(--secondary)">중간 영향</span></div><div class="card__desc">Feline의 야생 변형. 더 공격적인 특성.</div></div>
+    <!-- Avian -->
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Feather.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Avian <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 조인 (새족)</span></div></div><span class="chip--sm" style="background:rgba(253,139,0,0.12);color:var(--secondary)">중간 영향</span></div><div class="card__desc" style="margin-bottom:0.5rem">비행 능력을 잃은 새 종족. 활강과 빠른 이동.</div><div style="font-size:0.75rem;line-height:1.6;color:var(--on-surface-variant)"><span style="color:var(--success)">▸ 깃털 체중 (Featherweight):</span> 깃털처럼 부드러운 낙하 (웅크리기 해제)<br/><span style="color:var(--success)">▸ 빠른 발:</span> 지상 이동속도 소폭 증가</div></div>
+    <!-- Avian Starborne -->
+    <div class="card" style="border:1px solid rgba(107,184,255,0.12)"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Elytra.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Avian Starborne <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 천공의 후예</span></div></div><span class="chip--sm" style="background:rgba(255,107,107,0.12);color:var(--error)">높은 영향</span></div><div class="card__desc" style="margin-bottom:0.5rem">Avian의 천사 조상. 날개로 비행+활강 가능. 하늘의 왕.</div><div style="font-size:0.75rem;line-height:1.6;color:var(--on-surface-variant)"><span style="color:var(--success)">▸ 비행:</span> 날갯짓+활강 조합 비행<br/><span style="color:var(--success)">▸ 천사의 은총 (Angelic Grace):</span> 추락 피해 방지<br/><span style="color:var(--success)">▸ 공중 전투사 (Aerial Combatant):</span> 겉날개 비행 중 피해 대폭↑<br/><span style="color:var(--success)">▸ 순풍 (Tailwind):</span> 지상 이동속도↑ · 슬로우 면역<br/><span style="color:var(--error)">▸ 젖은 날개 (Wet Wings):</span> 수영 불가</div></div>
+    <!-- Bird of Paradise -->
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Tropical_Fish.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Bird of Paradise <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 극락조</span></div></div><span class="chip--sm" style="background:rgba(255,107,107,0.12);color:var(--error)">높은 영향</span></div><div class="card__desc" style="margin-bottom:0.5rem">겉날개 활강 + G키 발사로 사실상 비행. 초반 강력 Origin.</div><div style="font-size:0.75rem;line-height:1.6;color:var(--on-surface-variant)"><span style="color:var(--success)">▸ 활강:</span> 겉날개처럼 활강<br/><span style="color:var(--success)">▸ 발사 (G키):</span> 공중 점프로 사실상 비행</div></div>
+    <!-- Otter -->
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Pufferfish.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Otter <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 수달</span></div></div><span class="chip--sm" style="background:rgba(255,255,255,0.05);color:var(--on-surface-faint)">낮은 영향</span></div><div class="card__desc">수중/육상 양용. 빠른 수영.</div></div>
+    <!-- Piglin Brute -->
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Golden_Sword.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Piglin Brute <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 피글린 야수</span></div></div><span class="chip--sm" style="background:rgba(255,107,107,0.12);color:var(--error)">높은 영향</span></div><div class="card__desc">네더 전투 특화. 피글린과 우호적.</div></div>
+    <!-- Custom Origins -->
+    <div class="card" style="border:1px solid rgba(255,107,107,0.1)"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Totem_of_Undying.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Frijani Drengr <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 프리야니 전사</span></div></div><span class="chip--sm" style="background:rgba(255,231,146,0.12);color:var(--primary)">커스텀 · 크리 특화</span></div><div class="card__desc" style="margin-bottom:0.5rem">프리야니 빙원 부족 출신. 혹독한 겨울과 전투로 단련된 전사. 크리 + 생명흡수 특화.</div><div style="font-size:0.75rem;line-height:1.6;color:var(--on-surface-variant)"><span style="color:var(--success)">▸ 냉기 검 (Chilled Blades):</span> 크리 확률 +20%, 크리 데미지 +50%, 적 슬로우<br/><span style="color:var(--success)">▸ 광전사 (Berserkergang):</span> 받는 피해 30%↑ 대신 생명흡수 20%<br/><span style="color:var(--error)">▸ 무모한 분노 (Reckless Fury):</span> 주는 피해 20%↓ (빗나감 확률)</div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Wither_Skeleton_Skull.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Anthraxi Dark Mage <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 안트락시 암흑 마법사</span></div></div><span class="chip--sm" style="background:rgba(255,231,146,0.12);color:var(--primary)">커스텀</span></div><div class="card__desc" style="margin-bottom:0.5rem">안트락스의 어둠 마법에 몸을 바친 자.</div><div style="font-size:0.75rem;line-height:1.6;color:var(--on-surface-variant)"><span style="color:var(--success)">▸ 엔더 주문력 350%↑</span><br/><span style="color:var(--success)">▸ 마법 미사일 전문가:</span> 최고 레벨 자유 시전<br/><span style="color:var(--success)">▸ 영체 회피 (Ethereal Evasion):</span> 그림자와 합체하여 회피<br/><span style="color:var(--success)">▸ 마나 증가 + 시전 속도 2배</span></div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Nether_Star.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Lumerian Justicar <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 루메리안 심판관</span></div></div><span class="chip--sm" style="background:rgba(255,231,146,0.12);color:var(--primary)">커스텀</span></div><div class="card__desc" style="margin-bottom:0.5rem">루메라 여신의 신성한 심판관.</div><div style="font-size:0.75rem;line-height:1.6;color:var(--on-surface-variant)"><span style="color:var(--success)">▸ 신성 주문력 350%↑</span><br/><span style="color:var(--success)">▸ 인도의 빛 전문가 (Guiding Bolt):</span> 최고 레벨 자유 시전<br/><span style="color:var(--success)">▸ 강화 (Fortify):</span> 자신+아군에 신성 보호막<br/><span style="color:var(--error)">▸ 정의의 짐 (Onus Justorum):</span> 이동속도 30% 감소</div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Fire_Charge.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Pyriosi Phoenix Knight <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 피리오시 불사조 기사</span></div></div><span class="chip--sm" style="background:rgba(255,231,146,0.12);color:var(--primary)">커스텀</span></div><div class="card__desc">불사조의 힘을 가진 기사. 화염 특화.</div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Oak_Leaves.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Wood Elf <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 숲 엘프</span></div></div><span class="chip--sm" style="background:rgba(255,231,146,0.12);color:var(--primary)">커스텀</span></div><div class="card__desc">숲의 거주자. 자연 마법과 궁술 특화.</div></div>
+    <div class="card" style="border:1px solid rgba(255,231,146,0.12)"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_End_Crystal.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Demi-God Umbra <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 반신 움브라 (어둠)</span></div></div><span class="chip--sm" style="background:rgba(255,231,146,0.12);color:var(--primary)">커스텀 · S-Tier</span></div><div class="card__desc" style="margin-bottom:0.5rem">어둠의 반신. 전체 최강 Origin 중 하나.</div><div style="font-size:0.75rem;line-height:1.6;color:var(--on-surface-variant)"><span style="color:var(--success)">▸ 신성한 힘 (Divine Strength):</span> 주는 피해 40%↑<br/><span style="color:var(--success)">▸ 신의 육체 (Divinum Corpus):</span> 기본 체력 증가<br/><span style="color:var(--success)">▸ 움브라 혈통 (Umbral Lineage):</span> 엔드 차원에서 피해 15%↓<br/><span style="color:var(--success)">▸ 어둠 시야 (Dark Vision):</span> 완전한 어둠 투시<br/><span style="color:var(--error)">▸ 약점:</span> 받는 피해 20%↑ · 금(Golden) 음식만 섭취 가능</div></div>
+    <div class="card" style="border:1px solid rgba(255,231,146,0.12)"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Glowstone_Dust.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Demi-God Lux <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 반신 룩스 (빛)</span></div></div><span class="chip--sm" style="background:rgba(255,231,146,0.12);color:var(--primary)">커스텀 · S-Tier</span></div><div class="card__desc" style="margin-bottom:0.5rem">빛의 반신. 전체 최강 Origin 중 하나.</div><div style="font-size:0.75rem;line-height:1.6;color:var(--on-surface-variant)"><span style="color:var(--success)">▸ 신성한 힘 (Divine Strength):</span> 주는 피해 40%↑<br/><span style="color:var(--success)">▸ 신의 육체 (Divinum Corpus):</span> 기본 체력 증가<br/><span style="color:var(--success)">▸ 룩스 혈통 (Luxian Lineage):</span> 하늘 노출 시 피해 10%↓<br/><span style="color:var(--error)">▸ 약점:</span> 받는 피해 20%↑ · 금(Golden) 음식만 섭취 가능</div><div style="margin-top:0.5rem;font-size:0.6875rem;color:var(--on-surface-faint);padding:0.5rem;background:var(--surface-container-high);border-radius:var(--radius-sm)">💡 금음식 제한은 배낭 Food Upgrade 또는 Infinity Ham 렐릭으로 해결 가능</div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Bow.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Venthari Sharpshooter <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 벤타리 저격수</span></div></div><span class="chip--sm" style="background:rgba(255,231,146,0.12);color:var(--primary)">커스텀 · 궁수</span></div><div class="card__desc" style="margin-bottom:0.5rem">벤타리 사막 출신. 평생 활을 훈련한 명사수.</div><div style="font-size:0.75rem;line-height:1.6;color:var(--on-surface-variant)"><span style="color:var(--success)">▸ 저격수 (Deadeye):</span> 투사체 피해 30%↑<br/><span style="color:var(--error)">▸ 육식 (Carnivore):</span> 사막 환경 적응 — 고기만 섭취 가능</div></div>
+  </div>
+  </section></div>
+
+  <!-- ===== BLESSINGS ===== -->
+  <div id="tab-content-blessings" style="display:none">
+  <section class="section"><div class="section__label" style="color:var(--primary)">신의 축복 (Divine Blessings) — Origin 선택 후 결정. 엔더 드래곤 처치 시 강화.</div>
+  <div class="grid-2">
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Shield.png" style="width:32px;height:32px;image-rendering:pixelated" /><div><div class="card__title" style="margin:0">Athena's Blessing <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 아테나의 축복</span></div></div></div><div class="card__desc" style="margin-bottom:0.5rem">지혜의 여신 아테나의 보호 축복.</div><div style="font-size:0.75rem;line-height:1.8;color:var(--on-surface-variant)"><span style="color:var(--primary)">▸ 견고의 소축복 (Minor Boon of Fortitude):</span> 방어력 +5<br/><span style="color:var(--secondary)">▸ 지혜의 대축복 (Greater Boon of Wisdom):</span> [드래곤 처치] 모든 피해 8% 영구 감소</div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Diamond_Sword.png" style="width:32px;height:32px;image-rendering:pixelated" /><div><div class="card__title" style="margin:0">Thor's Blessing <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 토르의 축복</span></div></div></div><div class="card__desc" style="margin-bottom:0.5rem">번개와 힘의 신 토르의 뇌전 축복.</div><div style="font-size:0.75rem;line-height:1.8;color:var(--on-surface-variant)"><span style="color:var(--primary)">▸ 힘의 소축복 (Minor Boon of Might):</span> 공격력 +5<br/><span style="color:var(--secondary)">▸ 분노의 대축복 (Greater Boon of Fury):</span> [드래곤 처치] 주는 피해 8% 영구 증가</div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Golden_Apple.png" style="width:32px;height:32px;image-rendering:pixelated" /><div><div class="card__title" style="margin:0">Amaterasu's Blessing <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 아마테라스의 축복</span></div></div></div><div class="card__desc" style="margin-bottom:0.5rem">태양의 여신 아마테라스의 광휘 축복.</div><div style="font-size:0.75rem;line-height:1.8;color:var(--on-surface-variant)"><span style="color:var(--primary)">▸ 은총의 소축복 (Minor Boon of Grace):</span> 최대 체력 +5<br/><span style="color:var(--secondary)">▸ 활력의 대축복 (Greater Boon of Vitality):</span> [드래곤 처치] 최대 체력 +6 + 재생력 강화</div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Heart_of_the_Sea.png" style="width:32px;height:32px;image-rendering:pixelated" /><div><div class="card__title" style="margin:0">Neptune's Blessing <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 넵튠의 축복</span></div></div></div><div class="card__desc" style="margin-bottom:0.5rem">바다와 조류의 신 넵튠의 해류 축복.</div><div style="font-size:0.75rem;line-height:1.8;color:var(--on-surface-variant)"><span style="color:var(--primary)">▸ 파도의 소축복 (Minor Boon of Waves):</span> 수중 피해 20%↑<br/><span style="color:var(--secondary)">▸ 조류의 대축복 (Greater Boon of Tides):</span> [드래곤 처치] 수중호흡 + 수중시야 + 채굴속도↑</div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Packed_Ice.png" style="width:32px;height:32px;image-rendering:pixelated" /><div><div class="card__title" style="margin:0">Skadi's Blessing <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 스카디의 축복</span></div></div></div><div class="card__desc" style="margin-bottom:0.5rem">빙설의 여신 스카디의 냉기 축복.</div><div style="font-size:0.75rem;line-height:1.8;color:var(--on-surface-variant)"><span style="color:var(--primary)">▸ 눈사태의 소축복 (Minor Boon of Avalanche):</span> 추운 바이옴에서 피해 7%↑<br/><span style="color:var(--secondary)">▸ 겨울의 대축복 (Greater Boon of Winter):</span> [드래곤 처치] 투사체 피해 8% 영구 증가</div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Lightning_Rod.png" style="width:32px;height:32px;image-rendering:pixelated" /><div><div class="card__title" style="margin:0">Susanoo's Blessing <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 스사노오의 축복</span></div></div></div><div class="card__desc" style="margin-bottom:0.5rem">폭풍의 신 스사노오의 질풍 축복.</div><div style="font-size:0.75rem;line-height:1.8;color:var(--on-surface-variant)"><span style="color:var(--primary)">▸ 허리케인의 소축복 (Minor Boon of Hurricane):</span> 이동속도 5%↑<br/><span style="color:var(--secondary)">▸ 폭풍의 대축복 (Greater Boon of Tempest):</span> [드래곤 처치] 공격속도 10%↑ + 슬로우 면역</div></div>
+    <div class="card" style="border:1px solid rgba(255,231,146,0.12)"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Redstone.png" style="width:32px;height:32px;image-rendering:pixelated" /><div><div class="card__title" style="margin:0">Ares' Blessing <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 아레스의 축복</span></div></div><span class="chip--sm" style="background:rgba(255,231,146,0.12);color:var(--primary)">★ BEST</span></div><div class="card__desc" style="margin-bottom:0.5rem">전쟁의 신 아레스의 전투 축복. <strong style="color:var(--primary)">전체 축복 중 최강.</strong></div><div style="font-size:0.75rem;line-height:1.8;color:var(--on-surface-variant)"><span style="color:var(--primary)">▸ 크리 확률 + 크리 데미지 대폭 증가</span><br/><span style="color:var(--secondary)">▸ [드래곤 처치] 추가 크리 보너스 — Crit Build와 최고 시너지</span></div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Ender_Pearl.png" style="width:32px;height:32px;image-rendering:pixelated" /><div><div class="card__title" style="margin:0">Loki's Blessing <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 로키의 축복</span></div></div></div><div class="card__desc" style="margin-bottom:0.5rem">책략의 신 로키의 독과 속임수 축복.</div><div style="font-size:0.75rem;line-height:1.8;color:var(--on-surface-variant)"><span style="color:var(--primary)">▸ 독 + 대량 피해 + 텔레포트 + 추가 포켓</span><br/><span style="color:var(--secondary)">▸ [드래곤 처치] 투사체에 텔레포트 + 중독 대상 피해 40%↑</span></div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Anvil.png" style="width:32px;height:32px;image-rendering:pixelated" /><div><div class="card__title" style="margin:0">Hephaestus' Blessing <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 헤파이스토스의 축복</span></div></div></div><div class="card__desc" style="margin-bottom:0.5rem">대장장이의 신 헤파이스토스의 축복.</div><div style="font-size:0.75rem;line-height:1.8;color:var(--on-surface-variant)"><span style="color:var(--primary)">▸ 거인 학살 (Fell Giants):</span> 타격 시 현재 HP의 2% 추가 피해<br/><span style="color:var(--secondary)">▸ [드래곤 처치] 강화된 현재 HP 피해</span></div></div>
+    <div class="card" style="border:1px solid rgba(255,107,107,0.15)"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Wither_Skeleton_Skull.png" style="width:32px;height:32px;image-rendering:pixelated" /><div><div class="card__title" style="margin:0;color:var(--error)">Dark Blessing <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 어둠의 축복</span></div></div></div><div class="card__desc" style="margin-bottom:0.5rem">안트락스에게 영혼을 바침. 어둠 마법 특화.</div><div style="font-size:0.75rem;line-height:1.8;color:var(--on-surface-variant)"><span style="color:var(--error)">▸ 추가 마나 + 주문 시전 속도 2배</span><br/><span style="color:var(--on-surface-dim)">Anthraxi Dark Mage Origin 전용</span></div></div>
+    <div class="card" style="border:1px solid rgba(255,231,146,0.15)"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Nether_Star.png" style="width:32px;height:32px;image-rendering:pixelated" /><div><div class="card__title" style="margin:0;color:var(--primary)">Lumera's Might <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 루메라의 힘</span></div></div></div><div class="card__desc" style="margin-bottom:0.5rem">루메라 여신의 신성한 힘. Justicar 전용.</div><div style="font-size:0.75rem;line-height:1.8;color:var(--on-surface-variant)"><span style="color:var(--primary)">▸ 신성 주문력 350%↑</span><br/><span style="color:var(--on-surface-dim)">Lumerian Justicar Origin 전용</span></div></div>
+  </div>
+  <!-- Additional Blessings -->
+  <div style="margin-top:1.5rem"><div class="section__label">추가 축복</div>
+  <div class="grid-2" style="margin-bottom:1.5rem">
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Packed_Ice.png" style="width:32px;height:32px;image-rendering:pixelated" /><div><div class="card__title" style="margin:0">Boreas' Blessing <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 보레아스의 축복</span></div></div></div><div class="card__desc" style="margin-bottom:0.5rem">북풍의 신 보레아스의 빙결 축복. 냉기 피해 특화.</div><div style="font-size:0.75rem;line-height:1.8;color:var(--on-surface-variant)"><span style="color:var(--primary)">▸ 빙결의 소축복 (Minor Boon of Ice):</span> 냉기 피해 +3<br/><span style="color:var(--secondary)">▸ 빙풍의 대축복 (Greater Boon of Icy Wind):</span> [드래곤 처치] 냉기 피해 +10</div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Sunflower.png" style="width:32px;height:32px;image-rendering:pixelated" /><div><div class="card__title" style="margin:0">Ra's Blessing <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 라의 축복</span></div></div></div><div class="card__desc" style="margin-bottom:0.5rem">태양신 라의 축복. 태양/빛 관련 효과.</div><div style="font-size:0.75rem;line-height:1.8;color:var(--on-surface-variant)"><span style="color:var(--primary)">▸ 태양의 가호 관련 효과</span><br/><span style="color:var(--secondary)">▸ [드래곤 처치] 강화된 태양 축복</span></div></div>
+  </div></div>
+
+  <!-- V7/V8 NEW BLESSINGS -->
+  <div style="margin-top:1.5rem"><div class="section__label" style="color:var(--success)">V7/V8 신규 축복 (버프 포함)</div>
+  <div class="grid-2">
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Feather.png" style="width:32px;height:32px;image-rendering:pixelated" /><div><div class="card__title" style="margin:0">Zephyrus' Blessing <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 제피로스의 축복</span></div></div><span class="chip--sm" style="background:rgba(107,219,138,0.12);color:var(--success)">NEW</span></div><div class="card__desc" style="margin-bottom:0.5rem">바람의 신 제피로스의 축복. 공중 기동 특화.</div><div style="font-size:0.75rem;line-height:1.8;color:var(--on-surface-variant)"><span style="color:var(--primary)">▸ 극한 공중 기동력 + 낙하 피해 무효</span><br/><span style="color:var(--secondary)">▸ [드래곤 처치] 날개 비행 부여</span></div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Golden_Apple.png" style="width:32px;height:32px;image-rendering:pixelated" /><div><div class="card__title" style="margin:0">Vishnu's Blessing <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 비슈누의 축복</span></div></div><span class="chip--sm" style="background:rgba(107,219,138,0.12);color:var(--success)">V8 NEW</span></div><div class="card__desc" style="margin-bottom:0.5rem">수호의 신 비슈누의 축복. 피해 경감 + 치유.</div><div style="font-size:0.75rem;line-height:1.8;color:var(--on-surface-variant)"><span style="color:var(--primary)">▸ 피해 경감 (Damage Mitigation)</span><br/><span style="color:var(--primary)">▸ 받은 피해 기반 치유</span></div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Experience_Bottle.png" style="width:32px;height:32px;image-rendering:pixelated" /><div><div class="card__title" style="margin:0">Chiron's Blessing <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 케이론의 축복</span></div></div><span class="chip--sm" style="background:rgba(107,219,138,0.12);color:var(--success)">V8 NEW</span></div><div class="card__desc" style="margin-bottom:0.5rem">현자 케이론의 축복. 경험치 + 치유 특화.</div><div style="font-size:0.75rem;line-height:1.8;color:var(--on-surface-variant)"><span style="color:var(--primary)">▸ 경험치 대폭 보너스</span><br/><span style="color:var(--primary)">▸ 치유 능력 강화</span></div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Iron_Sword.png" style="width:32px;height:32px;image-rendering:pixelated" /><div><div class="card__title" style="margin:0">Arthur Pendragon's Blessing <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 아서 펜드래곤의 축복</span></div></div><span class="chip--sm" style="background:rgba(107,219,138,0.12);color:var(--success)">V8 NEW</span></div><div class="card__desc" style="margin-bottom:0.5rem">전설의 왕 아서의 축복. 언데드 학살 + 전투력.</div><div style="font-size:0.75rem;line-height:1.8;color:var(--on-surface-variant)"><span style="color:var(--primary)">▸ 언데드 대상 피해 대폭↑</span><br/><span style="color:var(--primary)">▸ 전체 치명타/공격력 증가</span></div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Brewing_Stand.png" style="width:32px;height:32px;image-rendering:pixelated" /><div><div class="card__title" style="margin:0">Baba Yaga's Blessing <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 바바 야가의 축복</span></div></div><span class="chip--sm" style="background:rgba(107,219,138,0.12);color:var(--success)">V8 NEW</span></div><div class="card__desc" style="margin-bottom:0.5rem">마녀 바바 야가의 축복. 디버프 + 피해 감소.</div><div style="font-size:0.75rem;line-height:1.8;color:var(--on-surface-variant)"><span style="color:var(--primary)">▸ 적에게 디버프 부여</span><br/><span style="color:var(--primary)">▸ 디버프 걸린 적에게 받는 피해↓</span></div></div>
+  </div></div>
+  </section></div>
+
+  <!-- ===== CLASSES ===== -->
+  <div id="tab-content-classes" style="display:none">
+  <section class="section"><div class="section__label" style="color:var(--info)">직업 (Classes) — Blessing 선택 후 결정. 전투형 + 생활형 13종.</div>
+  <div style="background:var(--surface-container-low);border-radius:var(--radius-md);padding:1rem;margin-bottom:1.5rem;font-size:0.75rem;color:var(--on-surface-dim)">
+    <strong style="color:var(--info)">참고:</strong> 일부 커스텀 Origin(Anthraxi Dark Mage, Lumerian Justicar, Frijani Drengr 등)은 자체 전투 역할이 내장되어 별도 Class 선택이 불필요합니다.
+  </div>
+
+  <!-- COMBAT CLASSES -->
+  <div style="font-family:var(--font-mono);font-size:0.5625rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--error);margin-bottom:0.75rem">⚔ 전투형 직업</div>
+  <div class="grid-2" style="margin-bottom:2rem">
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Iron_Sword.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Warrior <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 전사</span></div></div></div><div class="card__desc" style="margin-bottom:0.5rem">근접 전투 마스터. 무기와 갑옷에 정통한 전투 전문가.</div><div style="font-size:0.75rem;line-height:1.6;color:var(--on-surface-variant)"><span style="color:var(--success)">▸ 근접 전투 전문:</span> 높은 기본 체력과 공격력<br/><span style="color:var(--success)">▸ 갑옷 숙련:</span> 방어구 효율 증가<br/><span style="color:var(--info)">초보자 추천 · 안정적 밸런스</span></div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Bow.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Archer <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 궁수</span></div></div></div><div class="card__desc" style="margin-bottom:0.5rem">활 전문가. 다른 직업보다 활로 훨씬 높은 피해.</div><div style="font-size:0.75rem;line-height:1.6;color:var(--on-surface-variant)"><span style="color:var(--success)">▸ 명사수:</span> 활 피해 대폭 증가<br/><span style="color:var(--info)">Crit Build(활)와 최강 시너지</span></div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Iron_Nugget.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Rogue <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 도적</span></div></div></div><div class="card__desc" style="margin-bottom:0.5rem">은신과 기습 전문. 민첩성과 속임수로 전투.</div><div style="font-size:0.75rem;line-height:1.6;color:var(--on-surface-variant)"><span style="color:var(--success)">▸ 은밀 (Sneaky):</span> 벽 너머 이름표 숨김<br/><span style="color:var(--success)">▸ 그림자 속에서 (In the Shadows):</span> 10초 웅크리기 후 은신 돌입<br/><span style="color:var(--success)">▸ 은신 (Stealth):</span> 소음 감소 + 뒤에서 공격 시 피해↑</div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Enchanted_Book.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Cleric <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 성직자</span></div></div></div><div class="card__desc" style="margin-bottom:0.5rem">세상의 마법을 다루는 법을 익힌 자. 포션과 인챈트 강화.</div><div style="font-size:0.75rem;line-height:1.6;color:var(--on-surface-variant)"><span style="color:var(--success)">▸ 포션 정제:</span> 가마솥 물로 포션 정제 가능 — 즉발 효과↑ + 지속시간↑<br/><span style="color:var(--success)">▸ 인챈트 강화:</span> 인챈트 테이블에서 더 높은 인챈트 레벨 달성<br/><span style="color:var(--info)">포션 빌드 · 파티 서포터 최적</span></div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Bone.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Beastmaster <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 야수 조련사</span></div></div></div><div class="card__desc" style="margin-bottom:0.5rem">동물과의 유대. 길들인 동물 강화.</div><div style="font-size:0.75rem;line-height:1.6;color:var(--on-surface-variant)"><span style="color:var(--success)">▸ 쌍둥이 탄생 (Twin Births):</span> 번식 시 확률적 2마리 생산<br/><span style="color:var(--success)">▸ 길든 동물 영구 버프:</span> 체력 + 공격력 강화<br/><span style="color:var(--success)">▸ 포션 공유:</span> 근처 길든 동물도 포션 효과 적용</div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Compass.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Explorer <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 탐험가</span></div></div></div><div class="card__desc" style="margin-bottom:0.5rem">험난한 지형도 쉽게 통과. 숨겨진 랜드마크를 발견.</div><div style="font-size:0.75rem;line-height:1.6;color:var(--on-surface-variant)"><span style="color:var(--success)">▸ 시작 장비:</span> 나침반 + 시계 + 빈 지도 9장 지급<br/><span style="color:var(--success)">▸ 지형 탐색:</span> 이동/탐험 능력 강화<br/><span style="color:var(--info)">초반 탐색 · 던전 찾기 최적</span></div></div>
+  </div>
+
+  <!-- LIFE CLASSES -->
+  <div style="font-family:var(--font-mono);font-size:0.5625rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--success);margin-bottom:0.75rem">🌾 생활형 직업</div>
+  <div class="grid-2" style="margin-bottom:2rem">
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Wheat.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Farmer <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 농부</span></div></div></div><div class="card__desc" style="margin-bottom:0.5rem">식량 생산 전문.</div><div style="font-size:0.75rem;line-height:1.6;color:var(--on-surface-variant)"><span style="color:var(--success)">▸ 풍작 (Bountiful Harvest):</span> 수확 시 확률적 2배 수확<br/><span style="color:var(--success)">▸ 비료 기술 (Fertilizing Techniques):</span> 뼛가루 효과 2배</div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Leather.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Rancher <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 목축업자</span></div></div></div><div class="card__desc" style="margin-bottom:0.5rem">동물 자원 수집 특화.</div><div style="font-size:0.75rem;line-height:1.6;color:var(--on-surface-variant)"><span style="color:var(--success)">▸ 쌍둥이 (Twin Births):</span> 번식 시 확률 2마리<br/><span style="color:var(--success)">▸ 수집 (Scavenging):</span> 동물 처치 시 추가 자원 확률</div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Diamond_Pickaxe.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Miner <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 광부</span></div></div></div><div class="card__desc" style="margin-bottom:0.5rem">채굴 전문가.</div><div style="font-size:0.75rem;line-height:1.6;color:var(--on-surface-variant)"><span style="color:var(--success)">▸ 채굴 전문 (Mining Expert):</span> 석재 채굴 속도↑<br/><span style="color:var(--success)">▸ 숙련 굴착 (Experienced Excavator):</span> 블록 파괴 시 피로 없음</div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Iron_Axe.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Lumberjack <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 벌목꾼</span></div></div></div><div class="card__desc" style="margin-bottom:0.5rem">벌목 특화.</div><div style="font-size:0.75rem;line-height:1.6;color:var(--on-surface-variant)"><span style="color:var(--success)">▸ 목재! (Timber):</span> 나무 한 번에 전체 벌목 (웅크리기 시 해제)</div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Cooked_Beef.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Cook <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 요리사</span></div></div></div><div class="card__desc" style="margin-bottom:0.5rem">요리 전문가. 훈연기 경험치 보너스.</div><div style="font-size:0.75rem;line-height:1.6;color:var(--on-surface-variant)"><span style="color:var(--success)">▸ 요리 숙련:</span> 훈연기(Smoker) 사용 시 추가 경험치<br/><span style="color:var(--info)">Food Diversity 달성에 유리</span></div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Anvil.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Blacksmith <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 대장장이</span></div></div></div><div class="card__desc" style="margin-bottom:0.5rem">더 좋은 장비를 만드는 전문가.</div><div style="font-size:0.75rem;line-height:1.6;color:var(--on-surface-variant)"><span style="color:var(--success)">▸ 고품질 장비 (High-Quality Equipment):</span> 제작 아이템에 소량 버프 부여<br/><span style="color:var(--success)">▸ 효율적 수리 (Efficient Repairs):</span> 모루 수리 시 재료 절약<br/><span style="color:var(--success)">▸ 합성 수리 강화:</span> 장비 합성 시 내구도 추가 회복<br/><span style="color:var(--info)">장비 유지비 절약 · 초중반 경제적</span></div></div>
+  </div>
+
+  <!-- NITWIT -->
+  <div style="font-family:var(--font-mono);font-size:0.5625rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--on-surface-faint);margin-bottom:0.75rem">🤷 기타</div>
+  <div class="grid-2">
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Barrier.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Nitwit <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 멍청이</span></div></div><span class="chip--sm" style="background:rgba(255,255,255,0.05);color:var(--on-surface-faint)">특성 없음</span></div><div class="card__desc">아무 특기도 없음. 하드코어 도전용.</div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Ender_Eye.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div class="card__title" style="margin:0">Random <span style="font-size:0.75rem;color:var(--on-surface-dim);font-weight:400">— 랜덤</span></div></div><span class="chip--sm" style="background:rgba(253,139,0,0.12);color:var(--secondary)">무작위</span></div><div class="card__desc">위 직업 중 무작위 배정. 모험심 있는 플레이어용.</div></div>
+  </div>
+  </section></div>
+
+</div></div>
+
+<!-- ==================== BOSSES ==================== -->
+<div class="page" id="page-bosses"><div class="sub-page">
+  <header class="page-header"><p class="page-header__eyebrow" style="color:var(--error)">CHAPTER 02 — BOSSES</p><h1 class="page-header__title" style="background:linear-gradient(135deg,var(--error),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">보스 대백과</h1><p class="page-header__desc">3티어 + 게이트키퍼 + 인퍼널 변형</p></header>
+  <section class="section"><div class="section__label">보스 티어 시스템</div><div class="grid-3">
+    <div class="card" style="text-align:center"><div style="font-family:var(--font-display);font-size:2.5rem;color:var(--success)">I</div><div class="card__label" style="color:var(--success)">TIER 1</div><div class="card__desc">입문 보스. Seven Deadly Sins 후 도전. 기본 인챈트로 충분.</div></div>
+    <div class="card" style="text-align:center"><div style="font-family:var(--font-display);font-size:2.5rem;color:var(--secondary)">II</div><div class="card__label" style="color:var(--secondary)">TIER 2</div><div class="card__desc">풀 인챈트/리포지/젬 필수. TF & Aether 보스 포함.</div></div>
+    <div class="card" style="text-align:center"><div style="font-family:var(--font-display);font-size:2.5rem;color:var(--error)">III</div><div class="card__label" style="color:var(--error)">TIER 3</div><div class="card__desc">엔드게임 장비 필수. 게이트키퍼 = 최고 난이도.</div></div>
+  </div></section>
+  <section class="section"><div class="section__label">주요 보스</div><div class="grid-2">
+    <div class="card--sm card" style="display:flex;align-items:center;gap:12px"><img src="https://minecraft.wiki/images/Invicon_Skeleton_Skull.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div style="font-size:0.875rem;font-weight:600">Seven Deadly Sins</div><div style="font-size:0.6875rem;color:var(--on-surface-dim)">T1 테스트 · 7체 연속</div></div><span class="chip--sm" style="background:rgba(107,219,138,0.12);color:var(--success)">T1</span></div>
+    <div class="card--sm card" style="display:flex;align-items:center;gap:12px"><img src="https://minecraft.wiki/images/Invicon_Dragon_Egg.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div style="font-size:0.875rem;font-weight:600">엔더 드래곤 (인퍼널)</div><div style="font-size:0.6875rem;color:var(--on-surface-dim)">Lv100+ · 강화체력</div></div><span class="chip--sm" style="background:rgba(255,107,107,0.12);color:var(--error)">T3</span></div>
+    <div class="card--sm card" style="display:flex;align-items:center;gap:12px"><img src="https://minecraft.wiki/images/Invicon_Iron_Bars.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div style="font-size:0.875rem;font-weight:600">게이트키퍼</div><div style="font-size:0.6875rem;color:var(--on-surface-dim)">티어 관문 · 최고난도</div></div><span class="chip--sm" style="background:rgba(255,231,146,0.1);color:var(--primary)">GATE</span></div>
+    <div class="card--sm card" style="display:flex;align-items:center;gap:12px"><img src="https://minecraft.wiki/images/Invicon_Wither_Skeleton_Skull.png" style="width:32px;height:32px;image-rendering:pixelated" /><div style="flex:1"><div style="font-size:0.875rem;font-weight:600">위더</div><div style="font-size:0.6875rem;color:var(--on-surface-dim)">End 진입 조건</div></div><span class="chip--sm" style="background:rgba(255,107,107,0.12);color:var(--error)">T3</span></div>
+  </div></section>
+  <section class="section"><div class="card" style="text-align:center;border:1px solid rgba(255,231,146,0.1)"><div style="font-size:2rem">⚔</div><div style="font-family:var(--font-display);font-size:1.25rem;color:var(--primary);margin:0.5rem 0">CISCO — 최종 보스</div><div class="card__desc" style="max-width:400px;margin:0 auto">모드팩 최종 보스. Champion Coin 드랍. 엔드게임 핵심.</div><div style="display:flex;justify-content:center;gap:0.5rem;margin-top:0.75rem"><span class="chip" style="color:var(--primary-dim)">Champion Coins</span><span class="chip" style="color:var(--primary-dim)">Endgame Loot</span></div></div></section>
+</div></div>
+
+<!-- ==================== UPGRADE ==================== -->
+<div class="page" id="page-upgrade"><div class="sub-page">
+  <header class="page-header"><p class="page-header__eyebrow" style="color:var(--info)">CHAPTER 03 — UPGRADE</p><h1 class="page-header__title" style="background:linear-gradient(135deg,var(--info),var(--primary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">강화 시스템</h1><p class="page-header__desc">인챈팅 · 리포징 · 젬 소켓팅</p></header>
+  <section class="section"><div class="section__label">Apotheosis 3대 축</div><div class="grid-3">
+    <div class="card"><div style="font-size:1.5rem">📖</div><div class="card__label" style="color:var(--info)">ENCHANTING</div><div class="card__title">인챈팅</div><div class="card__desc">바닐라 오버홀. 수백 개 추가 인챈트. Fortune IX, Boon of the Earth VI.</div></div>
+    <div class="card"><div style="font-size:1.5rem">⚖</div><div class="card__label" style="color:var(--secondary)">REFORGING</div><div class="card__title">리포징</div><div class="card__desc">스탯+효과+소켓 부여. 5단계: Common→Mythic.</div><div class="card__items"><span class="chip" style="color:#aaa">Common</span><span class="chip" style="color:var(--success)">Uncommon</span><span class="chip" style="color:var(--info)">Rare</span><span class="chip" style="color:#b88aff">Epic</span><span class="chip" style="color:var(--secondary)">Mythic</span></div></div>
+    <div class="card"><div style="font-size:1.5rem">💎</div><div class="card__label" style="color:var(--primary)">GEMS</div><div class="card__title">젬 소켓팅</div><div class="card__desc">6단계: Cracked→Perfect. 빌드별 최적 젬 조합.</div></div>
+  </div></section>
+  <section class="section"><div class="section__label">최대 소켓 순서</div><div class="grid-3">
+    <div class="card--sm card" style="text-align:center"><div style="font-family:var(--font-mono);font-size:1.5rem;color:var(--primary-dim)">01</div><div style="font-size:0.8125rem;font-weight:600;color:var(--on-surface)">Superior Sigil 먼저</div><div style="font-size:0.6875rem;color:var(--on-surface-dim)">최대 4 소켓 추가</div></div>
+    <div class="card--sm card" style="text-align:center"><div style="font-family:var(--font-mono);font-size:1.5rem;color:var(--primary-dim)">02</div><div style="font-size:0.8125rem;font-weight:600;color:var(--on-surface)">리포징</div><div style="font-size:0.6875rem;color:var(--on-surface-dim)">Mythic → 3 소켓</div></div>
+    <div class="card--sm card" style="text-align:center"><div style="font-family:var(--font-mono);font-size:1.5rem;color:var(--primary-dim)">03</div><div style="font-size:0.8125rem;font-weight:600;color:var(--on-surface)">스킬트리</div><div style="font-size:0.6875rem;color:var(--on-surface-dim)">Jeweler +1 소켓</div></div>
+  </div></section>
+  <section class="section"><div class="section__label">핵심 젬</div><div class="grid-2">
+    <div class="card--sm card" style="display:flex;align-items:center;gap:12px"><img src="https://minecraft.wiki/images/Invicon_Redstone.png" style="width:28px;height:28px;image-rendering:pixelated" /><div><div style="font-size:0.875rem;font-weight:600">Warlord</div><div style="font-size:0.6875rem;color:var(--on-surface-dim)">크리 데미지 +40% (Perfect)</div></div></div>
+    <div class="card--sm card" style="display:flex;align-items:center;gap:12px"><img src="https://minecraft.wiki/images/Invicon_Emerald.png" style="width:28px;height:28px;image-rendering:pixelated" /><div><div style="font-size:0.875rem;font-weight:600">Samurai</div><div style="font-size:0.6875rem;color:var(--on-surface-dim)">크리 확률 +40% (Perfect)</div></div></div>
+    <div class="card--sm card" style="display:flex;align-items:center;gap:12px"><img src="https://minecraft.wiki/images/Invicon_Lapis_Lazuli.png" style="width:28px;height:28px;image-rendering:pixelated" /><div><div style="font-size:0.875rem;font-weight:600">Spell Level</div><div style="font-size:0.6875rem;color:var(--on-surface-dim)">주문 레벨 +1 (Mage용)</div></div></div>
+    <div class="card--sm card" style="display:flex;align-items:center;gap:12px"><img src="https://minecraft.wiki/images/Invicon_Shield.png" style="width:28px;height:28px;image-rendering:pixelated" /><div><div style="font-size:0.875rem;font-weight:600">Earth / Ballast</div><div style="font-size:0.6875rem;color:var(--on-surface-dim)">방어/체력 특화</div></div></div>
+  </div></section>
+  <section class="section"><div class="section__label">방어 공식</div><div class="formula">피해감소 = A / (A + X)<br/><span style="font-size:0.75rem;color:var(--on-surface-dim)">A = 피해/2 (min 10) · X = 아머 수치 · Protection 1pt = 2.5% 감소(max 85%)</span></div></section>
+</div></div>
+
+<!-- ==================== PROGRESSION ==================== -->
+<div class="page" id="page-progression"><div class="sub-page">
+  <header class="page-header"><p class="page-header__eyebrow" style="color:var(--success)">CHAPTER 04 — PROGRESSION</p><h1 class="page-header__title" style="background:linear-gradient(135deg,var(--success),var(--primary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">진행 공략</h1><p class="page-header__desc">스폰 → Finis Dierum</p></header>
+  <section class="section"><div class="section__label">4대 퀘스트라인</div><div class="grid-2">
+    <div class="card--sm card"><div class="card__label" style="color:var(--success)">MAIN</div><div style="font-weight:700">Champions Trials</div><div class="card__desc">초~중반 메인. ASAP 보상 수령.</div></div>
+    <div class="card--sm card"><div class="card__label" style="color:var(--error)">BOSS</div><div style="font-weight:700">Deus Interfectorum</div><div class="card__desc">보스전 중심. 3티어 도전.</div></div>
+    <div class="card--sm card"><div class="card__label" style="color:var(--info)">STORY</div><div style="font-weight:700">Cisco's Fate</div><div class="card__desc">로어/스토리 퀘스트.</div></div>
+    <div class="card--sm card"><div class="card__label" style="color:var(--primary)">ENDGAME</div><div style="font-weight:700">Finis Dierum</div><div class="card__desc">뉴게임+. 최종 도전.</div></div>
+  </div></section>
+  <section class="section"><div class="section__label">진행 타임라인</div><div class="timeline" style="max-width:700px">
+    <div class="tl-step"><div class="tl-step__dot" style="color:var(--success);border-color:var(--success)">01</div><div class="tl-step__card"><div class="tl-step__phase" style="color:var(--success)">EARLY</div><div class="tl-step__title">캐릭터 생성 & 초반 생존</div><div class="tl-step__desc">Origin+Blessing+Class 선택. 스폰 근처 활동 — 멀리 갈수록 몹 레벨↑</div><div class="tl-step__tip"><strong>TIP:</strong> 스폰 200블록 이내. 거리 = 몹 레벨.</div></div></div>
+    <div class="tl-step"><div class="tl-step__dot" style="color:var(--success)">02</div><div class="tl-step__card"><div class="tl-step__phase" style="color:var(--success)">EARLY</div><div class="tl-step__title">Champions Trials 시작</div><div class="tl-step__desc">퀘스트북 → 초반 보상 ASAP. Apotheosis 재료 수집.</div></div></div>
+    <div class="tl-step"><div class="tl-step__dot" style="color:var(--info)">03</div><div class="tl-step__card"><div class="tl-step__phase" style="color:var(--info)">MID</div><div class="tl-step__title">Apotheosis 강화 구축</div><div class="tl-step__desc">인챈트 테이블 + 책장, Reforging Table. 젬 수집. End Eyes 병행(15종 중 12개).</div></div></div>
+    <div class="tl-step"><div class="tl-step__dot" style="color:var(--secondary)">04</div><div class="tl-step__card"><div class="tl-step__phase" style="color:var(--secondary)">MID</div><div class="tl-step__title">7 Deadly Sins → T1 보스</div><div class="tl-step__desc">Deus Interfectorum 진입. Twilight/Aether 탐험.</div><div class="tl-step__tip"><strong>TIP:</strong> Silverfish 파밍으로 젬 효율 수집.</div></div></div>
+    <div class="tl-step"><div class="tl-step__dot" style="color:var(--secondary)">05</div><div class="tl-step__card"><div class="tl-step__phase" style="color:var(--secondary)">LATE</div><div class="tl-step__title">풀 강화 → T2 보스</div><div class="tl-step__desc">인챈트+리포지+젬+스킬트리 풀업. 퍼펙트 젬 획득.</div></div></div>
+    <div class="tl-step"><div class="tl-step__dot" style="color:var(--error)">06</div><div class="tl-step__card"><div class="tl-step__phase" style="color:var(--error)">LATE</div><div class="tl-step__title">위더 → 엔더 드래곤</div><div class="tl-step__desc">End Remastered 포탈 → 인퍼널 드래곤(Lv100+). Divine Blessing 강화.</div></div></div>
+    <div class="tl-step"><div class="tl-step__dot" style="color:var(--primary)">07</div><div class="tl-step__card"><div class="tl-step__phase" style="color:var(--primary)">ENDGAME</div><div class="tl-step__title">T3 + Cisco's Fate + Finis Dierum</div><div class="tl-step__desc">최상위 보스 & 게이트키퍼. Cisco 최종보스. 뉴게임+.</div></div></div>
+  </div></section>
+</div></div>
+
+<!-- ==================== CRAFTING ==================== -->
+<div class="page" id="page-crafting"><div class="sub-page">
+  <header class="page-header"><p class="page-header__eyebrow" style="color:var(--secondary)">CHAPTER 05 — CRAFTING</p><h1 class="page-header__title" style="background:linear-gradient(135deg,var(--secondary),var(--primary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">조합법 & 제작</h1><p class="page-header__desc">Tinkers · 포션 · 요리 · Sigil · Create · Ars Nouveau</p></header>
+  <section class="section"><div class="section__label">제작 시스템</div><div class="grid-3">
+    <div class="card"><div style="display:flex;align-items:center;gap:8px;margin-bottom:0.5rem"><img src="https://minecraft.wiki/images/Invicon_Anvil.png" style="width:24px;height:24px;image-rendering:pixelated" /><div class="card__label" style="color:var(--secondary)">TINKERS'</div></div><div class="card__title">틴커스 제작</div><div class="card__desc">Smeltery · 합금 · 커스텀 도구. Manyullyn, Cobalt, Bronze.</div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:8px;margin-bottom:0.5rem"><img src="https://minecraft.wiki/images/Invicon_Redstone.png" style="width:24px;height:24px;image-rendering:pixelated" /><div class="card__label" style="color:var(--info)">CREATE</div></div><div class="card__title">Create 자동화</div><div class="card__desc">기계+운송 시스템. 자동 파밍. 중후반 효율 극대화.</div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:8px;margin-bottom:0.5rem"><img src="https://minecraft.wiki/images/Invicon_Enchanted_Book.png" style="width:24px;height:24px;image-rendering:pixelated" /><div class="card__label" style="color:#b88aff">ARS NOUVEAU</div></div><div class="card__title">마법 제작</div><div class="card__desc">글리프 조합 커스텀 스펠. 자동화·이동기·파밍.</div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:8px;margin-bottom:0.5rem"><img src="https://minecraft.wiki/images/Invicon_Enchanting_Table.png" style="width:24px;height:24px;image-rendering:pixelated" /><div class="card__label">APOTHEOSIS</div></div><div class="card__title">강화 테이블</div><div class="card__desc">인챈트 테이블+책장, Chronicle of Shadows, Salvaging/Reforging Table.</div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:8px;margin-bottom:0.5rem"><img src="https://minecraft.wiki/images/Invicon_Nether_Star.png" style="width:24px;height:24px;image-rendering:pixelated" /><div class="card__label">SIGILS</div></div><div class="card__title">Sigil 제작</div><div class="card__desc">Socketing(+1, 3회) · Superior(+1, 4회). 젬 빌드 핵심.</div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:8px;margin-bottom:0.5rem"><img src="https://minecraft.wiki/images/Invicon_Cooked_Beef.png" style="width:24px;height:24px;image-rendering:pixelated" /><div class="card__label" style="color:var(--success)">COOKING</div></div><div class="card__title">요리 (Farmer's Delight)</div><div class="card__desc">Cooking Pot · Food Diversity 100 = 풀 버프.</div></div>
+  </div></section>
+  <section class="section"><div class="section__label">포션 제작 플로우</div><div class="flow">
+    <div class="flow__step"><div class="flow__step-name">포션 2개</div><div class="flow__step-desc">크래프팅</div></div><span class="flow__arrow">→</span>
+    <div class="flow__step"><div class="flow__step-name">혼합</div><div class="flow__step-desc">Mixture 노드</div></div><span class="flow__arrow">→</span>
+    <div class="flow__step"><div class="flow__step-name">증류</div><div class="flow__step-desc">양조대+Glowstone</div></div><span class="flow__arrow">→</span>
+    <div class="flow__step"><div class="flow__step-name">정제</div><div class="flow__step-desc">가마솥</div></div><span class="flow__arrow">→</span>
+    <div class="flow__step" style="border:1px solid rgba(253,139,0,0.3)"><div class="flow__step-name" style="color:var(--secondary)">Super Potion</div><div class="flow__step-desc">무기독/음용</div></div>
+  </div></section>
+  <section class="section"><div class="section__label">음식 버프</div><div class="grid-2">
+    <div class="card--sm card"><div class="card__title" style="color:var(--success)">Nourishment</div><div class="card__desc">행동으로 인한 허기/포만감 소모 방지. 허기 바 연장 효과.</div></div>
+    <div class="card--sm card"><div class="card__title" style="color:var(--info)">Comfort</div><div class="card__desc">한기(Slowness), 질병(Hunger, Weakness) 면역.</div></div>
+  </div></section>
+</div></div>
+
+<!-- ==================== EXPLORE ==================== -->
+<div class="page" id="page-explore"><div class="sub-page">
+  <header class="page-header"><p class="page-header__eyebrow" style="color:var(--success)">CHAPTER 06 — EXPLORE</p><h1 class="page-header__title" style="background:linear-gradient(135deg,var(--success),var(--info));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">차원 & 던전 탐험</h1><p class="page-header__desc">Twilight Forest · Aether · The End · 200+ 구조물</p></header>
+  <section class="section"><div class="section__label">차원</div><div class="grid-2">
+    <div class="card"><div style="font-size:1.5rem;margin-bottom:0.5rem">🌳</div><div class="card__label" style="color:var(--success)">TWILIGHT FOREST</div><div class="card__title">황혼의 숲</div><div class="card__desc">순차 보스전. 퍼펙트 젬 보상. 퀘스트북 연동.</div></div>
+    <div class="card"><div style="font-size:1.5rem;margin-bottom:0.5rem">☁</div><div class="card__label" style="color:var(--info)">AETHER</div><div class="card__title">에테르</div><div class="card__desc">Bronze/Silver/Gold 던전. 전용 Curios. Drygmy 파밍 → Mythic.</div></div>
+  </div></section>
+  <section class="section"><div class="card" style="border:1px solid rgba(255,231,146,0.1)"><div style="font-size:1.5rem;margin-bottom:0.5rem">🟣</div><div class="card__label" style="color:var(--primary)">THE END — END REMASTERED</div><div class="card__title">디 엔드</div><div class="card__desc">15종 특수 눈 중 12개로 포탈 활성화. 인퍼널 드래곤 Lv100+. 처치 시 Divine Blessing 강화.</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:1rem">
+    <span class="chip" style="font-size:0.6rem">Nether Eye</span><span class="chip" style="font-size:0.6rem">Old Eye</span><span class="chip" style="font-size:0.6rem">Rogue Eye</span><span class="chip" style="font-size:0.6rem">Cold Eye</span><span class="chip" style="font-size:0.6rem">Lost Eye</span><span class="chip" style="font-size:0.6rem">Wither Eye</span><span class="chip" style="font-size:0.6rem">Black Eye</span><span class="chip" style="font-size:0.6rem">Cursed Eye</span><span class="chip" style="font-size:0.6rem">Evil Eye</span><span class="chip" style="font-size:0.6rem">Guardian Eye</span><span class="chip" style="font-size:0.6rem">Magical Eye</span><span class="chip" style="font-size:0.6rem">Corrupted Eye</span><span class="chip" style="font-size:0.6rem">Witch Eye</span><span class="chip" style="font-size:0.6rem">Undead Eye</span><span class="chip" style="font-size:0.6rem">Exotic Eye</span>
+  </div></div></section>
+  <section class="section"><div class="section__label">파밍 가이드</div><div class="grid-2">
+    <div class="card--sm card"><div style="display:flex;align-items:center;gap:8px;margin-bottom:0.5rem"><img src="https://minecraft.wiki/images/Invicon_Diamond_Pickaxe.png" style="width:24px;height:24px;image-rendering:pixelated" /><span style="font-weight:600">광석 파밍</span></div><div class="card__desc">Non-Euclidean Cube + Fortune IX + Boon of the Earth VI</div></div>
+    <div class="card--sm card"><div style="display:flex;align-items:center;gap:8px;margin-bottom:0.5rem"><img src="https://minecraft.wiki/images/Invicon_Diamond.png" style="width:24px;height:24px;image-rendering:pixelated" /><span style="font-weight:600">젬 파밍</span></div><div class="card__desc">Silverfish = 젬만 드랍. 시간당 30,000젬 + 3,000 Coins.</div></div>
+    <div class="card--sm card"><div style="display:flex;align-items:center;gap:8px;margin-bottom:0.5rem"><img src="https://minecraft.wiki/images/Invicon_Gold_Ingot.png" style="width:24px;height:24px;image-rendering:pixelated" /><span style="font-weight:600">Champion Coins</span></div><div class="card__desc">Cisco 보스, 퀘스트, Lv750+ 몹, Vengeful Afterimages.</div></div>
+    <div class="card--sm card"><div style="display:flex;align-items:center;gap:8px;margin-bottom:0.5rem"><img src="https://minecraft.wiki/images/Invicon_Glowstone_Dust.png" style="width:24px;height:24px;image-rendering:pixelated" /><span style="font-weight:600">Mythic 장비</span></div><div class="card__desc">Aether Drygmy 파밍 → Mythic 등급 확률.</div></div>
+  </div></section>
+</div></div>
+
+<!-- ==================== WEAPONS ==================== -->
+<div class="page" id="page-weapons"><div class="sub-page">
+  <header class="page-header"><p class="page-header__eyebrow" style="color:var(--secondary)">DATABASE — WEAPONS</p><h1 class="page-header__title" style="background:linear-gradient(135deg,var(--secondary),var(--error));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">무기 도감</h1></header>
+  <section class="section"><div class="section__label">S-Tier</div><div class="grid-1">
+    <div class="card wpn"><div class="wpn__icon"><img src="https://minecraft.wiki/images/Invicon_Diamond_Sword.png" /></div><div><div class="wpn__header"><span class="wpn__name">Frostfang</span><span class="chip--sm" style="background:rgba(255,231,146,0.12);color:var(--primary)">LEGENDARY</span></div><div class="wpn__source">DROP: Fell King Sylvi</div><div class="card__desc">체력 비례 공격력 부스트 → 최대 1,000,000. 받는 피해 25% 캡(메인핸드).</div><div class="wpn__tip"><strong>TIP:</strong> 헬멧 젬과 조합 시 공격력 폭발.</div></div></div>
+    <div class="card wpn"><div class="wpn__icon"><img src="https://minecraft.wiki/images/Invicon_Amethyst_Shard.png" /></div><div><div class="wpn__header"><span class="wpn__name">Amethyst Rapier</span><span class="chip--sm" style="background:rgba(184,138,255,0.12);color:#b88aff">LEGENDARY</span></div><div class="wpn__source">CRAFT</div><div class="card__desc">Echoing Strike = 게임 최고 피해 배율. 스킬 발동 후 다른 무기로 스왑.</div></div></div>
+    <div class="card wpn"><div class="wpn__icon"><img src="https://minecraft.wiki/images/Invicon_Bow.png" /></div><div><div class="wpn__header"><span class="wpn__name">활 (Crit Build)</span><span class="chip--sm" style="background:rgba(255,231,146,0.12);color:var(--primary)">S-TIER</span></div><div class="wpn__source">CRAFT / DROP</div><div class="card__desc">젬 소켓 최다 + 리포지 크리뎀 최고 + 공속 무제한(클릭속도). Curios 리포지: 크리 940%/900%.</div></div></div>
+  </div></section>
+</div></div>
+
+<!-- ==================== ARMOR ==================== -->
+<div class="page" id="page-armor"><div class="sub-page">
+  <header class="page-header"><p class="page-header__eyebrow" style="color:var(--info)">DATABASE — ARMOR & CURIOS</p><h1 class="page-header__title" style="background:linear-gradient(135deg,var(--info),var(--success));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">방어구 & 큐리오스</h1></header>
+  <section class="section"><div class="section__label">아머 세트</div><div class="grid-1">
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Diamond_Chestplate.png" style="width:32px;height:32px;image-rendering:pixelated" /><div><div class="chip--sm" style="color:var(--primary)">ENDGAME</div><div class="card__title" style="margin:0">Ascendant Azure/Rouge/Violet</div></div></div><div class="card__desc">공격 80%↑ + 피해감소 50% + HP 50%↑시 추가 부스트 + 사망방지(10분 CD). Azure=힐, Rouge=공격, Violet=유틸.</div></div>
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem"><img src="https://minecraft.wiki/images/Invicon_Iron_Chestplate.png" style="width:32px;height:32px;image-rendering:pixelated" /><div><div class="chip--sm" style="color:var(--info)">MID-GAME</div><div class="card__title" style="margin:0">Sylvi's Armor</div></div></div><div class="card__desc">피해 20%↓ + 체력 10%↑ + 체력 7% → 공격력.</div></div>
+  </div></section>
+  <section class="section"><div class="section__label">핵심 큐리오 (41슬롯)</div><div class="grid-2">
+    <div class="card--sm card"><img src="https://minecraft.wiki/images/Invicon_Fire_Charge.png" style="width:24px;height:24px;image-rendering:pixelated;margin-bottom:0.5rem" /><div style="font-weight:600;margin-bottom:0.25rem">Charm of Hellblade</div><div class="card__desc">전체 피해 2배. 방어 0. <span style="color:var(--error)">극한 리스크.</span></div></div>
+    <div class="card--sm card"><img src="https://minecraft.wiki/images/Invicon_Prismarine_Shard.png" style="width:24px;height:24px;image-rendering:pixelated;margin-bottom:0.5rem" /><div style="font-weight:600;margin-bottom:0.25rem">Slicer's Dice</div><div class="card__desc">Luck 기반 2배 피해. Luck 20 = 80% 확률.</div></div>
+    <div class="card--sm card"><img src="https://minecraft.wiki/images/Invicon_Ender_Eye.png" style="width:24px;height:24px;image-rendering:pixelated;margin-bottom:0.5rem" /><div style="font-weight:600;margin-bottom:0.25rem">Eye of the Slider</div><div class="card__desc">Bronze 던전 드랍. 초보 추천. 양 슬롯 장착.</div></div>
+    <div class="card--sm card"><img src="https://minecraft.wiki/images/Invicon_Experience_Bottle.png" style="width:24px;height:24px;image-rendering:pixelated;margin-bottom:0.5rem" /><div style="font-weight:600;margin-bottom:0.25rem">Band of Brilliance</div><div class="card__desc">체력 확보 반지. Crit Mage 필수 1개.</div></div>
+  </div></section>
+  <section class="section"><div style="background:var(--surface-container-low);border-radius:var(--radius-md);padding:1.25rem;font-size:0.8rem;color:var(--on-surface-dim);line-height:1.7"><strong style="color:var(--secondary)">모든 Curio 리포지+젬 가능:</strong> 최대 크리확률 23.5% + 크리뎀 22.5% per slot → 합산 <strong style="color:var(--primary)">크리확률 940% + 크리뎀 900%</strong> (큐리오만)</div></section>
+</div></div>
+
+<script>
+// ========== NAVIGATION ==========
+const PAGES = ['home','builds','bosses','upgrade','progression','crafting','explore','weapons','armor'];
+const PAGE_NAMES = {home:'홈',builds:'빌드',bosses:'보스',upgrade:'강화',progression:'진행',crafting:'조합법',explore:'탐험',weapons:'무기',armor:'방어구'};
+
+// Tab switcher for builds page
+function showTab(tab) {
+  ['origins','blessings','classes'].forEach(t => {
+    const el = document.getElementById('tab-content-' + t);
+    const btn = document.getElementById('tab-' + t);
+    if (el) el.style.display = t === tab ? 'block' : 'none';
+    if (btn) {
+      btn.style.background = t === tab ? 'rgba(255,231,146,0.12)' : '';
+      btn.style.color = t === tab ? 'var(--primary)' : '';
+    }
+  });
+}
+// Init first tab
+setTimeout(() => showTab('origins'), 0);
+
+function go(page) {
+  PAGES.forEach(p => {
+    const el = document.getElementById('page-' + p);
+    if (el) el.classList.toggle('active', p === page);
+  });
+  document.getElementById('nav').classList.toggle('visible', page !== 'home');
+  document.querySelectorAll('.nav__link').forEach(l => l.classList.toggle('nav__link--active', l.dataset.page === page));
+  window.scrollTo(0, 0);
+  history.pushState(null, '', '#' + page);
+}
+
+// Build nav links
+const navLinks = document.getElementById('navLinks');
+PAGES.filter(p => p !== 'home').forEach(p => {
+  const a = document.createElement('div');
+  a.className = 'nav__link';
+  a.dataset.page = p;
+  a.textContent = PAGE_NAMES[p];
+  a.onclick = () => go(p);
+  navLinks.appendChild(a);
+});
+
+// Handle hash navigation
+function handleHash() {
+  const hash = location.hash.replace('#', '') || 'home';
+  if (PAGES.includes(hash)) go(hash);
+}
+window.addEventListener('hashchange', handleHash);
+handleHash();
+
+// ========== SEARCH ==========
+const DB=[
+{t:'크리티컬 빌드',d:'Samurai+Warlord 젬 · 다중 크리티컬 · 활 최강 DPS',k:'crit build 크리 빌드 활 bow',cat:'BUILD',page:'builds',img:'https://minecraft.wiki/images/Invicon_Diamond_Sword.png'},
+{t:'크리 메이지',d:"Iron's Spells 9학파 + 크리 시너지",k:'crit mage 메이지 magic',cat:'BUILD',page:'builds',img:'https://minecraft.wiki/images/Invicon_Blaze_Rod.png'},
+{t:'Sylvi Guardian 탱커',d:'피해 20%↓ · 체력 10%↑',k:'tank sylvi guardian',cat:'BUILD',page:'builds',img:'https://minecraft.wiki/images/Invicon_Diamond_Chestplate.png'},
+{t:'Hellblade Berserker',d:'피해 2배 · 방어 0',k:'hellblade glass cannon',cat:'BUILD',page:'builds',img:'https://minecraft.wiki/images/Invicon_Netherite_Sword.png'},
+{t:'Human — 인간',d:'바닐라 경험 · 특수 능력 없음',k:'human 인간 origin',cat:'ORIGIN',page:'builds',img:'https://minecraft.wiki/images/Invicon_Player_Head_(Steve).png'},
+{t:'Feline — 고양이',d:'낙하 면역 · 높이 점프 · 체력 -3',k:'feline 고양이 origin',cat:'ORIGIN',page:'builds',img:'https://minecraft.wiki/images/Invicon_String.png'},
+{t:'Plantaemancer — 식물 마법사',d:'독 덩굴 · 물 힐 · 불/어둠 약점',k:'plantaemancer 식물 origin',cat:'ORIGIN',page:'builds',img:'https://minecraft.wiki/images/Invicon_Oak_Sapling.png'},
+{t:'Thief — 도적',d:'시작 다이아 3개 · 야간 투시',k:'thief 도적 origin',cat:'ORIGIN',page:'builds',img:'https://minecraft.wiki/images/Invicon_Iron_Nugget.png'},
+{t:'Elytrian — 겉날개족',d:'기본 비행 · 30초 발사',k:'elytrian 겉날개 비행 origin',cat:'ORIGIN',page:'builds',img:'https://minecraft.wiki/images/Invicon_Elytra.png'},
+{t:'Enderian — 엔더인',d:'무피해 텔레포트 · 물 약점',k:'enderian 엔더 텔레포트 origin',cat:'ORIGIN',page:'builds',img:'https://minecraft.wiki/images/Invicon_Ender_Pearl.png'},
+{t:'Blazeborn — 블레이즈 혈통',d:'화염 면역 · 네더 안전 · 물 약점',k:'blazeborn 블레이즈 화염 origin',cat:'ORIGIN',page:'builds',img:'https://minecraft.wiki/images/Invicon_Blaze_Powder.png'},
+{t:'Phantom — 팬텀',d:'유령 모드 전환 · 블록 통과',k:'phantom 팬텀 유령 origin',cat:'ORIGIN',page:'builds',img:'https://minecraft.wiki/images/Invicon_Phantom_Membrane.png'},
+{t:'Merling — 인어',d:'수중 호흡/채굴/시야',k:'merling 인어 수중 origin',cat:'ORIGIN',page:'builds',img:'https://minecraft.wiki/images/Invicon_Heart_of_the_Sea.png'},
+{t:'Shulk — 셜커',d:'추가 인벤 9칸 · 껍질 보호',k:'shulk 셜커 인벤토리 origin',cat:'ORIGIN',page:'builds',img:'https://minecraft.wiki/images/Invicon_Shulker_Shell.png'},
+{t:'Paladin — 성기사',d:'언데드 퇴치 · 신성 주문',k:'paladin 성기사 origin',cat:'ORIGIN',page:'builds',img:'https://minecraft.wiki/images/Invicon_Iron_Sword.png'},
+{t:'Anthraxi Dark Mage — 암흑 마법사',d:'엔더 주문력 350%↑ · 시전 2배',k:'anthraxi dark mage 암흑 origin 커스텀',cat:'ORIGIN',page:'builds',img:'https://minecraft.wiki/images/Invicon_Wither_Skeleton_Skull.png'},
+{t:'Lumerian Justicar — 심판관',d:'신성 주문력 350%↑ · 이속 -30%',k:'lumerian justicar 심판관 origin 커스텀',cat:'ORIGIN',page:'builds',img:'https://minecraft.wiki/images/Invicon_Nether_Star.png'},
+{t:"Athena's Blessing — 아테나",d:'방어+5 · [드래곤] 피해 8% 감소',k:'athena 아테나 blessing 축복',cat:'BLESSING',page:'builds',img:'https://minecraft.wiki/images/Invicon_Shield.png'},
+{t:"Thor's Blessing — 토르",d:'공격+5 · [드래곤] 피해 8% 증가',k:'thor 토르 blessing 축복',cat:'BLESSING',page:'builds',img:'https://minecraft.wiki/images/Invicon_Diamond_Sword.png'},
+{t:"Amaterasu's Blessing — 아마테라스",d:'체력+5 · [드래곤] 체력+6 재생↑',k:'amaterasu 아마테라스 blessing 축복',cat:'BLESSING',page:'builds',img:'https://minecraft.wiki/images/Invicon_Golden_Apple.png'},
+{t:"Neptune's Blessing — 넵튠",d:'수중 피해 20%↑ · [드래곤] 수중호흡',k:'neptune 넵튠 blessing 축복',cat:'BLESSING',page:'builds',img:'https://minecraft.wiki/images/Invicon_Heart_of_the_Sea.png'},
+{t:"Skadi's Blessing — 스카디",d:'추운 바이옴 7%↑ · [드래곤] 투사체 8%↑',k:'skadi 스카디 blessing 축복',cat:'BLESSING',page:'builds',img:'https://minecraft.wiki/images/Invicon_Packed_Ice.png'},
+{t:"Susanoo's Blessing — 스사노오",d:'이속 5%↑ · [드래곤] 공속 10%↑ 슬로우 면역',k:'susanoo 스사노오 blessing 축복',cat:'BLESSING',page:'builds',img:'https://minecraft.wiki/images/Invicon_Lightning_Rod.png'},
+{t:"Ares' Blessing — 아레스",d:'크리 확률/데미지 증가',k:'ares 아레스 blessing 축복 크리',cat:'BLESSING',page:'builds',img:'https://minecraft.wiki/images/Invicon_Redstone.png'},
+{t:"Loki's Blessing — 로키",d:'독+텔레포트 · [드래곤] 중독 40%↑',k:'loki 로키 blessing 축복',cat:'BLESSING',page:'builds',img:'https://minecraft.wiki/images/Invicon_Ender_Pearl.png'},
+{t:"Hephaestus' Blessing — 헤파이스토스",d:'현재HP 2% 추가 피해',k:'hephaestus 헤파이스토스 blessing 축복',cat:'BLESSING',page:'builds',img:'https://minecraft.wiki/images/Invicon_Anvil.png'},
+{t:'Dark Blessing — 어둠의 축복',d:'마나↑ · 주문속도 2배 · Dark Mage 전용',k:'dark blessing 다크 축복 어둠',cat:'BLESSING',page:'builds',img:'https://minecraft.wiki/images/Invicon_Wither_Skeleton_Skull.png'},
+{t:"Lumera's Might — 루메라의 힘",d:'신성 주문력 350%↑ · Justicar 전용',k:'lumera 루메라 blessing 축복',cat:'BLESSING',page:'builds',img:'https://minecraft.wiki/images/Invicon_Nether_Star.png'},
+{t:"Zephyrus' Blessing — 제피로스",d:'공중 기동 · [드래곤] 비행 부여',k:'zephyrus 제피로스 blessing 축복 비행',cat:'BLESSING',page:'builds',img:'https://minecraft.wiki/images/Invicon_Feather.png'},
+{t:"Vishnu's Blessing — 비슈누",d:'피해 경감 + 치유 · V8 신규',k:'vishnu 비슈누 blessing 축복 탱커',cat:'BLESSING',page:'builds',img:'https://minecraft.wiki/images/Invicon_Golden_Apple.png'},
+{t:"Chiron's Blessing — 케이론",d:'경험치 보너스 + 치유 · V8 신규',k:'chiron 케이론 blessing 축복 경험치',cat:'BLESSING',page:'builds',img:'https://minecraft.wiki/images/Invicon_Experience_Bottle.png'},
+{t:"Arthur Pendragon — 아서 펜드래곤",d:'언데드 학살 + 전투력 · V8 신규',k:'arthur pendragon 아서 blessing 축복',cat:'BLESSING',page:'builds',img:'https://minecraft.wiki/images/Invicon_Iron_Sword.png'},
+{t:"Baba Yaga — 바바 야가",d:'디버프 + 피해감소 · V8 신규',k:'baba yaga 바바야가 blessing 축복',cat:'BLESSING',page:'builds',img:'https://minecraft.wiki/images/Invicon_Brewing_Stand.png'},
+{t:"Boreas' Blessing — 보레아스",d:'냉기 피해 +3 · [드래곤] +10',k:'boreas 보레아스 blessing 축복 냉기 얼음',cat:'BLESSING',page:'builds',img:'https://minecraft.wiki/images/Invicon_Packed_Ice.png'},
+{t:"Ra's Blessing — 라",d:'태양신 · 빛/태양 효과',k:'ra 라 blessing 축복 태양',cat:'BLESSING',page:'builds',img:'https://minecraft.wiki/images/Invicon_Sunflower.png'},
+{t:'Paladin — 성기사',d:'Durendal 검 · 힐+저항 · 언데드 퇴치',k:'paladin 성기사 origin durendal',cat:'ORIGIN',page:'builds',img:'https://minecraft.wiki/images/Invicon_Iron_Sword.png'},
+{t:'Avian Starborne — 천공의 후예',d:'비행+활강 · 공중 피해↑ · 수영 불가',k:'avian starborne 천공 비행 origin',cat:'ORIGIN',page:'builds',img:'https://minecraft.wiki/images/Invicon_Elytra.png'},
+{t:'Avian — 조인',d:'활강 · 낙하 부드러움 · 빠른 이동',k:'avian 조인 새 origin',cat:'ORIGIN',page:'builds',img:'https://minecraft.wiki/images/Invicon_Feather.png'},
+{t:'Demi-God Lux — 반신 룩스',d:'피해 40%↑ · 체력↑ · 금음식만 · S-Tier',k:'demigod lux 룩스 반신 origin 최강',cat:'ORIGIN',page:'builds',img:'https://minecraft.wiki/images/Invicon_Glowstone_Dust.png'},
+{t:'Demi-God Umbra — 반신 움브라',d:'피해 40%↑ · 체력↑ · 금음식만 · S-Tier',k:'demigod umbra 움브라 반신 origin 최강',cat:'ORIGIN',page:'builds',img:'https://minecraft.wiki/images/Invicon_End_Crystal.png'},
+{t:'Orb of Origin — 종족 변경',d:'Champions Trials 2번째 퀘스트 · 제작 가능',k:'orb origin 종족 변경 오브',cat:'SYSTEM',page:'builds',img:'https://minecraft.wiki/images/Invicon_Ender_Eye.png'},
+{t:'Warrior — 전사',d:'근접 전투 특화 · 높은 체력/공격력',k:'warrior 전사 class 직업',cat:'CLASS',page:'builds',img:'https://minecraft.wiki/images/Invicon_Iron_Sword.png'},
+{t:'Archer — 궁수',d:'원거리 피해↑ · Crit Build 최적',k:'archer 궁수 class 직업 활',cat:'CLASS',page:'builds',img:'https://minecraft.wiki/images/Invicon_Bow.png'},
+{t:'Rogue — 도적',d:'은신 · 뒤 공격 피해↑ · 기습',k:'rogue 도적 class 직업 은신',cat:'CLASS',page:'builds',img:'https://minecraft.wiki/images/Invicon_Iron_Nugget.png'},
+{t:'Cleric — 성직자',d:'힐링 + 버프 · 파티 서포터',k:'cleric 성직자 class 직업 힐',cat:'CLASS',page:'builds',img:'https://minecraft.wiki/images/Invicon_Enchanted_Book.png'},
+{t:'Beastmaster — 야수 조련사',d:'길든 동물 강화 · 포션 공유',k:'beastmaster 야수 조련사 class 직업',cat:'CLASS',page:'builds',img:'https://minecraft.wiki/images/Invicon_Bone.png'},
+{t:'Explorer — 탐험가',d:'이동/탐색 능력 강화',k:'explorer 탐험가 class 직업',cat:'CLASS',page:'builds',img:'https://minecraft.wiki/images/Invicon_Compass.png'},
+{t:'Miner — 광부',d:'채굴 속도↑ · 피로 없음',k:'miner 광부 class 직업',cat:'CLASS',page:'builds',img:'https://minecraft.wiki/images/Invicon_Diamond_Pickaxe.png'},
+{t:'Farmer — 농부',d:'2배 수확 확률 · 뼛가루 2배',k:'farmer 농부 class 직업',cat:'CLASS',page:'builds',img:'https://minecraft.wiki/images/Invicon_Wheat.png'},
+{t:'Lumberjack — 벌목꾼',d:'나무 한 번에 전체 벌목',k:'lumberjack 벌목꾼 class 직업',cat:'CLASS',page:'builds',img:'https://minecraft.wiki/images/Invicon_Iron_Axe.png'},
+{t:'Seven Deadly Sins',d:'T1 테스트 · 7체 연속',k:'seven deadly sins 보스',cat:'BOSS',page:'bosses',img:'https://minecraft.wiki/images/Invicon_Skeleton_Skull.png'},
+{t:'엔더 드래곤 (인퍼널)',d:'Lv100+ · 강화 체력',k:'ender dragon 엔더 드래곤',cat:'BOSS',page:'bosses',img:'https://minecraft.wiki/images/Invicon_Dragon_Egg.png'},
+{t:'Cisco (최종 보스)',d:'Champion Coin 드랍',k:'cisco boss 시스코 최종',cat:'BOSS',page:'bosses',img:'https://minecraft.wiki/images/Invicon_Nether_Star.png'},
+{t:'게이트키퍼',d:'티어 관문 · 최고 난이도',k:'gatekeeper 게이트키퍼',cat:'BOSS',page:'bosses',img:'https://minecraft.wiki/images/Invicon_Iron_Bars.png'},
+{t:'Frostfang',d:'공격력 100만 가능 · 피해 25% 캡',k:'frostfang 검 sword',cat:'WEAPON',page:'weapons',img:'https://minecraft.wiki/images/Invicon_Diamond_Sword.png'},
+{t:'Amethyst Rapier',d:'Echoing Strike · 최고 배율',k:'amethyst rapier echoing',cat:'WEAPON',page:'weapons',img:'https://minecraft.wiki/images/Invicon_Amethyst_Shard.png'},
+{t:'Aquaflora',d:'극고속 · 20회 무적 공격',k:'aquaflora 속도',cat:'WEAPON',page:'weapons',img:'https://minecraft.wiki/images/Invicon_Lily_Pad.png'},
+{t:'활 (Crit Build)',d:'젬 최다 · 공속 무제한',k:'bow 활 crit ranged',cat:'WEAPON',page:'weapons',img:'https://minecraft.wiki/images/Invicon_Bow.png'},
+{t:'Ascendant Armor',d:'공격 80%↑ · 감소 50% · 사망방지',k:'ascendant azure rouge violet armor',cat:'ARMOR',page:'armor',img:'https://minecraft.wiki/images/Invicon_Diamond_Chestplate.png'},
+{t:"Sylvi's Armor",d:'중반 최적 · 밸런스',k:'sylvi armor 방어구',cat:'ARMOR',page:'armor',img:'https://minecraft.wiki/images/Invicon_Iron_Chestplate.png'},
+{t:'Charm of Hellblade',d:'피해 2배 · 방어 0',k:'hellblade charm curio',cat:'CURIO',page:'armor',img:'https://minecraft.wiki/images/Invicon_Fire_Charge.png'},
+{t:"Slicer's Dice",d:'Luck 기반 2배',k:'slicer dice curio',cat:'CURIO',page:'armor',img:'https://minecraft.wiki/images/Invicon_Prismarine_Shard.png'},
+{t:'Warlord 젬',d:'크리뎀 +40%',k:'warlord gem 젬 크리',cat:'GEM',page:'upgrade',img:'https://minecraft.wiki/images/Invicon_Redstone.png'},
+{t:'Samurai 젬',d:'크리확률 +40%',k:'samurai gem 젬',cat:'GEM',page:'upgrade',img:'https://minecraft.wiki/images/Invicon_Emerald.png'},
+{t:'Spell Level 젬',d:'주문레벨 +1',k:'spell level gem 젬 마법',cat:'GEM',page:'upgrade',img:'https://minecraft.wiki/images/Invicon_Lapis_Lazuli.png'},
+{t:'인챈팅',d:'Fortune IX · Boon of the Earth VI',k:'enchanting 인챈팅 apotheosis',cat:'SYSTEM',page:'upgrade',img:'https://minecraft.wiki/images/Invicon_Enchanting_Table.png'},
+{t:'리포징',d:'5단계 · 스탯+소켓',k:'reforging 리포징 리포지',cat:'SYSTEM',page:'upgrade',img:'https://minecraft.wiki/images/Invicon_Anvil.png'},
+{t:'젬 소켓팅',d:'Sigil → 리포지 → 스킬트리',k:'gem socketing 소켓 sigil',cat:'SYSTEM',page:'upgrade',img:'https://minecraft.wiki/images/Invicon_Diamond.png'},
+{t:"Tinkers' Construct",d:'Smeltery · 합금 · Manyullyn',k:'tinkers construct 틴커스',cat:'RECIPE',page:'crafting',img:'https://minecraft.wiki/images/Invicon_Anvil.png'},
+{t:'Super 포션',d:'혼합→증류→정제',k:'potion 포션 super mixture',cat:'RECIPE',page:'crafting',img:'https://minecraft.wiki/images/Invicon_Potion.png'},
+{t:'음식 다양성',d:'FD 100 · Nourishment · Comfort',k:'food diversity 음식 요리',cat:'RECIPE',page:'crafting',img:'https://minecraft.wiki/images/Invicon_Cooked_Beef.png'},
+{t:'Sigil 제작',d:'소켓 추가 핵심',k:'sigil socketing 시길',cat:'RECIPE',page:'crafting',img:'https://minecraft.wiki/images/Invicon_Nether_Star.png'},
+{t:'Twilight Forest',d:'순차 보스 · 퍼펙트 젬',k:'twilight forest 황혼',cat:'DIM',page:'explore',img:'https://minecraft.wiki/images/Invicon_Oak_Sapling.png'},
+{t:'Aether',d:'3단계 던전 · Drygmy',k:'aether 에테르',cat:'DIM',page:'explore',img:'https://minecraft.wiki/images/Invicon_Glowstone_Dust.png'},
+{t:'The End',d:'15종 눈 · 12개 필요',k:'end remastered 엔드',cat:'DIM',page:'explore',img:'https://minecraft.wiki/images/Invicon_Ender_Eye.png'},
+{t:'Silverfish 파밍',d:'시간당 30,000젬',k:'silverfish farming 파밍',cat:'FARM',page:'explore',img:'https://minecraft.wiki/images/Invicon_Diamond.png'},
+{t:'Champions Trials',d:'초중반 메인 퀘스트',k:'champions trials 퀘스트',cat:'QUEST',page:'progression',img:'https://minecraft.wiki/images/Invicon_Writable_Book.png'},
+{t:'Finis Dierum',d:'엔드게임 뉴게임+',k:'finis dierum 엔드게임',cat:'QUEST',page:'progression',img:'https://minecraft.wiki/images/Invicon_Nether_Star.png'},
+{t:"Cisco's Wares",d:'Champion Coin 상점',k:'cisco wares shop 상점 코인',cat:'SYSTEM',page:'explore',img:'https://minecraft.wiki/images/Invicon_Gold_Ingot.png'},
+{t:'방어 메카닉',d:'A/(A+X) · Protection 2.5%',k:'defense 방어 armor',cat:'SYSTEM',page:'armor',img:'https://minecraft.wiki/images/Invicon_Shield.png'},
+];
+
+const CC={'BUILD':'background:rgba(253,139,0,0.12);color:#fd8b00','ORIGIN':'background:rgba(107,219,138,0.12);color:#6bdb8a','BLESSING':'background:rgba(255,231,146,0.12);color:#ffe792','CLASS':'background:rgba(107,184,255,0.12);color:#6bb8ff','BOSS':'background:rgba(255,107,107,0.12);color:#ff6b6b','WEAPON':'background:rgba(253,139,0,0.15);color:#fd8b00','ARMOR':'background:rgba(107,184,255,0.12);color:#6bb8ff','CURIO':'background:rgba(184,138,255,0.12);color:#b88aff','GEM':'background:rgba(184,138,255,0.15);color:#b88aff','SYSTEM':'background:rgba(107,184,255,0.1);color:#6bb8ff','RECIPE':'background:rgba(107,219,138,0.1);color:#6bdb8a','DIM':'background:rgba(107,219,138,0.12);color:#6bdb8a','FARM':'background:rgba(255,231,146,0.1);color:#c9a84c','QUEST':'background:rgba(253,139,0,0.1);color:#fd8b00'};
+
+const input=document.getElementById('searchInput'),resultsEl=document.getElementById('searchResults');
+
+function doSearch(q){
+  if(!q||q.length<1)return DB.slice(0,6);
+  const terms=q.toLowerCase().split(/\s+/);
+  return DB.map(item=>{
+    const hay=(item.t+' '+item.d+' '+item.k+' '+item.cat).toLowerCase();
+    let s=0;for(const t of terms){if(item.t.toLowerCase().includes(t))s+=10;else if(item.k.toLowerCase().includes(t))s+=5;else if(hay.includes(t))s+=2;}
+    return{...item,s};
+  }).filter(x=>x.s>0).sort((a,b)=>b.s-a.s).slice(0,8);
+}
+
+function hl(text,q){
+  if(!q)return text;
+  for(const t of q.toLowerCase().split(/\s+/).filter(x=>x)){const i=text.toLowerCase().indexOf(t);if(i>=0)text=text.slice(0,i)+'<mark>'+text.slice(i,i+t.length)+'</mark>'+text.slice(i+t.length);}
+  return text;
+}
+
+function render(items,q){
+  if(!items.length){resultsEl.innerHTML='<div style="padding:1rem;font-size:0.8rem;color:var(--on-surface-faint)">검색 결과 없음</div>';return;}
+  let h='';const g={};items.forEach(i=>{(g[i.cat]=g[i.cat]||[]).push(i);});
+  for(const[c,es]of Object.entries(g)){h+=`<div class="sr-group">${c}</div>`;
+    for(const e of es)h+=`<div class="sr-item" onclick="go('${e.page}');resultsEl.classList.remove('active');input.blur()"><span class="sr-item__icon"><img src="${e.img}" onerror="this.style.display='none'"/></span><div class="sr-item__text"><div class="sr-item__title">${hl(e.t,q)}</div><div class="sr-item__meta">${e.d}</div></div><span class="sr-chip" style="${CC[c]||''}">${c}</span></div>`;
+  }
+  resultsEl.innerHTML=h;
+}
+
+input.addEventListener('focus',()=>{resultsEl.classList.add('active');render(doSearch(input.value),input.value);});
+input.addEventListener('input',()=>render(doSearch(input.value),input.value));
+input.addEventListener('blur',()=>setTimeout(()=>resultsEl.classList.remove('active'),200));
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();go('home');setTimeout(()=>input.focus(),100);}if(e.key==='Escape')input.blur();});
+document.querySelectorAll('.quick-tag').forEach(t=>t.addEventListener('click',()=>{input.value=t.textContent.trim();input.focus();render(doSearch(input.value),input.value);}));
+</script>
+
+<!-- ========== SCREENSHOT TRANSLATOR ========== -->
+<button class="translate-fab" onclick="openTranslateModal()" title="스크린샷 번역">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-4"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/></svg>
+  번역
+</button>
+<div class="translate-overlay" id="translateOverlay" onclick="closeTranslateModal()"></div>
+<div class="translate-panel" id="translatePanel">
+  <div class="translate-panel__header">
+    <div>
+      <div class="section__label" style="color:var(--secondary);margin-bottom:2px">SCREENSHOT TRANSLATOR</div>
+      <div style="font-weight:700;font-size:1.05rem;color:var(--on-surface)">스크린샷 번역</div>
+    </div>
+    <button onclick="closeTranslateModal()" style="background:var(--surface-container);border:none;border-radius:var(--radius-full);width:28px;height:28px;color:var(--on-surface-dim);cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center">✕</button>
+  </div>
+  <div class="translate-panel__body">
+    <label class="translate-drop" id="translateDrop" for="translateFile">
+      <div id="translateDropContent">
+        <div style="font-size:2rem;margin-bottom:0.5rem">📸</div>
+        <div style="font-weight:600;color:var(--on-surface);margin-bottom:0.25rem">스크린샷 업로드</div>
+        <div style="font-size:0.75rem;color:var(--on-surface-dim)">클릭하거나 이미지를 드래그하세요</div>
+      </div>
+      <img id="translatePreview" style="display:none;max-width:100%;max-height:200px;border-radius:var(--radius-md);object-fit:contain" />
+    </label>
+    <input type="file" id="translateFile" accept="image/*" style="display:none" onchange="handleImageUpload(event)" />
+    <div id="translateProgress" style="display:none">
+      <div style="font-size:0.75rem;color:var(--on-surface-dim);margin-bottom:0.5rem" id="translateStatus">텍스트 인식 중...</div>
+      <div style="background:var(--surface-container);border-radius:var(--radius-full);height:4px;overflow:hidden">
+        <div id="translateProgressBar" style="height:100%;background:linear-gradient(135deg,var(--primary),var(--secondary));width:0%;transition:width 0.3s ease"></div>
+      </div>
+    </div>
+    <div id="translateResults" style="display:none">
+      <div style="margin-bottom:0.75rem">
+        <div class="section__label" style="color:var(--on-surface-dim);margin-bottom:0.4rem">원문 (EN)</div>
+        <div id="translateOriginal" style="background:var(--surface-container);border-radius:var(--radius-md);padding:0.75rem;font-size:0.78rem;color:var(--on-surface-variant);white-space:pre-wrap;max-height:140px;overflow-y:auto;line-height:1.6"></div>
+      </div>
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.4rem">
+          <div class="section__label" style="color:var(--secondary)">번역 (KO)</div>
+          <button id="copyBtn" onclick="copyTranslation()" style="background:rgba(255,231,146,0.08);border:none;border-radius:var(--radius-full);padding:3px 12px;font-size:0.7rem;color:var(--primary);cursor:pointer;font-family:var(--font-body)">복사</button>
+        </div>
+        <div id="translateKorean" style="background:var(--surface-container);border-radius:var(--radius-md);padding:0.75rem;font-size:0.78rem;color:var(--on-surface);white-space:pre-wrap;max-height:140px;overflow-y:auto;line-height:1.6"></div>
+      </div>
+    </div>
+    <div id="translateError" style="display:none;background:rgba(255,107,107,0.1);border-radius:var(--radius-md);padding:0.75rem;font-size:0.78rem;color:var(--error)"></div>
+    <button id="translateReset" style="display:none;width:100%;background:rgba(255,231,146,0.06);border:none;border-radius:var(--radius-md);padding:0.75rem;color:var(--primary);cursor:pointer;font-family:var(--font-body);font-size:0.875rem" onclick="resetTranslate()">다른 스크린샷 번역하기</button>
+    <div style="font-size:0.68rem;color:var(--on-surface-faint);text-align:center">Tesseract.js OCR + MyMemory 번역 (무료, 하루 5000자)</div>
+  </div>
+</div>
+</body>
+</html>
