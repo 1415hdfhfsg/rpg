@@ -10,11 +10,11 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" media="print" onload="this.media='all'" />
   <style>
 :root{--surface:#0e0e0e;--surface-dim:#0a0a0a;--surface-container-lowest:#0b0b0b;--surface-container-low:#131313;--surface-container:#191a1a;--surface-container-high:#1f1f1f;--surface-container-highest:#262626;--surface-elevated:#2a2a2a;--primary:#ffe792;--primary-container:#ffd709;--primary-dim:#c9a84c;--on-primary-container:#5b4b00;--secondary:#fd8b00;--secondary-container:#904d00;--on-secondary-container:#ffe0b2;--surface-tint:rgba(255,231,146,0.10);--on-surface:#e6e1d9;--on-surface-variant:#b0a896;--on-surface-dim:#7a7468;--on-surface-faint:#4a4640;--outline-variant:rgba(72,72,72,0.15);--error:#ff6b6b;--success:#6bdb8a;--info:#6bb8ff;--font-display:'Black Han Sans','Noto Serif KR',sans-serif;--font-body:'Pretendard',-apple-system,sans-serif;--font-mono:'JetBrains Mono',monospace;--radius-sm:0.25rem;--radius-md:0.75rem;--radius-lg:1rem;--radius-xl:1.5rem;--radius-full:9999px}
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth;background:var(--surface)}body{font-family:var(--font-body);background:var(--surface);color:var(--on-surface);line-height:1.6;min-height:100vh;overflow-x:clip}::selection{background:rgba(255,231,146,0.25)}a{color:var(--primary);text-decoration:none}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth;background:#0e0e0e;min-height:100%}body{font-family:var(--font-body);background:#0e0e0e;color:var(--on-surface);line-height:1.6;min-height:100vh;overflow-x:clip;display:flex;justify-content:center}::selection{background:rgba(255,231,146,0.25)}a{color:var(--primary);text-decoration:none}
+body.is-home{background:radial-gradient(ellipse 140% 90% at 50% 0%,#1a1612 0%,#111010 35%,#0e0e0e 65%) fixed}
 
 /* APP SHELL */
-#app-shell{display:flex;min-height:100vh;max-width:1200px;margin:0 auto;width:100%;padding:0 0 0 6px}
-body{display:flex;justify-content:center}
+#app-shell{display:flex;min-height:100vh;width:100%;max-width:1200px;padding:0 0 0 6px}
 #sidenav{width:54px;flex-shrink:0;position:sticky;top:calc(50vh - 200px);height:400px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:16px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;z-index:100;box-shadow:0 4px 24px rgba(0,0,0,0.3);backdrop-filter:blur(12px)}
 #app-content{flex:1;min-width:0;overflow-x:clip}
 .snav-logo{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 4px 12px;cursor:pointer;border-bottom:1px solid rgba(80,80,80,0.15);flex-shrink:0}
@@ -40,7 +40,6 @@ body{display:flex;justify-content:center}
 .landing{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:2rem}
 #page-home{min-height:100vh;position:relative}
 #page-home .blur-bg{display:none}
-body.is-home{background:radial-gradient(ellipse 120% 70% at 50% 0%,rgba(253,139,0,0.09) 0%,rgba(255,231,146,0.04) 25%,#0e0e0e 60%)}
 .hero-glow{position:absolute;top:8%;left:50%;transform:translateX(-50%);width:800px;height:500px;background:radial-gradient(circle,rgba(253,139,0,0.06) 0%,rgba(255,231,146,0.03) 30%,transparent 65%);pointer-events:none}
 .logo-area{text-align:center;margin-bottom:2rem}
 .logo-area__img{width:120px;height:120px;border-radius:var(--radius-md);image-rendering:pixelated;border:2px solid var(--surface-container-highest);box-shadow:0 0 40px rgba(253,139,0,0.08),0 4px 20px rgba(0,0,0,0.5);transition:transform 0.3s,box-shadow 0.3s;cursor:pointer}
