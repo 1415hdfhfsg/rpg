@@ -1020,6 +1020,25 @@ document.querySelectorAll('.quick-tag').forEach(t=>t.addEventListener('click',()
     trBody.style.display='flex';
   }
 })();
+
+// ========== SIDENAV SCROLL MOTION ==========
+(function(){
+  var nav = document.getElementById('sidenav');
+  var scrollY = 0, lastScrollY = 0, velocity = 0, offset = 0;
+  window.addEventListener('scroll', function(){ scrollY = window.scrollY; }, { passive: true });
+  function tick(){
+    var delta = scrollY - lastScrollY;
+    lastScrollY = scrollY;
+    velocity += delta * 0.2;   // 스크롤 방향으로 반응
+    velocity *= 0.78;           // 감쇠
+    offset += velocity;
+    offset *= 0.88;             // 원위치로 복귀 (스프링)
+    offset = Math.max(-28, Math.min(28, offset)); // ±28px 제한
+    nav.style.transform = 'translateY(calc(-50% + ' + offset.toFixed(2) + 'px))';
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
 </script>
 
 </body>
