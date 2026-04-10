@@ -871,24 +871,24 @@ document.querySelectorAll('.quick-tag').forEach(t=>t.addEventListener('click',()
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script>
 // ========== SCREENSHOT TRANSLATOR ==========
+// 모든 함수를 먼저 정의 — Tesseract는 실제 OCR 시작할 때만 lazy load
 function openTranslateModal(){
-  document.getElementById('translateOverlay').style.display='block';
-  document.getElementById('translatePanel').classList.add('active');
+  var o=document.getElementById('translateOverlay'),p=document.getElementById('translatePanel');
+  o.style.display='block';p.classList.add('active');
 }
 function closeTranslateModal(){
-  document.getElementById('translateOverlay').style.display='none';
-  document.getElementById('translatePanel').classList.remove('active');
+  var o=document.getElementById('translateOverlay'),p=document.getElementById('translatePanel');
+  o.style.display='none';p.classList.remove('active');
 }
 function handleImageUpload(event){
-  const file=event.target.files[0];
+  var file=event.target&&event.target.files&&event.target.files[0];
   if(!file)return;
-  const preview=document.getElementById('translatePreview');
-  const dropContent=document.getElementById('translateDropContent');
-  const reader=new FileReader();
-  reader.onload=e=>{preview.src=e.target.result;preview.style.display='block';dropContent.style.display='none';};
+  var preview=document.getElementById('translatePreview');
+  var dropContent=document.getElementById('translateDropContent');
+  var reader=new FileReader();
+  reader.onload=function(e){preview.src=e.target.result;preview.style.display='block';dropContent.style.display='none';};
   reader.readAsDataURL(file);
   document.getElementById('translateProgress').style.display='block';
   document.getElementById('translateResults').style.display='none';
@@ -896,62 +896,70 @@ function handleImageUpload(event){
   document.getElementById('translateReset').style.display='none';
   runOCR(file);
 }
+function loadTesseract(){
+  return new Promise(function(resolve,reject){
+    if(window.Tesseract){resolve();return;}
+    var s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+    s.onload=resolve;
+    s.onerror=function(){reject(new Error('Tesseract 로드 실패'));};
+    document.body.appendChild(s);
+  });
+}
 async function runOCR(file){
-  const status=document.getElementById('translateStatus');
-  const bar=document.getElementById('translateProgressBar');
+  var status=document.getElementById('translateStatus');
+  var bar=document.getElementById('translateProgressBar');
   try{
-    status.textContent='언어 데이터 로딩 중...';
+    status.textContent='OCR 엔진 로딩 중...';
     bar.style.width='5%';
-    const worker=await Tesseract.createWorker('eng',1,{
-      logger:m=>{
+    await loadTesseract();
+    status.textContent='언어 데이터 로딩 중...';
+    bar.style.width='10%';
+    var worker=await Tesseract.createWorker('eng',1,{
+      logger:function(m){
         if(m.status==='recognizing text'){
-          bar.style.width=(Math.round(m.progress*75)+10)+'%';
+          bar.style.width=(Math.round(m.progress*75)+15)+'%';
           status.textContent='텍스트 인식 중... '+Math.round(m.progress*100)+'%';
-        } else if(m.status==='loading language traineddata'){
-          bar.style.width='15%';
-          status.textContent='언어 데이터 로딩 중...';
-        } else if(m.status==='initializing api'){
-          bar.style.width='25%';
-          status.textContent='OCR 엔진 초기화 중...';
+        }else if(m.status==='loading language traineddata'){
+          bar.style.width='20%';status.textContent='언어 데이터 로딩 중...';
+        }else if(m.status==='initializing api'){
+          bar.style.width='30%';status.textContent='OCR 초기화 중...';
         }
       }
     });
-    const {data:{text}}=await worker.recognize(file);
+    var result=await worker.recognize(file);
     await worker.terminate();
-    const cleaned=text.trim().replace(/\f/g,'').replace(/[ \t]+/g,' ').trim();
+    var cleaned=result.data.text.trim().replace(/\f/g,'').replace(/[ \t]+/g,' ').trim();
     if(!cleaned||cleaned.length<3){showTranslateError('텍스트를 인식할 수 없습니다. 더 선명한 이미지를 사용해 보세요.');return;}
     bar.style.width='90%';
     status.textContent='번역 중...';
-    const translated=await translateText(cleaned);
+    var translated=await translateText(cleaned);
     bar.style.width='100%';
-    setTimeout(()=>{
+    setTimeout(function(){
       document.getElementById('translateProgress').style.display='none';
       document.getElementById('translateOriginal').textContent=cleaned;
       document.getElementById('translateKorean').textContent=translated;
       document.getElementById('translateResults').style.display='block';
       document.getElementById('translateReset').style.display='block';
     },300);
-  } catch(err){
+  }catch(err){
     showTranslateError('오류: '+err.message);
   }
 }
 async function translateText(text){
-  const maxLen=450;
-  const chunks=[];
-  const lines=text.split('\n');
-  let cur='';
-  for(const line of lines){
-    if((cur+line).length>maxLen){if(cur)chunks.push(cur.trim());cur=line+'\n';}
-    else cur+=line+'\n';
+  var maxLen=450,chunks=[],lines=text.split('\n'),cur='';
+  for(var i=0;i<lines.length;i++){
+    if((cur+lines[i]).length>maxLen){if(cur)chunks.push(cur.trim());cur=lines[i]+'\n';}
+    else cur+=lines[i]+'\n';
   }
   if(cur.trim())chunks.push(cur.trim());
-  const results=[];
-  for(const chunk of chunks){
+  var results=[];
+  for(var j=0;j<chunks.length;j++){
     try{
-      const res=await fetch('https://api.mymemory.translated.net/get?q='+encodeURIComponent(chunk)+'&langpair=en|ko');
-      const json=await res.json();
-      results.push(json.responseData?.translatedText||chunk);
-    } catch{results.push(chunk);}
+      var res=await fetch('https://api.mymemory.translated.net/get?q='+encodeURIComponent(chunks[j])+'&langpair=en|ko');
+      var json=await res.json();
+      results.push((json.responseData&&json.responseData.translatedText)||chunks[j]);
+    }catch(e){results.push(chunks[j]);}
   }
   return results.join('\n');
 }
@@ -972,21 +980,24 @@ function resetTranslate(){
   document.getElementById('translateProgressBar').style.width='0%';
 }
 function copyTranslation(){
-  const text=document.getElementById('translateKorean').textContent;
-  const btn=document.getElementById('copyBtn');
-  navigator.clipboard.writeText(text).then(()=>{btn.textContent='복사됨!';setTimeout(()=>btn.textContent='복사',1500);});
-}
-// Drag & Drop — DOM is ready here (script is at end of body)
-const _tDrop=document.getElementById('translateDrop');
-_tDrop.addEventListener('dragover',e=>{e.preventDefault();_tDrop.style.borderColor='var(--primary)';});
-_tDrop.addEventListener('dragleave',()=>{_tDrop.style.borderColor='';});
-_tDrop.addEventListener('drop',e=>{
-  e.preventDefault();_tDrop.style.borderColor='';
-  const file=e.dataTransfer.files[0];
-  if(file&&file.type.startsWith('image/')){
-    handleImageUpload({target:{files:[file]}});
+  var text=document.getElementById('translateKorean').textContent;
+  var btn=document.getElementById('copyBtn');
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(function(){btn.textContent='복사됨!';setTimeout(function(){btn.textContent='복사';},1500);}).catch(function(){});
   }
-});
+}
+// Drag & Drop
+(function(){
+  var drop=document.getElementById('translateDrop');
+  if(!drop)return;
+  drop.addEventListener('dragover',function(e){e.preventDefault();drop.style.borderColor='var(--primary)';});
+  drop.addEventListener('dragleave',function(){drop.style.borderColor='';});
+  drop.addEventListener('drop',function(e){
+    e.preventDefault();drop.style.borderColor='';
+    var file=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0];
+    if(file&&file.type.startsWith('image/'))handleImageUpload({target:{files:[file]}});
+  });
+})();
 </script>
 </body>
 </html>
