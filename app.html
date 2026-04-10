@@ -677,12 +677,49 @@ _tDrop.addEventListener('drop',e=>{
 
 <!-- ==================== WEAPONS ==================== -->
 <div class="page" id="page-weapons"><div class="sub-page">
-  <header class="page-header"><p class="page-header__eyebrow" style="color:var(--secondary)">DATABASE — WEAPONS</p><h1 class="page-header__title" style="background:linear-gradient(135deg,var(--secondary),var(--error));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">무기 도감</h1></header>
-  <section class="section"><div class="section__label">S-Tier</div><div class="grid-1">
-    <div class="card wpn"><div class="wpn__icon"><img src="https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/item/diamond_sword.png" /></div><div><div class="wpn__header"><span class="wpn__name">Frostfang</span><span class="chip--sm" style="background:rgba(255,231,146,0.12);color:var(--primary)">LEGENDARY</span></div><div class="wpn__source">DROP: Fell King Sylvi</div><div class="card__desc">체력 비례 공격력 부스트 → 최대 1,000,000. 받는 피해 25% 캡(메인핸드).</div><div class="wpn__tip"><strong>TIP:</strong> 헬멧 젬과 조합 시 공격력 폭발.</div></div></div>
-    <div class="card wpn"><div class="wpn__icon"><img src="https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/item/amethyst_shard.png" /></div><div><div class="wpn__header"><span class="wpn__name">Amethyst Rapier</span><span class="chip--sm" style="background:rgba(184,138,255,0.12);color:#b88aff">LEGENDARY</span></div><div class="wpn__source">CRAFT</div><div class="card__desc">Echoing Strike = 게임 최고 피해 배율. 스킬 발동 후 다른 무기로 스왑.</div></div></div>
-    <div class="card wpn"><div class="wpn__icon"><img src="https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/item/bow.png" /></div><div><div class="wpn__header"><span class="wpn__name">활 (Crit Build)</span><span class="chip--sm" style="background:rgba(255,231,146,0.12);color:var(--primary)">S-TIER</span></div><div class="wpn__source">CRAFT / DROP</div><div class="card__desc">젬 소켓 최다 + 리포지 크리뎀 최고 + 공속 무제한(클릭속도). Curios 리포지: 크리 940%/900%.</div></div></div>
-  </div></section>
+  <header class="page-header"><p class="page-header__eyebrow" style="color:var(--secondary)">DATABASE — WEAPONS</p><h1 class="page-header__title" style="background:linear-gradient(135deg,var(--secondary),var(--error));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">무기 도감</h1><p class="page-header__desc">S-Tier · 진행 단계별 추천 · 모드별 분류</p></header>
+
+  <div style="display:flex;gap:6px;justify-content:center;margin-bottom:2rem;flex-wrap:wrap">
+    <div class="chip" style="padding:8px 20px;font-weight:600" onclick="showWeaponTab('stier')" id="wtab-stier">S-Tier</div>
+    <div class="chip" style="padding:8px 20px;font-weight:600" onclick="showWeaponTab('prog')" id="wtab-prog">단계별 추천</div>
+    <div class="chip" style="padding:8px 20px;font-weight:600" onclick="showWeaponTab('mods')" id="wtab-mods">모드별 분류</div>
+  </div>
+
+  <!-- ===== S-TIER ===== -->
+  <div id="wtab-content-stier">
+    <section class="section"><div class="section__label" style="color:var(--primary)">S-Tier — 최강 무기</div>
+    <div class="grid-1">
+      <div class="card wpn"><div class="wpn__icon"><img src="https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/item/diamond_sword.png"/></div><div><div class="wpn__header"><span class="wpn__name">Frostfang</span><span class="chip--sm" style="background:rgba(255,231,146,0.12);color:var(--primary)">LEGENDARY</span><span class="chip--sm" style="background:rgba(255,107,107,0.12);color:var(--error)">ENDGAME</span></div><div class="wpn__source">DROP: Fell King Sylvi (T2 보스)</div><div class="card__desc">체력 비례 공격력 부스트 → 최대 1,000,000. 받는 피해 25% 캡(메인핸드). 젬 풀소켓 시 공격력 폭발적 증가.</div><div class="wpn__skills"><div class="wpn__skill">체력 1당 공격력 배율 증가 — 체력 높을수록 강함</div><div class="wpn__skill">메인핸드 착용 시 받는 피해 25% 자동 감소</div></div><div class="wpn__tip"><strong>TIP:</strong> Ascendant 방어구 + 높은 체력 큐리오와 조합 시 최강.</div></div></div>
+      <div class="card wpn"><div class="wpn__icon"><img src="https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/item/amethyst_shard.png"/></div><div><div class="wpn__header"><span class="wpn__name">Amethyst Rapier</span><span class="chip--sm" style="background:rgba(184,138,255,0.12);color:#b88aff">LEGENDARY</span><span class="chip--sm" style="background:rgba(255,107,107,0.12);color:var(--error)">ENDGAME</span></div><div class="wpn__source">CRAFT (JEI 확인)</div><div class="card__desc">Echoing Strike = 게임 최고 피해 배율. 스킬만 발동하고 다른 무기로 스왑하는 플레이.</div><div class="wpn__skills"><div class="wpn__skill">Echoing Strike: 단타 최고 피해 배율</div><div class="wpn__skill">스킬 쿨다운 중 다른 무기 사용 가능</div></div><div class="wpn__tip"><strong>TIP:</strong> Frostfang과 병행 사용 — 쿨마다 Rapier 스킬 발동.</div></div></div>
+      <div class="card wpn"><div class="wpn__icon"><img src="https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/item/bow.png"/></div><div><div class="wpn__header"><span class="wpn__name">활 (Crit Build)</span><span class="chip--sm" style="background:rgba(255,231,146,0.12);color:var(--primary)">S-TIER</span></div><div class="wpn__source">CRAFT / DROP · Serenity Bow 추천</div><div class="card__desc">젬 소켓 최다 + 리포지 크리뎀 최고 + 공속 무제한(클릭속도). 큐리오 리포지 합산: 크리확률 940% + 크리뎀 900%.</div><div class="wpn__skills"><div class="wpn__skill">소켓 수 무기 중 최다 → Samurai 젬 대량 장착 가능</div><div class="wpn__skill">공격속도 클릭 속도에 비례 — 자동클릭 사용 시 극한 DPS</div></div><div class="wpn__tip"><strong>TIP:</strong> Serenity Bow가 원거리 중 유일하게 쓸만한 활.</div></div></div>
+      <div class="card wpn"><div class="wpn__icon"><img src="https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/item/prismarine_shard.png"/></div><div><div class="wpn__header"><span class="wpn__name">Aquaflora</span><span class="chip--sm" style="background:rgba(107,219,138,0.12);color:var(--success)">HIGH-A</span><span class="chip--sm" style="background:rgba(107,184,255,0.12);color:var(--info)">MID→LATE</span></div><div class="wpn__source">DROP / CRAFT</div><div class="card__desc">Frostfang 전 단계 최강 근접 무기. 극고속 공격 + Petal Pierces(관통) + Exorbitant Slashing(무적 20회).</div><div class="wpn__skills"><div class="wpn__skill">Petal Pierces: 방어구 관통 공격</div><div class="wpn__skill">Exorbitant Slashing: 연속 타격 시 무적 프레임 20회</div></div><div class="wpn__tip"><strong>TIP:</strong> Frostfang 파밍 전 메인 무기로 사용.</div></div></div>
+    </div></section>
+  </div>
+
+  <!-- ===== PROGRESSION ===== -->
+  <div id="wtab-content-prog" style="display:none">
+    <section class="section"><div class="section__label" style="color:var(--info)">진행 단계별 추천 무기</div>
+    <div class="timeline">
+      <div class="tl-step"><div class="tl-step__dot">초반</div><div class="card"><div class="card__label" style="color:var(--success)">EARLY — 스폰 직후</div><div class="card__title">기본 철/다이아 무기</div><div class="card__desc">바닐라 무기 + Origins 시작 아이템(Thief: 다이아 3개). Simply Swords 모드 무기 탐험 시 수집.</div></div></div>
+      <div class="tl-step"><div class="tl-step__dot">중반</div><div class="card"><div class="card__label" style="color:var(--info)">MID — Champions Trials 이후</div><div class="card__title">Aquaflora / Spartan Weaponry</div><div class="card__desc">Aquaflora 획득 → 중반 최강. Spartan Weaponry 창·할버드 등 2차 공격 활용. Apotheosis 인챈팅으로 강화.</div></div></div>
+      <div class="tl-step"><div class="tl-step__dot">후반</div><div class="card"><div class="card__label" style="color:#b88aff)">LATE — TF/Aether 클리어 후</div><div class="card__title">Amethyst Rapier + 활</div><div class="card__desc">Rapier 제작 + 크리 빌드 활 강화. 큐리오 전체 Mythic 리포지 시작. 젬 소켓 최대화.</div></div></div>
+      <div class="tl-step"><div class="tl-step__dot">엔드</div><div class="card"><div class="card__label" style="color:var(--secondary)">ENDGAME — T2 보스 이후</div><div class="card__title">Frostfang + Amethyst Rapier</div><div class="card__desc">Fell King Sylvi 처치 → Frostfang 드랍. Rapier 쿨타임마다 병행. 활 크리 빌드 완성.</div></div></div>
+    </div></section>
+  </div>
+
+  <!-- ===== MODS ===== -->
+  <div id="wtab-content-mods" style="display:none">
+    <section class="section"><div class="section__label" style="color:var(--secondary)">무기 모드 분류</div>
+    <div class="grid-2">
+      <div class="card"><div class="card__label" style="color:var(--primary)">Celestisynth</div><div class="card__title">최고급 커스텀 무기</div><div class="card__desc">Cisco's RPG 전용 모드. 고유 스킬+효과. S-Tier 무기 다수 포함. Frostfang·Aquaflora 등.</div></div>
+      <div class="card"><div class="card__label" style="color:var(--info)">Simply Swords</div><div class="card__title">다양한 검 종류</div><div class="card__desc">롱소드·그레이트소드·카타나 등 다양한 검. 각 무기마다 고유 공격 패턴. 초중반 활용.</div></div>
+      <div class="card"><div class="card__label" style="color:var(--secondary)">Spartan Weaponry</div><div class="card__title">창·도끼·할버드</div><div class="card__desc">창(투척 가능)·할버드(범위)·전투도끼 등. 2차 공격 시스템. 중반 강력한 선택지.</div></div>
+      <div class="card"><div class="card__label" style="color:var(--success)">Tinkers' Construct</div><div class="card__title">커스텀 제작 무기</div><div class="card__desc">Smeltery에서 합금 제작. Manyullyn·Cobalt·Bronze 소재. 재료 조합으로 고유 특성 부여.</div></div>
+      <div class="card"><div class="card__label" style="color:var(--on-surface-dim)">Cisco's Weapons</div><div class="card__title">서버 전용 무기</div><div class="card__desc">모드팩 전용 제작 무기. Champion Coins으로 구매 가능한 무기 포함. Cisco's Wares 상점 확인.</div></div>
+      <div class="card"><div class="card__label" style="color:#b88aff">Iron's Spells</div><div class="card__title">마법 지팡이·스태프</div><div class="card__desc">마법사 전용 무기. 주문서 발동 도구. Spell Level 젬 최우선 장착. 크리 메이지 빌드 핵심.</div></div>
+    </div></section>
+  </div>
+
 </div></div>
 
 <!-- ==================== ARMOR ==================== -->
@@ -707,6 +744,27 @@ const PAGES = ['home','builds','bosses','upgrade','progression','crafting','expl
 const PAGE_NAMES = {home:'홈',builds:'빌드',bosses:'보스',upgrade:'강화',progression:'진행',crafting:'조합법',explore:'탐험',weapons:'무기',armor:'방어구'};
 
 // Tab switcher for builds page
+
+function showUpgradeTab(tab) {
+  ['enchant','reforge','gems','magic'].forEach(t => {
+    const el = document.getElementById('utab-content-' + t);
+    const btn = document.getElementById('utab-' + t);
+    if (el) el.style.display = t === tab ? 'block' : 'none';
+    if (btn) { btn.style.background = t === tab ? 'rgba(255,231,146,0.12)' : ''; btn.style.color = t === tab ? 'var(--primary)' : ''; }
+  });
+}
+setTimeout(() => showUpgradeTab('enchant'), 0);
+
+function showWeaponTab(tab) {
+  ['stier','prog','mods'].forEach(t => {
+    const el = document.getElementById('wtab-content-' + t);
+    const btn = document.getElementById('wtab-' + t);
+    if (el) el.style.display = t === tab ? 'block' : 'none';
+    if (btn) { btn.style.background = t === tab ? 'rgba(253,139,0,0.12)' : ''; btn.style.color = t === tab ? 'var(--secondary)' : ''; }
+  });
+}
+setTimeout(() => showWeaponTab('stier'), 0);
+
 function showTab(tab) {
   ['origins','blessings','classes'].forEach(t => {
     const el = document.getElementById('tab-content-' + t);
@@ -833,6 +891,16 @@ const DB=[
 {t:'Finis Dierum',d:'엔드게임 뉴게임+',k:'finis dierum 엔드게임',cat:'QUEST',page:'progression',img:'https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/item/nether_star.png'},
 {t:"Cisco's Wares",d:'Champion Coin 상점',k:'cisco wares shop 상점 코인',cat:'SYSTEM',page:'explore',img:'https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/item/gold_ingot.png'},
 {t:'방어 메카닉',d:'A/(A+X) · Protection 2.5%',k:'defense 방어 armor',cat:'SYSTEM',page:'armor',img:'https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/entity/shield_base.png'},
+,
+{t:'Frostfang',d:'체력비례 공격력 최대 1,000,000 · Fell King 드랍',k:'frostfang 무기 legendary sword',cat:'WEAPON',page:'weapons',img:'https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/item/diamond_sword.png'},
+{t:'Amethyst Rapier',d:'Echoing Strike 최고 배율 · 스킬 스왑 전술',k:'amethyst rapier weapon legendary',cat:'WEAPON',page:'weapons',img:'https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/item/amethyst_shard.png'},
+{t:'Aquaflora',d:'Frostfang 전 최강 근접 · Petal Pierces 관통',k:'aquaflora weapon mid',cat:'WEAPON',page:'weapons',img:'https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/item/prismarine_shard.png'},
+{t:'Warlord 젬',d:'크리 데미지 +40% (Perfect) · 크리 빌드 핵심',k:'warlord gem crit damage',cat:'GEM',page:'upgrade',img:'https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/item/redstone.png'},
+{t:'Samurai 젬',d:'크리 확률 +40% (Perfect) · 활 필수',k:'samurai gem crit chance',cat:'GEM',page:'upgrade',img:'https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/item/emerald.png'},
+{t:'Spell Level 젬',d:'주문 레벨 +1 · 메이지 필수',k:'spell level gem magic mage',cat:'GEM',page:'upgrade',img:'https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/item/lapis_lazuli.png'},
+{t:'Mythic 리포징',d:'보너스×4 + 효과×3 + 소켓×3 · 최종 목표',k:'mythic reforge reforging',cat:'SYSTEM',page:'upgrade',img:'https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/item/anvil_top.png'},
+{t:"Iron's Spells",d:'9개 학파 전투 마법 · 크리 메이지 핵심',k:"iron spells magic mage school",cat:'SYSTEM',page:'upgrade',img:'https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/item/blaze_rod.png'},
+{t:'Ars Nouveau',d:'글리프 조합 자동화 · Drygmy Mythic 파밍',k:'ars nouveau magic glyph drygmy',cat:'SYSTEM',page:'upgrade',img:'https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/item/oak_leaves.png'}
 ];
 
 const CC={'BUILD':'background:rgba(253,139,0,0.12);color:#fd8b00','ORIGIN':'background:rgba(107,219,138,0.12);color:#6bdb8a','BLESSING':'background:rgba(255,231,146,0.12);color:#ffe792','CLASS':'background:rgba(107,184,255,0.12);color:#6bb8ff','BOSS':'background:rgba(255,107,107,0.12);color:#ff6b6b','WEAPON':'background:rgba(253,139,0,0.15);color:#fd8b00','ARMOR':'background:rgba(107,184,255,0.12);color:#6bb8ff','CURIO':'background:rgba(184,138,255,0.12);color:#b88aff','GEM':'background:rgba(184,138,255,0.15);color:#b88aff','SYSTEM':'background:rgba(107,184,255,0.1);color:#6bb8ff','RECIPE':'background:rgba(107,219,138,0.1);color:#6bdb8a','DIM':'background:rgba(107,219,138,0.12);color:#6bdb8a','FARM':'background:rgba(255,231,146,0.1);color:#c9a84c','QUEST':'background:rgba(253,139,0,0.1);color:#fd8b00'};
