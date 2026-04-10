@@ -216,6 +216,29 @@
   .search-box__kbd{display:none}
   .stats-row{gap:1.5rem}
 }
+/* ========== BOSS PAGE ========== */
+.boss-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
+.boss-card{background:var(--surface-container-low);border-radius:var(--radius-xl);padding:1.25rem;border:1px solid transparent;transition:all 0.25s;display:flex;flex-direction:column;gap:0.625rem}
+.boss-card:hover{background:var(--surface-container);border-color:var(--outline-variant)}
+.boss-header{display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem}
+.boss-name{font-size:0.9375rem;font-weight:700;color:var(--on-surface);line-height:1.3}
+.boss-name-sub{font-size:0.6875rem;color:var(--on-surface-dim);margin-top:2px;font-weight:400}
+.boss-badges{display:flex;gap:4px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
+.boss-stats{display:flex;gap:6px;flex-wrap:wrap}
+.boss-stat{display:flex;align-items:center;gap:3px;background:var(--surface-container-high);border-radius:var(--radius-sm);padding:3px 7px}
+.bsl{font-family:var(--font-mono);font-size:0.5rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--on-surface-faint)}
+.bsv{font-family:var(--font-mono);font-size:0.6875rem;font-weight:700;color:var(--on-surface-variant)}
+.boss-location{font-size:0.6875rem;color:var(--on-surface-dim);display:flex;align-items:center;gap:4px}
+.boss-abilities{font-size:0.6875rem;color:var(--on-surface-dim);line-height:1.65}
+.boss-abilities li{margin-left:1em;margin-top:2px}
+.boss-drops{display:flex;flex-wrap:wrap;gap:3px;margin-top:2px}
+.boss-drop{background:var(--surface-container);border-radius:var(--radius-sm);padding:2px 7px;font-size:0.5625rem;color:var(--on-surface-dim);font-weight:600;letter-spacing:0.03em}
+.mod-section-banner{display:flex;align-items:center;gap:0.75rem;padding:0.875rem 1.25rem;background:var(--surface-container-low);border-radius:var(--radius-lg);border-left:3px solid;margin-bottom:1rem}
+.mod-section-banner__icon{font-size:1.5rem;flex-shrink:0}
+.mod-section-banner__title{font-size:0.9375rem;font-weight:700;color:var(--on-surface)}
+.mod-section-banner__desc{font-size:0.6875rem;color:var(--on-surface-dim);margin-top:1px}
+.boss-phase{font-size:0.6875rem;color:var(--secondary);font-weight:600;margin-top:2px}
+@media(max-width:700px){.boss-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
