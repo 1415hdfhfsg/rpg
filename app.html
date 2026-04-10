@@ -15,15 +15,15 @@
 /* APP SHELL */
 #app-shell{display:flex;min-height:100vh;max-width:1200px;margin:0 auto;width:100%}
 body{display:flex;justify-content:center}
-#sidenav{width:64px;flex-shrink:0;position:sticky;top:12px;height:calc(100vh - 24px);margin:12px 0 12px 12px;background:rgba(18,18,18,0.98);border:1px solid rgba(72,72,72,0.25);border-radius:18px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;z-index:100;box-shadow:0 4px 32px rgba(0,0,0,0.5)}
+#sidenav{width:56px;flex-shrink:0;position:sticky;top:0;height:100vh;background:rgba(14,14,14,0.98);border-right:1px solid rgba(72,72,72,0.15);border-radius:0 16px 16px 0;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;z-index:100;box-shadow:4px 0 20px rgba(0,0,0,0.35)}
 #app-content{flex:1;min-width:0;overflow-x:clip}
-.snav-logo{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 4px 10px;cursor:pointer;border-bottom:1px solid rgba(72,72,72,0.18);flex-shrink:0}
-.snav-logo img{width:34px;height:34px;border-radius:8px;image-rendering:pixelated}
-.snav-middle{display:flex;flex-direction:column;flex:1;justify-content:space-evenly;padding:6px 0}
-.snav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;margin:0 5px;border-radius:10px;cursor:pointer;color:#7a7468;font-size:9px;font-weight:700;letter-spacing:0.04em;text-align:center;transition:color 0.15s,background 0.15s}
+.snav-logo{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 4px 12px;cursor:pointer;border-bottom:1px solid rgba(72,72,72,0.15);flex-shrink:0}
+.snav-logo img{width:32px;height:32px;border-radius:7px;image-rendering:pixelated}
+.snav-middle{display:flex;flex-direction:column;flex:1;justify-content:space-evenly;padding:8px 0}
+.snav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;margin:0 4px;border-radius:10px;cursor:pointer;color:#7a7468;font-size:9px;font-weight:700;letter-spacing:0.04em;text-align:center;transition:color 0.15s,background 0.15s}
 .snav-item:hover{color:#b0a896}
 .snav-item.active{color:#ffe792;background:rgba(255,231,146,0.1)}
-.snav-sep{height:1px;background:rgba(72,72,72,0.18);margin:0 10px}
+.snav-sep{height:1px;background:rgba(72,72,72,0.15);margin:0 8px}
 
 /* BLUR BG */
 .blur-bg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
