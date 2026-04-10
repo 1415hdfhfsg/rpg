@@ -1024,15 +1024,24 @@ document.querySelectorAll('.quick-tag').forEach(t=>t.addEventListener('click',()
 // ========== SIDENAV SCROLL MOTION ==========
 (function(){
   var nav = document.getElementById('sidenav');
-  var scrollY = 0, lastScrollY = 0, velocity = 0, offset = 0;
-  window.addEventListener('scroll', function(){ scrollY = window.scrollY; }, { passive: true });
+  var lastScrollY = window.scrollY, velocity = 0, offset = 0;
+  var queue = [];
+  var DELAY = 1000;
+  window.addEventListener('scroll', function(){
+    var now = Date.now();
+    var cur = window.scrollY;
+    var delta = cur - lastScrollY;
+    lastScrollY = cur;
+    if(delta !== 0) queue.push({time: now, delta: delta});
+  }, { passive: true });
   function tick(){
-    var delta = scrollY - lastScrollY;
-    lastScrollY = scrollY;
-    velocity += delta * 0.38;   // 시작 속도 빠르게
-    velocity *= 0.88;           // 속도 감쇠
+    var now = Date.now();
+    while(queue.length && now - queue[0].time >= DELAY){
+      velocity += queue.shift().delta * 0.38;
+    }
+    velocity *= 0.88;
     offset += velocity;
-    offset *= 0.93;             // 스프링 빠르게 시작+빠르게 복귀
+    offset *= 0.93;
     offset = Math.max(-45, Math.min(45, offset));
     var blur = Math.min(1.2, Math.abs(velocity) * 0.04);
     nav.style.filter = blur > 0.2 ? 'blur(' + blur.toFixed(1) + 'px)' : '';
