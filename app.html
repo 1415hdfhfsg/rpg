@@ -1026,7 +1026,7 @@ document.querySelectorAll('.quick-tag').forEach(t=>t.addEventListener('click',()
   var nav = document.getElementById('sidenav');
   var lastScrollY = window.scrollY, velocity = 0, offset = 0;
   var queue = [];
-  var DELAY = 1000;
+  var DELAY = 200;
   window.addEventListener('scroll', function(){
     var now = Date.now();
     var cur = window.scrollY;
@@ -1037,12 +1037,12 @@ document.querySelectorAll('.quick-tag').forEach(t=>t.addEventListener('click',()
   function tick(){
     var now = Date.now();
     while(queue.length && now - queue[0].time >= DELAY){
-      velocity += queue.shift().delta * 0.38;
+      velocity += queue.shift().delta * 0.18;  // 느린 속도
     }
     velocity *= 0.88;
     offset += velocity;
     offset *= 0.93;
-    offset = Math.max(-45, Math.min(45, offset));
+    offset = Math.max(-75, Math.min(75, offset));  // 넓은 범위
     var blur = Math.min(1.2, Math.abs(velocity) * 0.04);
     nav.style.filter = blur > 0.2 ? 'blur(' + blur.toFixed(1) + 'px)' : '';
     nav.style.transform = 'translateY(calc(-50% + ' + offset.toFixed(2) + 'px))';
