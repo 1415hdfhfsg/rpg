@@ -38,7 +38,10 @@ body{display:flex;justify-content:center}
 
 /* LANDING */
 .landing{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:2rem}
-#page-home{min-height:100vh;position:relative}
+#page-home{min-height:100vh;position:relative;background:var(--surface)}
+#page-home .blur-bg{display:none}
+#page-home .pixel-bg{display:none}
+#page-home .vignette{display:none}
 .hero-glow{position:absolute;top:8%;left:50%;transform:translateX(-50%);width:800px;height:500px;background:radial-gradient(circle,rgba(253,139,0,0.06) 0%,rgba(255,231,146,0.03) 30%,transparent 65%);pointer-events:none}
 .logo-area{text-align:center;margin-bottom:2rem}
 .logo-area__img{width:120px;height:120px;border-radius:var(--radius-md);image-rendering:pixelated;border:2px solid var(--surface-container-highest);box-shadow:0 0 40px rgba(253,139,0,0.08),0 4px 20px rgba(0,0,0,0.5);transition:transform 0.3s,box-shadow 0.3s;cursor:pointer}
