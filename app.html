@@ -1029,11 +1029,11 @@ document.querySelectorAll('.quick-tag').forEach(t=>t.addEventListener('click',()
   function tick(){
     var delta = scrollY - lastScrollY;
     lastScrollY = scrollY;
-    velocity += delta * 0.2;   // 스크롤 방향으로 반응
-    velocity *= 0.78;           // 감쇠
+    velocity += delta * 0.45;  // 더 격렬하게 반응
+    velocity *= 0.80;           // 감쇠
     offset += velocity;
-    offset *= 0.88;             // 원위치로 복귀 (스프링)
-    offset = Math.max(-28, Math.min(28, offset)); // ±28px 제한
+    offset *= 0.95;             // 스프링 약하게 (천천히 복귀)
+    offset = Math.max(-55, Math.min(55, offset)); // ±55px 제한
     nav.style.transform = 'translateY(calc(-50% + ' + offset.toFixed(2) + 'px))';
     requestAnimationFrame(tick);
   }
