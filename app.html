@@ -203,6 +203,15 @@
   .grid-2{grid-template-columns:1fr}
   .nav__links{gap:0.25rem}
   .nav__link{font-size:0.65rem;padding:3px 6px}
+/* ===== SIDE NAV ===== */
+.sidenav{position:fixed;left:0;top:52px;height:calc(100vh - 52px);width:64px;background:rgba(11,11,11,0.96);backdrop-filter:blur(20px);border-right:1px solid var(--outline-variant);display:none;flex-direction:column;padding:0.5rem 0;z-index:99;overflow-y:auto;overflow-x:hidden}
+.sidenav.visible{display:flex}
+.sidenav__item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px;cursor:pointer;border-radius:var(--radius-md);margin:2px 5px;transition:all 0.18s;color:var(--on-surface-dim);font-size:0.58rem;font-weight:600;letter-spacing:0.03em;text-align:center;line-height:1.2;user-select:none}
+.sidenav__item:hover{color:var(--on-surface);background:var(--surface-container)}
+.sidenav__item--active{color:var(--primary)!important;background:rgba(255,231,146,0.1)!important}
+.sidenav__item svg{width:19px;height:19px;flex-shrink:0}
+.sidenav__divider{height:1px;background:var(--outline-variant);margin:6px 10px}
+body.has-sidenav{padding-left:64px}
   .flow{flex-direction:column}
   .flow__arrow{transform:rotate(90deg)}
 }
@@ -223,7 +232,45 @@
       <img src="https://media.forgecdn.net/avatars/thumbnails/1347/122/256/256/638875340907659040.png" alt="" />
       Champion's Codex
     </div>
-    <div class="nav__links" id="navLinks"></div>
+    <div class="nav__links" id="navLinks" style="display:none"></div>
+  </div>
+</nav>
+
+<!-- ==================== SIDE NAV ==================== -->
+<nav class="sidenav" id="sidenav">
+  <div class="sidenav__item" id="snav-builds" onclick="go('builds')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    빌드
+  </div>
+  <div class="sidenav__item" id="snav-bosses" onclick="go('bosses')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M9 8h.01M15 8h.01"/><path d="M9 13s.5 2 3 2 3-2 3-2"/><path d="M6 20v-2a6 6 0 0 1 12 0v2"/><path d="M4 20h16"/></svg>
+    보스
+  </div>
+  <div class="sidenav__item" id="snav-upgrade" onclick="go('upgrade')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+    강화
+  </div>
+  <div class="sidenav__divider"></div>
+  <div class="sidenav__item" id="snav-weapons" onclick="go('weapons')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="20" x2="20" y2="4"/><path d="M14 4h6v6"/><path d="M4 14l3 3"/></svg>
+    무기
+  </div>
+  <div class="sidenav__item" id="snav-armor" onclick="go('armor')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    방어구
+  </div>
+  <div class="sidenav__divider"></div>
+  <div class="sidenav__item" id="snav-crafting" onclick="go('crafting')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+    조합법
+  </div>
+  <div class="sidenav__item" id="snav-progression" onclick="go('progression')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    진행
+  </div>
+  <div class="sidenav__item" id="snav-explore" onclick="go('explore')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+    탐험
   </div>
 </nav>
 
@@ -704,8 +751,14 @@ function go(page) {
     const el = document.getElementById('page-' + p);
     if (el) el.classList.toggle('active', p === page);
   });
-  document.getElementById('nav').classList.toggle('visible', page !== 'home');
-  document.querySelectorAll('.nav__link').forEach(l => l.classList.toggle('nav__link--active', l.dataset.page === page));
+  const isHome = page === 'home';
+  document.getElementById('nav').classList.toggle('visible', !isHome);
+  document.getElementById('sidenav').classList.toggle('visible', !isHome);
+  document.body.classList.toggle('has-sidenav', !isHome);
+  // sidenav active state
+  document.querySelectorAll('.sidenav__item').forEach(el => {
+    el.classList.toggle('sidenav__item--active', el.id === 'snav-' + page);
+  });
   window.scrollTo(0, 0);
   history.pushState(null, '', '#' + page);
 }
