@@ -1037,7 +1037,7 @@ document.querySelectorAll('.quick-tag').forEach(t=>t.addEventListener('click',()
   function tick(){
     var now = Date.now();
     while(queue.length && now - queue[0].time >= DELAY){
-      velocity += queue.shift().delta * 0.18;  // 느린 속도
+      velocity += queue.shift().delta * 0.06;  // 매우 느린 속도
     }
     velocity *= 0.88;
     offset += velocity;
