@@ -194,7 +194,29 @@
   .search-box__kbd{display:none}
   .stats-row{gap:1.5rem}
 }
-  
+/* ===== TRANSLATOR ===== */
+.tr-fab{position:fixed;bottom:1.5rem;right:1.5rem;z-index:900;display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#0e0e0e;border:none;border-radius:var(--radius-full);padding:10px 20px;font-family:var(--font-body);font-weight:700;font-size:0.875rem;cursor:pointer;box-shadow:0 4px 20px rgba(255,231,146,0.3);transition:all 0.2s}
+.tr-fab:hover{transform:translateY(-2px);box-shadow:0 6px 32px rgba(255,231,146,0.4)}
+.tr-panel{position:fixed;bottom:5rem;right:1.5rem;z-index:950;width:340px;background:var(--surface-container-low);border-radius:var(--radius-xl);box-shadow:0 8px 40px rgba(0,0,0,0.6);display:none;flex-direction:column;overflow:hidden}
+.tr-panel.open{display:flex}
+.tr-panel__head{padding:0.875rem 1.125rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--outline-variant)}
+.tr-chat{flex:1;overflow-y:auto;padding:0.875rem;display:flex;flex-direction:column;gap:0.625rem;min-height:140px;max-height:320px}
+.tr-msg{max-width:88%;padding:0.55rem 0.875rem;border-radius:var(--radius-lg);font-size:0.8rem;line-height:1.65;word-break:break-word}
+.tr-msg--user{align-self:flex-end;background:linear-gradient(135deg,rgba(255,231,146,0.14),rgba(253,139,0,0.1));border:1px solid rgba(255,231,146,0.18);color:var(--on-surface)}
+.tr-msg--bot{align-self:flex-start;background:var(--surface-container);color:var(--on-surface)}
+.tr-msg--hint{align-self:center;background:none;color:var(--on-surface-faint);font-size:0.73rem;text-align:center;padding:0.25rem 0}
+.tr-msg--typing{align-self:flex-start;background:var(--surface-container);padding:0.65rem 1rem;display:flex;gap:5px;align-items:center}
+.tr-msg img{max-width:190px;max-height:130px;border-radius:var(--radius-md);display:block}
+.tr-bar{padding:0.625rem 0.875rem;display:flex;gap:0.5rem;border-top:1px solid var(--outline-variant);align-items:center}
+.tr-upload-lbl{flex:1;display:flex;align-items:center;gap:7px;background:var(--surface-container);border-radius:var(--radius-md);padding:0.5rem 0.875rem;cursor:pointer;font-size:0.8rem;color:var(--on-surface-dim);transition:background 0.15s;white-space:nowrap}
+.tr-upload-lbl:hover{background:var(--surface-container-high);color:var(--on-surface)}
+.tr-confirm{background:linear-gradient(135deg,var(--primary),var(--secondary));color:#0e0e0e;border:none;border-radius:var(--radius-md);padding:0.5rem 1rem;font-family:var(--font-body);font-weight:700;font-size:0.8rem;cursor:pointer;opacity:0.35;pointer-events:none;transition:all 0.2s;white-space:nowrap}
+.tr-confirm.ready{opacity:1;pointer-events:auto}
+.tr-dot{width:6px;height:6px;border-radius:50%;background:var(--on-surface-dim);animation:trPulse 1.3s infinite;opacity:0.3}
+.tr-dot:nth-child(2){animation-delay:0.22s}
+.tr-dot:nth-child(3){animation-delay:0.44s}
+@keyframes trPulse{0%,80%,100%{opacity:0.3}40%{opacity:1}}
+@media(max-width:480px){.tr-panel{right:0.75rem;width:calc(100vw - 1.5rem)}}
 </style>
 </head>
 <body>
@@ -809,6 +831,141 @@ input.addEventListener('input',()=>render(doSearch(input.value),input.value));
 input.addEventListener('blur',()=>setTimeout(()=>resultsEl.classList.remove('active'),200));
 document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();go('home');setTimeout(()=>input.focus(),100);}if(e.key==='Escape')input.blur();});
 document.querySelectorAll('.quick-tag').forEach(t=>t.addEventListener('click',()=>{input.value=t.textContent.trim();input.focus();render(doSearch(input.value),input.value);}));
+</script>
+
+<!-- ===== SCREENSHOT TRANSLATOR ===== -->
+<button class="tr-fab" id="trFab">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+  번역
+</button>
+
+<div class="tr-panel" id="trPanel">
+  <div class="tr-panel__head">
+    <div style="display:flex;align-items:center;gap:8px">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--secondary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-4"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/></svg>
+      <span style="font-weight:700;font-size:0.875rem;color:var(--on-surface)">스크린샷 번역</span>
+    </div>
+    <button id="trClose" style="background:var(--surface-container);border:none;border-radius:var(--radius-full);width:26px;height:26px;color:var(--on-surface-dim);cursor:pointer;font-size:0.85rem;display:flex;align-items:center;justify-content:center">✕</button>
+  </div>
+  <div class="tr-chat" id="trChat">
+    <div class="tr-msg tr-msg--hint">스크린샷을 업로드하고 번역 확인을 누르세요</div>
+  </div>
+  <div class="tr-bar">
+    <label for="trFile" class="tr-upload-lbl" id="trUploadLbl">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      업로드
+    </label>
+    <input type="file" id="trFile" accept="image/*" style="display:none">
+    <button class="tr-confirm" id="trConfirm">번역 확인</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var fab=document.getElementById('trFab');
+  var panel=document.getElementById('trPanel');
+  var closeBtn=document.getElementById('trClose');
+  var fileInput=document.getElementById('trFile');
+  var confirmBtn=document.getElementById('trConfirm');
+  var chat=document.getElementById('trChat');
+  var pendingFile=null;
+
+  fab.addEventListener('click',function(){panel.classList.toggle('open');});
+  closeBtn.addEventListener('click',function(){panel.classList.remove('open');});
+
+  fileInput.addEventListener('change',function(e){
+    var file=e.target.files&&e.target.files[0];
+    if(!file)return;
+    pendingFile=file;
+    var reader=new FileReader();
+    reader.onload=function(ev){
+      addMsg('<img src="'+ev.target.result+'" alt="업로드 이미지">','user');
+    };
+    reader.readAsDataURL(file);
+    confirmBtn.classList.add('ready');
+    fileInput.value='';
+  });
+
+  confirmBtn.addEventListener('click',function(){
+    if(!pendingFile)return;
+    confirmBtn.classList.remove('ready');
+    var file=pendingFile;
+    pendingFile=null;
+    doTranslate(file);
+  });
+
+  function addMsg(html,type){
+    var d=document.createElement('div');
+    d.className='tr-msg tr-msg--'+type;
+    d.innerHTML=html;
+    chat.appendChild(d);
+    chat.scrollTop=chat.scrollHeight;
+    return d;
+  }
+
+  function addTyping(){
+    var d=document.createElement('div');
+    d.className='tr-msg tr-msg--typing';
+    d.innerHTML='<span class="tr-dot"></span><span class="tr-dot"></span><span class="tr-dot"></span>';
+    chat.appendChild(d);
+    chat.scrollTop=chat.scrollHeight;
+    return d;
+  }
+
+  function loadTesseract(){
+    return new Promise(function(resolve,reject){
+      if(window.Tesseract){resolve();return;}
+      var s=document.createElement('script');
+      s.src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+      s.onload=resolve;
+      s.onerror=function(){reject(new Error('OCR 엔진 로드 실패'));};
+      document.body.appendChild(s);
+    });
+  }
+
+  async function doTranslate(file){
+    var typing=addTyping();
+    try{
+      await loadTesseract();
+      var worker=await Tesseract.createWorker('eng',1,{logger:function(){}});
+      var res=await worker.recognize(file);
+      await worker.terminate();
+      var text=res.data.text.trim().replace(/\f/g,'').replace(/[ \t]+/g,' ').trim();
+      if(!text||text.length<2){
+        typing.remove();
+        addMsg('텍스트를 인식할 수 없습니다. 더 선명한 이미지를 사용해 보세요.','bot');
+        return;
+      }
+      // split into <=450 char chunks
+      var chunks=[],lines=text.split('\n'),cur='';
+      for(var i=0;i<lines.length;i++){
+        if((cur+lines[i]).length>450){if(cur)chunks.push(cur.trim());cur=lines[i]+'\n';}
+        else cur+=lines[i]+'\n';
+      }
+      if(cur.trim())chunks.push(cur.trim());
+      if(!chunks.length)chunks=[text];
+      // translate each chunk
+      var translated=[];
+      for(var j=0;j<chunks.length;j++){
+        try{
+          var r=await fetch('https://api.mymemory.translated.net/get?q='+encodeURIComponent(chunks[j])+'&langpair=en|ko');
+          var json=await r.json();
+          translated.push((json.responseData&&json.responseData.translatedText)||chunks[j]);
+        }catch(e){translated.push(chunks[j]);}
+      }
+      typing.remove();
+      var finalText=translated.join('\n').trim();
+      addMsg('<div style="font-size:0.68rem;color:var(--secondary);margin-bottom:5px;font-weight:600">번역 결과</div><div style="white-space:pre-wrap">'+escHtml(finalText)+'</div>','bot');
+    }catch(err){
+      typing.remove();
+      addMsg('오류: '+err.message,'bot');
+    }
+  }
+
+  function escHtml(s){
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+})();
 </script>
 
 </body>
