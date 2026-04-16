@@ -222,8 +222,9 @@ SUBJECT_KEYWORDS = {
     ],
     "animal": [
         "cat", "dog", "bird", "horse", "dragon", "wolf", "fox", "rabbit",
-        "animal", "pet", "wildlife",
+        "animal", "pet", "wildlife", "hamster", "puppy", "kitten",
         "고양이", "강아지", "개", "새", "말", "용", "늑대", "토끼", "동물",
+        "햄스터", "고슴도치", "앵무새", "거북이", "물고기",
     ],
     "product": [
         "product", "bottle", "phone", "watch", "shoe", "bag", "car",
@@ -251,6 +252,23 @@ COMPOSITION_PRESETS = {
     "low-angle": "low angle hero shot, looking up, dramatic power perspective",
     "overhead": "top-down overhead flat lay, 90 degree angle, organized layout",
     "three-quarter": "three-quarter view, 45 degree angle, dimensional depth",
+    # Real-world casual shooting patterns
+    "phone-pet": (
+        "smartphone camera close-up, wide angle lens distortion, "
+        "shot from slightly above looking down at pet, "
+        "shallow phone camera depth of field, "
+        "owner leaning in close, casual handheld angle"
+    ),
+    "phone-food": (
+        "smartphone overhead or 45 degree, table edge visible in frame, "
+        "natural phone camera perspective, slight vignette, "
+        "other items partially visible at edges"
+    ),
+    "phone-selfie": (
+        "front-facing phone camera, arm length distance, "
+        "slightly above eye level, wide angle subtle distortion, "
+        "background naturally blurred by phone portrait mode"
+    ),
 }
 
 # ---------------------------------------------------------------------------
@@ -266,6 +284,17 @@ LIGHTING_PRESETS = {
     "rim": "strong rim backlighting, glowing edges, silhouette definition",
     "ambient": "soft ambient diffused light, overcast, minimal shadows, even illumination",
     "cinematic": "cinematic anamorphic lighting, lens flares, warm-cool contrast",
+    "fluorescent": (
+        "overhead fluorescent tube lighting, flat even cool-white illumination, "
+        "slightly blue-green color cast, minimal shadows directly below, "
+        "no warm tones from light source, harsh but even, "
+        "typical indoor ceiling light"
+    ),
+    "window-cafe": (
+        "large window side lighting in cafe, soft directional daylight, "
+        "one side brighter than other, gentle shadow gradient across subject, "
+        "warm but not golden, typical Korean cafe window seat lighting"
+    ),
 }
 
 

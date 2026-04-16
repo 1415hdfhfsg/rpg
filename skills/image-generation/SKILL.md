@@ -48,6 +48,63 @@ When it is NOT applied:
 - Fantasy, anime, pixel-art, comic-book, cyberpunk, 3D render, etc.
 - User explicitly requests a different aesthetic (e.g. "dark moody", "cyberpunk")
 
+## Reality Grounding Protocol (MANDATORY)
+
+**Before writing ANY prompt, Claude MUST verify physical reality.**
+Do NOT write "pretty words" — write what a CAMERA would actually capture.
+
+### Step A — Study the Real Subject
+Ask yourself: "이 피사체가 실제로 어떻게 생겼는가?"
+
+- **형상**: 실제 물체의 형태, 크기, 비율, 자세를 정확히 묘사
+  - ❌ "a hamster on paper bedding" (모호)
+  - ✅ "장모 골든햄스터가 완전히 납작하게 엎드려 있다. 몸이 찐빵처럼 퍼져 있고,
+       앞발은 앞으로 쭉 뻗거나 얼굴 밑에 접혀 있다. 뒷다리는 뒤로 펴져 있다.
+       긴 털이 바닥에 방사형으로 퍼져 종이와 뒤섞인다."
+- **재질**: 종이바닥 = 사무용지를 잘게 찢은 흰색 스트립, 일부 구겨짐, 두께 불균일
+  - ❌ "paper substrate" (학술 용어)
+  - ✅ "shredded strips of white office paper, crumpled and layered unevenly,
+       some strips curled, creating a messy nest texture"
+
+### Step B — Verify Light × Material Interaction
+Ask yourself: "이 조명이 이 재질에 닿으면 실제로 어떻게 보이는가?"
+
+Real-world light behavior by material:
+| Material | Light Interaction |
+|----------|------------------|
+| 긴 동물 털 (golden fur) | 형광등 → 털 끝에 차가운 흰색 하이라이트, 털 사이 그림자는 따뜻한 금색, 기름기에 따라 약간의 윤기 |
+| 찢긴 종이 | 형광등 → 흰색이지만 순백 아님, 약간 누르스름, 접힌 부분에 미세 그림자, 매트한 반사 |
+| 유리잔 (iced latte) | 창가 자연광 → 얼음에 하이라이트, 액체 내부 투과광, 결로 물방울에 작은 반사점들 |
+| 대리석 테이블 | 자연광 → 표면 무늬가 반투명하게 비침, 광택면에 창문 반사 |
+| 벚꽃잎 | 역광 → 반투명하게 빛이 투과, 꽃잎 핏줄 보임, 테두리 밝은 림라이트 |
+| 피부 (인물) | 창가광 → subsurface scattering으로 귀/손가락 끝이 약간 붉게 투과 |
+| 빵 껍질 | 측광 → 균열 부분 그림자 강조, 광택 부분에 오일 반사, 기공 내부 어둡게 |
+
+### Step C — Use Real Composition Patterns
+Ask yourself: "이 장면을 실제로 촬영한다면 카메라를 어디에 두는가?"
+
+Real-world photography patterns:
+| Subject | Real Composition |
+|---------|-----------------|
+| 케이지 속 햄스터 | 위에서 내려다봄 (top-down) 또는 케이지 문 열고 눈높이, 폰 가까이 대고 촬영, 한쪽에 케이지 철망이나 물병 일부 보임 |
+| 카페 음식 | 45도 또는 탑뷰, 접시 전체 + 음료 일부, 테이블 가장자리 보임, 냅킨/수저 자연스럽게 |
+| 인스타 셀카/인물 | 약간 위에서, 자연광 창가, 3/4 얼굴, 배경에 카페/거리 흐림 |
+| 벚꽃 풍경 | 벚꽃 터널 아래에서 앞으로 촬영, 또는 나무 올려보기, 사람 뒷모습 작게 |
+| 반려동물 | 눈높이로 낮춰서, 또는 위에서, 폰 셀카 앵글, 약간 흔들릴 수 있는 캐주얼 |
+| 제품 | 45도, 깔끔한 배경, 주변에 소품 1-2개 |
+
+### Step D — Self-Check Before Generating
+프롬프트 완성 후, 다음을 확인:
+
+1. **형상 테스트**: "이 묘사대로 그리면 실제 피사체와 같은가?"
+   - 햄스터 발가락 수? 눈 크기? 귀 모양? 꼬리 길이?
+2. **빛 테스트**: "이 조명에서 이 재질이 실제로 이렇게 보이는가?"
+   - 형광등 아래 금색 털 = 차가운 하이라이트, 순백이 아닌 약간 푸른끼
+3. **구도 테스트**: "실제로 이 상황에서 사람이 카메라를 이 위치에 두는가?"
+   - 케이지 안 햄스터를 85mm로 찍지 않음 → 폰 카메라, 광각, 가까이
+4. **재질 테스트**: "종이바닥이라고 했는데 실제로 종이가 보이는가?"
+   - 찢긴 종이 스트립의 형태, 구김, 두께가 묘사되었는가?
+
 ## Available Commands
 
 All scripts are in `skills/image-generation/scripts/`.
