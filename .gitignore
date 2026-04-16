@@ -1,3 +1,7 @@
 __pycache__/
 *.pyc
 *.pyo
+
+# Generated output files
+*_preview.html
+*.generated.png
