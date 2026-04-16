@@ -54,7 +54,10 @@ QUALITY_TIERS = {
     "standard": {
         "description": "Balanced quality and speed",
         "width": 1024, "height": 1024,
-        "tags": "high quality, detailed, sharp focus",
+        "tags": (
+            "high quality, detailed, sharp focus, well-composed, "
+            "professional color grading"
+        ),
         "model_hint": "flux",
         "enhance": False,
     },
@@ -62,20 +65,26 @@ QUALITY_TIERS = {
         "description": "High fidelity, rich detail",
         "width": 1280, "height": 1280,
         "tags": (
-            "masterpiece, best quality, highly detailed, sharp focus, "
-            "professional, 8k uhd, high resolution, intricate details"
+            "masterpiece, best quality, highly detailed, razor sharp focus, "
+            "professional photography, 8k uhd, high resolution, "
+            "intricate details, rich textures, natural color depth, "
+            "accurate shadows, volumetric atmosphere"
         ),
         "model_hint": "flux",
         "enhance": True,
     },
     "ultra": {
         "description": "Maximum quality, publication-ready",
-        "width": 1440, "height": 1440,
+        "width": 1920, "height": 1920,
         "tags": (
             "masterpiece, best quality, extraordinarily detailed, "
-            "ultra high resolution, 8k uhd, photorealistic fidelity, "
-            "razor sharp focus, intricate fine details, professional photography, "
-            "award winning, gallery quality, flawless composition"
+            "ultra high resolution, 16k uhd, photorealistic fidelity, "
+            "razor sharp focus across entire frame, "
+            "intricate fine details visible at pixel level, "
+            "professional large-format photography, award winning, "
+            "gallery exhibition quality, flawless composition, "
+            "accurate global illumination, physically correct light transport, "
+            "true-to-life color science, micro-contrast preserved"
         ),
         "model_hint": "gptimage",
         "enhance": True,
@@ -302,8 +311,14 @@ def build_prompt(base_prompt, filters=None, style=None, quality="standard",
     # --- 5. Style ---
     quick_styles = {
         "photorealistic": (
-            "photorealistic, 8k uhd, ultra realistic, shot on Canon EOS R5, "
-            "85mm f/1.4 lens, cinematic lighting, sharp focus, DSLR photograph"
+            "photorealistic, indistinguishable from a real photograph, "
+            "shot on Canon EOS R5 with 85mm f/1.4 GM lens, "
+            "natural film grain, accurate lens optics with subtle chromatic aberration, "
+            "true optical bokeh with circular highlights, "
+            "DSLR RAW photograph, Lightroom color grading, "
+            "physically accurate light falloff, real shadow penumbra, "
+            "no AI artifacts, no plastic skin, no uncanny smoothness, "
+            "genuine photographic imperfections that make it real"
         ),
         "anime": (
             "anime illustration, cel shading, vibrant saturated colors, "
@@ -394,7 +409,11 @@ def build_prompt(base_prompt, filters=None, style=None, quality="standard",
         parts.append(
             "extreme attention to micro details, every surface texture rendered, "
             "subsurface scattering on translucent materials, specular highlights "
-            "on reflective surfaces, chromatic depth, tack sharp throughout"
+            "on reflective surfaces, chromatic depth, tack sharp throughout, "
+            "pore-level skin detail, fabric thread visibility, "
+            "dust motes in light beams, fingerprint smudges on glass, "
+            "condensation droplets, real optical lens characteristics, "
+            "sensor noise at appropriate ISO, natural vignetting"
         )
 
     return ", ".join(parts)

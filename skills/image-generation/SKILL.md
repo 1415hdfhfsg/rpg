@@ -121,6 +121,19 @@ python3 skills/image-generation/scripts/analyze.py \
   --input artwork.jpg
 ```
 
+### 10. Preview (HTML with PNG Download)
+Generate a local HTML page that fetches the image client-side and offers
+a PNG download button. Useful when the server environment blocks API access.
+```bash
+python3 skills/image-generation/scripts/preview.py \
+  --prompt "bread on a table" -q ultra -d maximum \
+  --composition close-up --lighting golden --style photorealistic \
+  --prompt-ko "테이블 위의 빵" \
+  --output preview.html --open
+```
+The HTML page includes: settings card, EN/KO prompt display,
+live image preview, PNG download button, regenerate button, copy prompt button.
+
 ## Models Available (via Pollinations.ai)
 
 | Model | Best For | Speed |
