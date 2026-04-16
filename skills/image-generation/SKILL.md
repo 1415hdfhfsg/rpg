@@ -26,15 +26,30 @@ Uses free APIs (primarily Pollinations.ai) — no API key required for core feat
 
 All scripts are in `skills/image-generation/scripts/`.
 
-### 1. Generate (Text → Image)
+### 1. Generate (Text → Image) — with Quality & Detail Control
 ```bash
+# Quick draft (512px, fast)
 python3 skills/image-generation/scripts/generate.py \
-  --prompt "a fantasy castle at sunset" \
-  --style fantasy \
-  --model flux \
-  --width 1024 --height 1024 \
-  --output output.png
+  --prompt "a fantasy castle" -q draft --output draft.png
+
+# Standard (1024px, default)
+python3 skills/image-generation/scripts/generate.py \
+  --prompt "a fantasy castle at sunset" --output castle.png
+
+# High quality with auto detail expansion (1280px)
+python3 skills/image-generation/scripts/generate.py \
+  --prompt "a fantasy castle at sunset" -q high --output castle_hq.png
+
+# Ultra quality, maximum detail, composition + lighting control (1440px)
+python3 skills/image-generation/scripts/generate.py \
+  --prompt "freshly baked bread on a rustic wooden table" \
+  -q ultra -d maximum --composition close-up --lighting golden \
+  --output bread_ultra.png
 ```
+
+**Quality tiers**: draft → standard → high → ultra
+**Detail levels**: minimal → normal → detailed → maximum
+Higher tiers auto-select better models, larger sizes, and richer prompts.
 
 ### 2. Edit (Image + Instruction → Image)
 ```bash

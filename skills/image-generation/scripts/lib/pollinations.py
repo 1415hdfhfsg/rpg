@@ -29,11 +29,43 @@ AVAILABLE_MODELS = [
 # Models that support image-to-image
 IMG2IMG_MODELS = ["kontext", "nanobanana", "nanobanana-pro", "gptimage"]
 
+# Model quality rankings (higher = better detail rendering)
+MODEL_DETAIL_RANK = {
+    "gptimage":       5,  # Best photorealistic detail
+    "seedream-pro":   5,  # Best artistic detail
+    "nanobanana-pro": 4,
+    "flux":           4,  # Strong all-rounder
+    "seedream":       3,
+    "nanobanana":     3,
+    "kontext":        3,  # Best for edits
+    "zimage":         2,
+    "turbo":          1,  # Speed over quality
+}
+
 DEFAULT_MODEL = "flux"
 DEFAULT_WIDTH = 1024
 DEFAULT_HEIGHT = 1024
 MAX_RETRIES = 3
 RETRY_DELAY = 5  # seconds
+
+
+def auto_select_model(quality="standard", task="generate", current_model=None):
+    """
+    Recommend the best model based on quality tier and task.
+    If the user explicitly chose a model, respect that choice.
+    """
+    if current_model and current_model != DEFAULT_MODEL:
+        return current_model  # user explicitly chose
+
+    quality_model_map = {
+        "draft":    {"generate": "turbo",    "edit": "kontext", "compose": "turbo"},
+        "standard": {"generate": "flux",     "edit": "kontext", "compose": "gptimage"},
+        "high":     {"generate": "flux",     "edit": "nanobanana", "compose": "gptimage"},
+        "ultra":    {"generate": "gptimage", "edit": "nanobanana-pro", "compose": "gptimage"},
+    }
+
+    tier = quality_model_map.get(quality, quality_model_map["standard"])
+    return tier.get(task, "flux")
 
 
 def generate_image_url(prompt, model=None, width=None, height=None,
@@ -73,9 +105,9 @@ def download_image(url, output_path, retries=MAX_RETRIES):
         try:
             print(f"[{attempt}/{retries}] Requesting image...", file=sys.stderr)
             req = urllib.request.Request(url, headers={
-                "User-Agent": "ImageGenSkill/1.0"
+                "User-Agent": "ImageGenSkill/2.0"
             })
-            with urllib.request.urlopen(req, timeout=120) as resp:
+            with urllib.request.urlopen(req, timeout=180) as resp:
                 data = resp.read()
 
             os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
@@ -112,7 +144,8 @@ def generate_and_save(prompt, output_path, model=None, width=None,
     )
     print(f"Model: {model or DEFAULT_MODEL}", file=sys.stderr)
     print(f"Size: {width or DEFAULT_WIDTH}x{height or DEFAULT_HEIGHT}", file=sys.stderr)
-    print(f"URL: {url}", file=sys.stderr)
+    print(f"Enhance: {enhance}", file=sys.stderr)
+    print(f"URL: {url[:200]}...", file=sys.stderr)
     return download_image(url, output_path)
 
 
