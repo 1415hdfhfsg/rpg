@@ -165,12 +165,13 @@ follow this exact workflow:
 4. Run `generate.py --show-prompt` to build the final prompt
 
 ### Step 2 — Present Prompt Card to User
-Show the user a structured preview card like this:
+Show the user a structured preview card with BOTH English prompt AND
+Korean translation. The Korean version helps the user understand exactly
+what will be generated and request precise modifications.
 
 ```
------ Image Generation Plan -----
-Subject:      food (auto-detected)
-Prompt:       freshly baked bread on a rustic wooden table
+========== Image Generation Plan ==========
+Subject:      food (자동 감지)
 Quality:      ultra
 Detail:       maximum
 Model:        gptimage
@@ -180,18 +181,31 @@ Lighting:     golden
 Style:        photorealistic
 Filter:       —
 
---- Final Prompt (926 chars) ---
+--- Prompt (EN) ---
 freshly baked bread, glistening surface texture, visible moisture
 and oils, rich appetizing color variations, natural color gradients,
 crispy crunchy flaky moist textures clearly distinguishable, ...
+
+--- Prompt (KO) ---
+갓 구운 빵, 반짝이는 표면 질감, 수분과 기름기가 보이는,
+풍부하고 식욕을 자극하는 색상 변화, 자연스러운 색상 그라데이션,
+바삭하고 촉촉한 질감이 뚜렷하게 구분되는, ...
 
 --- Command ---
 python3 skills/image-generation/scripts/generate.py \
   --prompt "freshly baked bread" -q ultra -d maximum \
   --composition close-up --lighting golden \
   --style photorealistic --output bread_ultra.png
----------------------------------
+================================================
 ```
+
+**Korean translation rules:**
+- Translate the FULL expanded prompt, not just the user's original input
+- Translate segment by segment so the user can see which detail maps to which
+- Use natural Korean, not machine-translated awkward phrasing
+- Mark auto-added details with (자동) so the user knows what was expanded
+- If the user's original request was in Korean, show the original Korean
+  first, then the English prompt that will actually be sent to the API
 
 ### Step 3 — Ask for Approval
 Ask the user:
