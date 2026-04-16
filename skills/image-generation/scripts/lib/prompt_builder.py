@@ -92,37 +92,84 @@ QUALITY_TIERS = {
 }
 
 # ---------------------------------------------------------------------------
+# Korean Instagram Aesthetic — Default Reference for Photo/Edit
+# ---------------------------------------------------------------------------
+# Applied automatically to photo-style generations (person, food, landscape,
+# architecture, product). NOT applied to fantasy, anime, pixel-art, etc.
+KOREAN_INSTAGRAM_AESTHETIC = {
+    "color_grading": (
+        "Korean Instagram aesthetic color grading, "
+        "muted warm desaturated tones, soft pastel color palette, "
+        "lowered contrast with lifted blacks, "
+        "warm highlights with slightly cool shadows, "
+        "VSCO-style faded film look, "
+        "subtle pink and peach undertones"
+    ),
+    "mood": (
+        "Korean 감성 (gamsong) emotional atmosphere, "
+        "calm serene contemplative mood, "
+        "clean minimalist composition with breathing space, "
+        "effortlessly aesthetic, not overly styled"
+    ),
+    "lighting": (
+        "soft diffused natural light, "
+        "window light or golden hour preferred, "
+        "gentle even illumination without harsh shadows, "
+        "light and airy feel"
+    ),
+    "editing": (
+        "subtle Lightroom-style editing, "
+        "skin tones warm but not oversaturated, "
+        "whites slightly creamy not pure, "
+        "overall soft and dreamy processing"
+    ),
+}
+
+# Subject categories that receive Korean Instagram treatment
+KOREAN_AESTHETIC_SUBJECTS = {
+    "person", "food", "landscape", "architecture", "product", "default",
+}
+
+# Subject categories that skip Korean Instagram treatment
+NON_KOREAN_AESTHETIC_STYLES = {
+    "anime", "pixel-art", "comic-book", "pop-art", "low-poly",
+    "vector-flat", "cyberpunk", "fantasy", "3d-render",
+}
+
+# ---------------------------------------------------------------------------
 # Subject-aware detail expansion templates
 # ---------------------------------------------------------------------------
 # Each key is a detected subject category; value is a dict of visual dimensions
 # that get merged into the prompt when the user hasn't specified them.
 DETAIL_TEMPLATES = {
     "person": {
-        "skin": "realistic skin texture with fine pores and subtle imperfections",
+        "skin": "realistic skin texture with fine pores, warm healthy skin tone, Korean beauty standard natural glow",
         "eyes": "detailed eyes with visible iris patterns and natural reflections",
-        "hair": "individual hair strands visible, natural hair texture",
+        "hair": "individual hair strands visible, natural hair texture with soft sheen",
         "clothing": "fabric weave and texture clearly visible, realistic folds and creases",
+        "vibe": "Korean street fashion aesthetic, effortlessly styled, natural candid pose",
     },
     "food": {
         "surface": "glistening surface texture, visible moisture and oils",
-        "color": "rich appetizing color variations, natural color gradients",
+        "color": "appetizing warm color tones, natural color gradients, Korean cafe plating aesthetic",
         "texture": "crispy crunchy flaky moist textures clearly distinguishable",
         "steam": "subtle steam or heat haze rising from warm areas",
-        "plating": "professional plating on appropriate dish or surface",
-        "garnish": "fresh garnish with visible leaf veins and water droplets",
+        "plating": "aesthetic Korean cafe-style plating on ceramic dish, minimalist tableware",
+        "setting": "clean bright cafe table or wooden surface, soft background blur, latte or drink beside dish",
     },
     "landscape": {
-        "atmosphere": "atmospheric perspective with depth haze in distance",
-        "sky": "detailed sky with cloud formations and light scattering",
-        "foliage": "individual leaves and branches with natural variation",
-        "ground": "ground texture with dirt, stones, grass blades visible",
-        "depth": "clear foreground, midground, and background separation",
+        "atmosphere": "atmospheric perspective with depth haze, dreamy soft air quality",
+        "sky": "soft pastel sky with gentle cloud formations",
+        "foliage": "individual leaves and branches with natural variation, seasonal Korean scenery",
+        "depth": "clear foreground, midground, and background separation with soft transitions",
+        "korean": "Korean scenery vibes, Hangang park or Jeju or cherry blossom or autumn foliage feel",
     },
     "architecture": {
-        "material": "visible material textures: stone grain, brick mortar, wood grain, metal patina",
-        "detail": "architectural ornaments and structural details clearly rendered",
+        "material": "visible material textures: concrete, glass, wood, Korean hanok details if traditional",
+        "detail": "architectural details clearly rendered, clean modern or traditional Korean aesthetic",
         "scale": "sense of scale with environmental context",
-        "light": "light interaction with building surfaces, reflections in glass",
+        "light": "soft light interaction with surfaces, warm interior glow from windows",
+        "vibe": "Korean cafe interior or Bukchon hanok village or modern Seoul architecture feel",
     },
     "animal": {
         "fur": "individual fur strands with natural color variation and sheen",
@@ -134,7 +181,7 @@ DETAIL_TEMPLATES = {
         "material": "product material clearly visible: metal brushing, plastic sheen, glass clarity",
         "reflection": "accurate surface reflections and highlights",
         "edges": "clean sharp product edges with precise manufacturing detail",
-        "branding": "crisp text and logos if applicable",
+        "setting": "Korean minimalist flat lay or clean marble surface, aesthetic props",
     },
     "fantasy": {
         "magic": "magical effects with glowing particles, energy wisps, ethereal light",
@@ -286,6 +333,13 @@ def build_prompt(base_prompt, filters=None, style=None, quality="standard",
     """
     parts = []
 
+    # --- 0. Detect subject for Korean aesthetic routing ---
+    subject = detect_subject(base_prompt)
+    apply_korean = (
+        subject in KOREAN_AESTHETIC_SUBJECTS
+        and (style not in NON_KOREAN_AESTHETIC_STYLES if style else True)
+    )
+
     # --- 1. Subject (with optional detail expansion) ---
     if detail_level in ("detailed", "maximum"):
         enhanced = detail_enhance(base_prompt)
@@ -293,15 +347,25 @@ def build_prompt(base_prompt, filters=None, style=None, quality="standard",
     else:
         parts.append(base_prompt.strip())
 
-    # --- 2. Composition / Camera ---
+    # --- 2. Korean Instagram Aesthetic (auto-applied for photo subjects) ---
+    if apply_korean and detail_level != "minimal":
+        parts.append(KOREAN_INSTAGRAM_AESTHETIC["color_grading"])
+        if detail_level in ("detailed", "maximum"):
+            parts.append(KOREAN_INSTAGRAM_AESTHETIC["mood"])
+            parts.append(KOREAN_INSTAGRAM_AESTHETIC["editing"])
+
+    # --- 3. Composition / Camera ---
     if composition and composition in COMPOSITION_PRESETS:
         parts.append(COMPOSITION_PRESETS[composition])
 
-    # --- 3. Lighting ---
+    # --- 4. Lighting ---
     if lighting and lighting in LIGHTING_PRESETS:
         parts.append(LIGHTING_PRESETS[lighting])
+    elif apply_korean and not lighting:
+        # Default Korean Instagram lighting if none specified
+        parts.append(KOREAN_INSTAGRAM_AESTHETIC["lighting"])
 
-    # --- 4. Filter modifiers ---
+    # --- 5. Filter modifiers ---
     if filters:
         for fp in filters:
             flt = load_filter(fp)

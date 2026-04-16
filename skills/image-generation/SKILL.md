@@ -22,6 +22,32 @@ allowed-tools:
 Multi-purpose AI image generation, editing, and transformation skill.
 Uses free APIs (primarily Pollinations.ai) — no API key required for core features.
 
+## Korean Instagram Aesthetic (Default Reference)
+
+**All photo-style images automatically use Korean Instagram (한국 인스타 감성) as
+the default aesthetic reference.** This is applied automatically — no user action needed.
+
+What gets applied:
+- **Color grading**: muted warm tones, soft pastels, lowered contrast, lifted blacks,
+  VSCO-style faded film look, subtle pink/peach undertones
+- **Mood**: 감성(gamsong) atmosphere, calm/serene, clean minimalist composition,
+  effortlessly aesthetic
+- **Lighting**: soft diffused natural light, window light or golden hour,
+  gentle even illumination, light and airy
+- **Editing**: Lightroom-style, warm but not oversaturated skin, creamy whites,
+  soft and dreamy processing
+
+When it IS applied (auto):
+- Person / portrait photos
+- Food / cafe photos
+- Landscape / scenery
+- Architecture / interior
+- Product photos
+
+When it is NOT applied:
+- Fantasy, anime, pixel-art, comic-book, cyberpunk, 3D render, etc.
+- User explicitly requests a different aesthetic (e.g. "dark moody", "cyberpunk")
+
 ## Available Commands
 
 All scripts are in `skills/image-generation/scripts/`.
