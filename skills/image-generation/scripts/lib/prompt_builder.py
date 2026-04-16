@@ -127,7 +127,7 @@ KOREAN_INSTAGRAM_AESTHETIC = {
 
 # Subject categories that receive Korean Instagram treatment
 KOREAN_AESTHETIC_SUBJECTS = {
-    "person", "food", "landscape", "architecture", "product", "default",
+    "person", "food", "landscape", "architecture", "product", "animal", "default",
 }
 
 # Subject categories that skip Korean Instagram treatment
@@ -175,7 +175,7 @@ DETAIL_TEMPLATES = {
         "fur": "individual fur strands with natural color variation and sheen",
         "eyes": "expressive eyes with realistic reflections and depth",
         "anatomy": "anatomically accurate proportions and posture",
-        "environment": "natural habitat context with appropriate vegetation",
+        "vibe": "casual pet photo taken with phone by owner, authentic everyday moment, not a studio concept shot",
     },
     "product": {
         "material": "product material clearly visible: metal brushing, plastic sheen, glass clarity",
@@ -464,21 +464,43 @@ def build_prompt(base_prompt, filters=None, style=None, quality="standard",
     if style and style in quick_styles:
         parts.append(quick_styles[style])
 
-    # --- 6. Quality tier tags ---
+    # --- 7. Quality tier tags ---
+    # When Korean Instagram aesthetic is active, replace "pro studio" tags
+    # with "casual authentic" tags to avoid concept-shot feel
     tier = QUALITY_TIERS.get(quality, QUALITY_TIERS["standard"])
-    parts.append(tier["tags"])
 
-    # --- 7. Extra detail-level boosters ---
-    if detail_level == "maximum":
+    if apply_korean and quality in ("high", "ultra"):
+        # Korean Instagram = casual high quality, NOT studio concept shot
         parts.append(
-            "extreme attention to micro details, every surface texture rendered, "
-            "subsurface scattering on translucent materials, specular highlights "
-            "on reflective surfaces, chromatic depth, tack sharp throughout, "
-            "pore-level skin detail, fabric thread visibility, "
-            "dust motes in light beams, fingerprint smudges on glass, "
-            "condensation droplets, real optical lens characteristics, "
-            "sensor noise at appropriate ISO, natural vignetting"
+            "high quality, sharp focus on subject, natural color depth, "
+            "realistic textures, authentic casual photograph, "
+            "not a studio concept shot, not overly retouched, "
+            "genuine everyday moment captured beautifully, "
+            "slight natural imperfections that feel real"
         )
+    else:
+        parts.append(tier["tags"])
+
+    # --- 8. Extra detail-level boosters ---
+    if detail_level == "maximum":
+        if apply_korean:
+            # Korean casual detail: emphasis on texture/material, not clinical perfection
+            parts.append(
+                "fine texture details visible, surface materials clearly rendered, "
+                "natural bokeh in out-of-focus areas, "
+                "real camera sensor characteristics, subtle noise, "
+                "true-to-life color reproduction"
+            )
+        else:
+            parts.append(
+                "extreme attention to micro details, every surface texture rendered, "
+                "subsurface scattering on translucent materials, specular highlights "
+                "on reflective surfaces, chromatic depth, tack sharp throughout, "
+                "pore-level skin detail, fabric thread visibility, "
+                "dust motes in light beams, fingerprint smudges on glass, "
+                "condensation droplets, real optical lens characteristics, "
+                "sensor noise at appropriate ISO, natural vignetting"
+            )
 
     return ", ".join(parts)
 
