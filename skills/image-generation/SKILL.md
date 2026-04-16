@@ -282,18 +282,77 @@ When building the preview card, Claude should proactively suggest:
 - **Filter**: "이 사진에 cinematic/wes-anderson 필터를 추천합니다"
 - **Quality**: "빠른 확인용이면 draft, 최종본이면 ultra를 추천합니다"
 
-## Auto-Routing
+## Situation-Based Model Routing (MANDATORY)
+
+Claude MUST auto-select the optimal model based on what the user is asking for.
+The user should never need to know model names — Claude picks the best one.
+
+### Routing Rules
+
+**By content type** — what is being generated:
+| User says (예시) | Model | Why |
+|-----------------|-------|-----|
+| "사진 찍은 것처럼", "실제 사진", "포토", real photo | `gptimage-large` | 실사 최강 |
+| "로고 만들어줘", "텍스트 넣어줘", text in image | `gptimage-large` | 텍스트 렌더링 최고 |
+| "일러스트", "컨셉아트", "그림", illustration | `seedream-pro` | 예술적 표현 최강 |
+| "애니메이션", "만화", anime, cartoon | `seedream5` | 스타일 표현 우수 |
+| "독특하게", "창의적으로", "자유롭게", creative | `grok-imagine-pro` | 대담한 해석 |
+| "영화 장면", "시네마틱", cinematic still | `wan-image-pro` | 필름 프레임 특화 |
+| "제품 사진", "상품", "이커머스", product | `nova-canvas` | 상업 사진 안정적 |
+| "타이포그래피", "폰트 디자인", typography | `qwen-image` | 텍스트 정확도 + LoRA |
+| general, 기본 | `flux` | 올라운더 |
+
+**By action** — what is being done:
+| User says (예시) | Model | Why |
+|-----------------|-------|-----|
+| "이 사진 수정해줘", "배경 바꿔줘", edit photo | `kontext` | 지시 기반 편집 최강 |
+| "필터 적용", "느낌 바꿔줘", apply filter | `kontext` | 스타일 변환 특화 |
+| "여러 번 수정", "계속 고쳐", multi-turn edit | `nanobanana-pro` | 멀티턴 편집 |
+| "합성해줘", "합쳐줘", compose images | `gptimage-large` | 합성 품질 최고 |
+| "배경 제거", remove background | `kontext` | 빠르고 정확 |
+| "스타일 변환", style transfer | `kontext` | 자연스러운 변환 |
+
+**By quality request:**
+| User says | Quality Tier | Model auto-selected |
+|-----------|-------------|-------------------|
+| "빨리", "대충", "시안", quick/draft | draft | flux |
+| (기본, 별말 없음) | standard | flux |
+| "고화질", "잘 만들어줘", high quality | high | gptimage |
+| "최고 화질", "인쇄용", "완벽하게", maximum | ultra | gptimage-large |
+
+### Model Switch Mid-Conversation
+
+When the user is unsatisfied with results, Claude should proactively suggest:
+- "실사 느낌이 부족하다면 → gptimage-large로 바꿔볼까요?"
+- "더 예술적인 느낌을 원하시면 → grok-imagine-pro가 적합합니다"
+- "텍스트가 깨진다면 → qwen-image가 텍스트 렌더링에 특화되어 있습니다"
+
+### Example Flow
+```
+사용자: 영화 포스터 만들어줘. 제목은 "THE LAST KNIGHT"
+
+Claude 판단:
+  - 영화 포스터 → 시네마틱 → wan-image-pro? 
+  - 하지만 "THE LAST KNIGHT" 텍스트 포함 → gptimage-large가 텍스트 정확
+  - 결론: gptimage-large (텍스트 > 시네마틱 우선)
+  - composition: portrait (포스터는 세로)
+  - lighting: dramatic
+```
+
+## Auto-Routing Summary
 
 When a user makes a request, Claude should:
 
 1. **Detect intent** — generate / edit / filter / compose / analyze
-2. **Choose model** — based on task (see model table above)
-3. **Apply presets** — auto-match style/filter from context
-4. **Set dimensions** — match purpose (SNS, print, game icon, etc.)
-5. **Preview prompt** — ALWAYS show the prompt card first (Step 2 above)
-6. **Wait for approval** — never generate without user confirmation
-7. **Execute script** — run the approved command
-8. **Verify output** — read the generated image and check quality
+2. **Detect content type** — photo / illustration / cinematic / product / text
+3. **Choose model** — using routing rules above (user never needs to know model names)
+4. **Apply presets** — auto-match style/filter/composition/lighting from context
+5. **Set dimensions** — match purpose (SNS, print, game icon, etc.)
+6. **Preview prompt** — ALWAYS show the prompt card first (with model choice reason)
+7. **Wait for approval** — never generate without user confirmation
+8. **Execute script** — run the approved command
+9. **Verify output** — read the generated image and check quality
+10. **Suggest alternatives** — if result is unsatisfying, recommend a different model
 
 ## Dimension Presets
 
