@@ -2,6 +2,8 @@
 Pollinations.ai API wrapper.
 Free, no API key required for basic usage.
 Docs: https://github.com/pollinations/pollinations/blob/main/APIDOCS.md
+
+Curated model list — low-quality models excluded.
 """
 
 import urllib.request
@@ -14,32 +16,58 @@ import sys
 
 BASE_URL = "https://image.pollinations.ai"
 
+# -----------------------------------------------------------------------
+# Curated high-quality models only
+# Excluded: turbo (low detail), klein (weak), zimage (mediocre),
+#           p-image / p-image-edit (unverified quality), wan-image (keep pro only)
+# -----------------------------------------------------------------------
 AVAILABLE_MODELS = [
-    "flux",           # General purpose, high quality (default)
-    "turbo",          # Fast drafts
-    "gptimage",       # Photorealistic, text rendering
-    "kontext",        # Image editing, img2img
-    "seedream",       # Creative/artistic
-    "seedream-pro",   # Premium artistic
-    "nanobanana",     # Editing, multi-turn (Gemini 2.5 Flash Image)
-    "nanobanana-pro", # Premium editing
-    "zimage",         # Alternative generation
+    # --- Photorealistic / Top Tier ---
+    "gptimage-large",  # GPT Image 1.5 — best photorealism, text rendering
+    "gptimage",        # GPT Image 1   — strong photorealism, text rendering
+    # --- Creative / Artistic ---
+    "grok-imagine-pro", # Grok premium  — bold creative, few restrictions
+    "grok-imagine",     # Grok standard — creative, unconventional
+    "seedream5",        # Seedream v5   — latest artistic, rich color
+    "seedream-pro",     # Seedream premium — high-end artistic
+    "seedream",         # Seedream standard — solid artistic
+    # --- Text Rendering / Special ---
+    "qwen-image",      # Qwen Image    — text accuracy, LoRA, layer editing
+    # --- All-rounder ---
+    "flux",            # FLUX.1        — reliable, fast, good prompt adherence
+    # --- Editing / Img2Img ---
+    "kontext",         # FLUX Kontext   — instruction-based editing best
+    "nanobanana-pro",  # NB Pro         — premium multi-turn editing
+    "nanobanana-2",    # NB v2          — improved editing
+    "nanobanana",      # NB standard    — Gemini-based editing
+    # --- Cinematic / Commercial ---
+    "wan-image-pro",   # Wan Pro        — cinematic stills
+    "nova-canvas",     # Nova Canvas    — stable commercial/product
 ]
 
 # Models that support image-to-image
-IMG2IMG_MODELS = ["kontext", "nanobanana", "nanobanana-pro", "gptimage"]
+IMG2IMG_MODELS = [
+    "kontext", "nanobanana", "nanobanana-2", "nanobanana-pro",
+    "gptimage", "gptimage-large",
+]
 
-# Model quality rankings (higher = better detail rendering)
-MODEL_DETAIL_RANK = {
-    "gptimage":       5,  # Best photorealistic detail
-    "seedream-pro":   5,  # Best artistic detail
-    "nanobanana-pro": 4,
-    "flux":           4,  # Strong all-rounder
-    "seedream":       3,
-    "nanobanana":     3,
-    "kontext":        3,  # Best for edits
-    "zimage":         2,
-    "turbo":          1,  # Speed over quality
+# Quality ranking (1-5, higher = better output fidelity)
+MODEL_QUALITY_RANK = {
+    "gptimage-large":  5,
+    "gptimage":        5,
+    "grok-imagine-pro": 5,
+    "seedream-pro":    5,
+    "nanobanana-pro":  4,
+    "seedream5":       4,
+    "grok-imagine":    4,
+    "qwen-image":      4,
+    "flux":            4,
+    "wan-image-pro":   4,
+    "kontext":         4,
+    "nanobanana-2":    3,
+    "seedream":        3,
+    "nanobanana":      3,
+    "nova-canvas":     3,
 }
 
 DEFAULT_MODEL = "flux"
@@ -55,13 +83,37 @@ def auto_select_model(quality="standard", task="generate", current_model=None):
     If the user explicitly chose a model, respect that choice.
     """
     if current_model and current_model != DEFAULT_MODEL:
-        return current_model  # user explicitly chose
+        return current_model
 
     quality_model_map = {
-        "draft":    {"generate": "turbo",    "edit": "kontext", "compose": "turbo"},
-        "standard": {"generate": "flux",     "edit": "kontext", "compose": "gptimage"},
-        "high":     {"generate": "flux",     "edit": "nanobanana", "compose": "gptimage"},
-        "ultra":    {"generate": "gptimage", "edit": "nanobanana-pro", "compose": "gptimage"},
+        "draft":    {
+            "generate": "flux",
+            "edit": "kontext",
+            "compose": "gptimage",
+            "artistic": "seedream",
+            "cinematic": "flux",
+        },
+        "standard": {
+            "generate": "flux",
+            "edit": "kontext",
+            "compose": "gptimage",
+            "artistic": "seedream5",
+            "cinematic": "wan-image-pro",
+        },
+        "high":     {
+            "generate": "gptimage",
+            "edit": "nanobanana-2",
+            "compose": "gptimage-large",
+            "artistic": "seedream-pro",
+            "cinematic": "wan-image-pro",
+        },
+        "ultra":    {
+            "generate": "gptimage-large",
+            "edit": "nanobanana-pro",
+            "compose": "gptimage-large",
+            "artistic": "grok-imagine-pro",
+            "cinematic": "wan-image-pro",
+        },
     }
 
     tier = quality_model_map.get(quality, quality_model_map["standard"])
@@ -157,14 +209,16 @@ def list_models():
 def get_best_model(task="generate"):
     """Suggest the best model for a given task."""
     task_map = {
-        "generate": "flux",
-        "edit": "kontext",
-        "photorealistic": "gptimage",
-        "artistic": "seedream",
-        "fast": "turbo",
-        "text_in_image": "gptimage",
+        "generate":      "flux",
+        "edit":          "kontext",
+        "photorealistic": "gptimage-large",
+        "artistic":      "seedream-pro",
+        "text_in_image": "gptimage-large",
         "style_transfer": "kontext",
-        "filter": "kontext",
-        "compose": "gptimage",
+        "filter":        "kontext",
+        "compose":       "gptimage-large",
+        "cinematic":     "wan-image-pro",
+        "creative":      "grok-imagine-pro",
+        "commercial":    "nova-canvas",
     }
     return task_map.get(task, DEFAULT_MODEL)

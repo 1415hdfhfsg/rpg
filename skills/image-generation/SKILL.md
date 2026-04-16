@@ -134,18 +134,56 @@ python3 skills/image-generation/scripts/preview.py \
 The HTML page includes: settings card, EN/KO prompt display,
 live image preview, PNG download button, regenerate button, copy prompt button.
 
-## Models Available (via Pollinations.ai)
+## Models Available (via Pollinations.ai) — Quality Curated
 
-| Model | Best For | Speed |
-|-------|----------|-------|
-| `flux` | General purpose, high quality (default) | Medium |
-| `turbo` | Fast drafts, iteration | Fast |
-| `gptimage` | Photorealistic, text in images | Slow |
-| `kontext` | Image editing, img2img | Medium |
-| `seedream` | Creative, artistic | Medium |
-| `seedream-pro` | Premium artistic | Slow |
-| `nanobanana` | Editing, multi-turn | Medium |
-| `nanobanana-pro` | Premium editing | Slow |
+Low-quality models excluded. All models below produce high-fidelity output.
+
+### Photorealistic / Top Tier
+| Model | Best For | Speed | Quality |
+|-------|----------|-------|---------|
+| `gptimage-large` | Best photorealism, text rendering, print-ready | Slow | ★★★★★ |
+| `gptimage` | Photorealistic, text in images | Slow | ★★★★★ |
+
+### Creative / Artistic
+| Model | Best For | Speed | Quality |
+|-------|----------|-------|---------|
+| `grok-imagine-pro` | Bold creative, few content restrictions | Slow | ★★★★★ |
+| `grok-imagine` | Unconventional artistic | Medium | ★★★★ |
+| `seedream5` | Latest artistic, rich color | Medium | ★★★★ |
+| `seedream-pro` | Premium artistic, concept art | Slow | ★★★★★ |
+| `seedream` | Solid artistic, illustrations | Medium | ★★★ |
+
+### Text / Special
+| Model | Best For | Speed | Quality |
+|-------|----------|-------|---------|
+| `qwen-image` | Text accuracy, LoRA, layer editing | Medium | ★★★★ |
+
+### All-rounder
+| Model | Best For | Speed | Quality |
+|-------|----------|-------|---------|
+| `flux` | Reliable default, good prompt adherence | Medium | ★★★★ |
+
+### Editing / Img2Img
+| Model | Best For | Speed | Quality |
+|-------|----------|-------|---------|
+| `kontext` | Instruction-based editing, style transfer | Medium | ★★★★ |
+| `nanobanana-pro` | Premium multi-turn editing | Slow | ★★★★ |
+| `nanobanana-2` | Improved editing | Medium | ★★★ |
+| `nanobanana` | Gemini-based editing | Medium | ★★★ |
+
+### Cinematic / Commercial
+| Model | Best For | Speed | Quality |
+|-------|----------|-------|---------|
+| `wan-image-pro` | Cinematic stills, film frames | Slow | ★★★★ |
+| `nova-canvas` | Stable commercial/product photos | Medium | ★★★ |
+
+### Auto-Selection by Quality Tier
+| Tier | Generate | Edit | Compose | Artistic |
+|------|----------|------|---------|----------|
+| draft | flux | kontext | gptimage | seedream |
+| standard | flux | kontext | gptimage | seedream5 |
+| high | gptimage | nanobanana-2 | gptimage-large | seedream-pro |
+| ultra | **gptimage-large** | **nanobanana-pro** | **gptimage-large** | **grok-imagine-pro** |
 
 ## Filter Presets
 
