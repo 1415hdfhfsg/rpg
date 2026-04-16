@@ -1,0 +1,44 @@
+category: purpose
+description: "Platform and purpose-optimized transformations"
+filters:
+  - id: instagram-feed
+    name: "Instagram Feed"
+    description: "Cohesive 1:1 feed aesthetic"
+    prompt_modifier: "Instagram feed optimized, cohesive warm tone, slightly faded, unified color palette, aesthetically pleasing, curated, modern"
+    model: kontext
+    strength: 0.5
+
+  - id: instagram-story
+    name: "Instagram Story"
+    description: "Bold 9:16 vertical impact"
+    prompt_modifier: "Instagram story style, bold vivid colors, eye-catching, dynamic, vertical composition optimized, engaging, scroll-stopping"
+    model: kontext
+    strength: 0.5
+
+  - id: youtube-thumbnail
+    name: "YouTube Thumbnail"
+    description: "High contrast click-worthy"
+    prompt_modifier: "YouTube thumbnail optimized, high contrast, bold saturated colors, clear subject, eye-catching, dramatic, attention-grabbing"
+    model: kontext
+    strength: 0.6
+
+  - id: tiktok-vertical
+    name: "TikTok Vertical"
+    description: "Vibrant vertical format"
+    prompt_modifier: "TikTok style, vibrant saturated colors, trendy aesthetic, youthful energy, vertical 9:16 composition, dynamic, engaging"
+    model: kontext
+    strength: 0.5
+
+  - id: pinterest-pin
+    name: "Pinterest Pin"
+    description: "Aesthetic 2:3 vertical"
+    prompt_modifier: "Pinterest aesthetic, clean curated look, soft consistent tones, visually organized, inspirational, aspirational, beautiful composition"
+    model: kontext
+    strength: 0.5
+
+  - id: print-quality
+    name: "Print Quality"
+    description: "High-res print optimized"
+    prompt_modifier: "print quality enhancement, sharp detail, rich tonal range, balanced exposure, professional color accuracy, publication ready"
+    model: kontext
+    strength: 0.4

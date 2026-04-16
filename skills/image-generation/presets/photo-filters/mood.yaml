@@ -1,0 +1,72 @@
+category: mood
+description: "Emotional atmosphere and mood transformations"
+filters:
+  - id: dreamy
+    name: Dreamy
+    description: "Soft, hazy, ethereal atmosphere"
+    prompt_modifier: "dreamy atmosphere, soft focus, hazy glow, pastel tones, ethereal light, gentle bloom effect, slightly overexposed highlights"
+    model: kontext
+    strength: 0.7
+
+  - id: melancholic
+    name: Melancholic
+    description: "Subdued, reflective sadness"
+    prompt_modifier: "melancholic mood, desaturated colors, blue-gray tint, soft shadows, muted tones, contemplative atmosphere, faded"
+    model: kontext
+    strength: 0.7
+
+  - id: vibrant
+    name: Vibrant
+    description: "Bold, lively, saturated energy"
+    prompt_modifier: "vibrant colors, high saturation, punchy contrast, vivid hues, energetic, bold, dynamic color range"
+    model: kontext
+    strength: 0.6
+
+  - id: moody
+    name: Moody
+    description: "Dark, dramatic, heavy shadows"
+    prompt_modifier: "moody atmosphere, low key lighting, deep shadows, dramatic contrast, dark tones, brooding, cinematic darkness"
+    model: kontext
+    strength: 0.7
+
+  - id: serene
+    name: Serene
+    description: "Calm, peaceful, meditative"
+    prompt_modifier: "serene calm atmosphere, soft pastel tones, balanced gentle lighting, peaceful, zen-like tranquility, quiet beauty"
+    model: kontext
+    strength: 0.6
+
+  - id: nostalgic
+    name: Nostalgic
+    description: "Warm memories, vintage warmth"
+    prompt_modifier: "nostalgic warm feeling, faded warm tones, slight grain, vintage warmth, soft amber glow, memory-like quality"
+    model: kontext
+    strength: 0.7
+
+  - id: mysterious
+    name: Mysterious
+    description: "Enigmatic, foggy, hidden depths"
+    prompt_modifier: "mysterious atmosphere, dark teal shadows, fog, cinematic shadow play, enigmatic, hidden depths, eerie beauty"
+    model: kontext
+    strength: 0.7
+
+  - id: romantic
+    name: Romantic
+    description: "Warm pink/peach tones, soft bokeh"
+    prompt_modifier: "romantic atmosphere, warm pink and peach tones, soft bokeh, gentle diffused light, intimate, tender, rosy glow"
+    model: kontext
+    strength: 0.6
+
+  - id: intense
+    name: Intense
+    description: "Hard light, raw power"
+    prompt_modifier: "intense atmosphere, hard directional light, deep contrast, saturated reds, raw power, aggressive, striking"
+    model: kontext
+    strength: 0.7
+
+  - id: peaceful
+    name: Peaceful
+    description: "Quiet, calm greens and blues"
+    prompt_modifier: "peaceful atmosphere, muted greens and blues, soft natural light, gentle, calm, soothing, harmonious balance"
+    model: kontext
+    strength: 0.6

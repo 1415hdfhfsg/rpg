@@ -1,0 +1,58 @@
+category: portrait
+description: "Portrait and people photography styles"
+filters:
+  - id: linkedin-pro
+    name: "LinkedIn Professional"
+    description: "Corporate professional headshot"
+    prompt_modifier: "professional LinkedIn headshot, clean neutral background, soft even studio lighting, sharp focus on face, business appropriate, confident"
+    model: kontext
+    strength: 0.6
+
+  - id: dating-profile
+    name: "Dating Profile"
+    description: "Warm, approachable, attractive"
+    prompt_modifier: "warm natural portrait, approachable friendly expression, soft golden lighting, slightly shallow depth of field, natural, attractive, inviting"
+    model: kontext
+    strength: 0.6
+
+  - id: id-photo
+    name: "ID Photo"
+    description: "Official document portrait"
+    prompt_modifier: "official ID passport photo, straight-on frontal view, plain white background, uniform even lighting, neutral expression, formal"
+    model: kontext
+    strength: 0.7
+
+  - id: magazine-cover
+    name: "Magazine Cover"
+    description: "Dramatic editorial lighting"
+    prompt_modifier: "magazine cover portrait, dramatic editorial lighting, sharp detail, strong contrast, professional retouching, bold, striking composition"
+    model: kontext
+    strength: 0.7
+
+  - id: headshot-corporate
+    name: "Corporate Headshot"
+    description: "Business formal portrait"
+    prompt_modifier: "corporate headshot, professional studio setup, neutral gray background, crisp focus, business formal, trustworthy, approachable executive"
+    model: kontext
+    strength: 0.6
+
+  - id: glamour
+    name: Glamour
+    description: "Beauty, soft skin, polished"
+    prompt_modifier: "glamour portrait, smooth flawless skin, beauty lighting, soft diffused glow, polished, fashion beauty, luminous, magazine quality"
+    model: kontext
+    strength: 0.7
+
+  - id: editorial-fashion
+    name: "Editorial Fashion"
+    description: "High fashion magazine style"
+    prompt_modifier: "high fashion editorial portrait, dramatic creative lighting, bold styling, fashion magazine, avant-garde, artistic, Vogue inspired"
+    model: kontext
+    strength: 0.7
+
+  - id: natural-soft
+    name: "Natural Soft"
+    description: "Minimal editing, natural beauty"
+    prompt_modifier: "natural portrait, soft available window light, minimal editing, authentic beauty, candid feel, gentle, real, unposed"
+    model: kontext
+    strength: 0.5

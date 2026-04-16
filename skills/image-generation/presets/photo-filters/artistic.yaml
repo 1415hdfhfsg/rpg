@@ -1,0 +1,86 @@
+category: artistic
+description: "Fine art and illustration style transformations"
+filters:
+  - id: oil-painting
+    name: "Oil Painting"
+    description: "Classical oil on canvas"
+    prompt_modifier: "oil painting on canvas, visible thick brushstrokes, rich color mixing, museum quality, classical art, impasto technique"
+    model: kontext
+    strength: 0.8
+
+  - id: watercolor
+    name: Watercolor
+    description: "Soft wet-on-wet painting"
+    prompt_modifier: "watercolor painting, soft bleeding edges, paper texture visible, wet-on-wet technique, transparent washes, artistic, gentle"
+    model: kontext
+    strength: 0.8
+
+  - id: pencil-sketch
+    name: "Pencil Sketch"
+    description: "Graphite drawing"
+    prompt_modifier: "pencil sketch drawing, graphite on paper, hatching and crosshatching, monochrome gray tones, detailed linework, sketchbook"
+    model: kontext
+    strength: 0.8
+
+  - id: ink-wash
+    name: "Ink Wash"
+    description: "East Asian sumi-e brush art"
+    prompt_modifier: "ink wash painting, sumi-e brush art, traditional East Asian style, rice paper, black ink gradients, minimalist, zen"
+    model: kontext
+    strength: 0.8
+
+  - id: pop-art
+    name: "Pop Art"
+    description: "Warhol-style bold colors"
+    prompt_modifier: "pop art style, bold flat colors, Ben-Day dots, Andy Warhol screen print inspired, high contrast, graphic, 1960s"
+    model: kontext
+    strength: 0.8
+
+  - id: impressionist
+    name: Impressionist
+    description: "Monet-style light and color"
+    prompt_modifier: "impressionist painting, visible brushstrokes, dappled light, Claude Monet inspired, outdoor plein air, vibrant color patches"
+    model: kontext
+    strength: 0.8
+
+  - id: anime
+    name: Anime
+    description: "Japanese animation style"
+    prompt_modifier: "anime illustration style, cel shading, clean outlines, vibrant colors, large expressive features, Japanese animation, detailed"
+    model: kontext
+    strength: 0.8
+
+  - id: pixel-art
+    name: "Pixel Art"
+    description: "Retro game pixel style"
+    prompt_modifier: "16-bit pixel art, retro game style, limited color palette, crisp individual pixels visible, nostalgic, 8-bit to 16-bit era"
+    model: kontext
+    strength: 0.8
+
+  - id: comic-book
+    name: "Comic Book"
+    description: "Ink lines and halftone dots"
+    prompt_modifier: "comic book art, bold ink outlines, halftone dots, flat bold colors, dynamic composition, superhero comic style, graphic novel"
+    model: kontext
+    strength: 0.8
+
+  - id: low-poly
+    name: "Low Poly"
+    description: "Geometric 3D faceted style"
+    prompt_modifier: "low poly 3D render style, geometric triangular facets, flat shading, clean colors, modern geometric art, crystalline"
+    model: kontext
+    strength: 0.8
+
+  - id: vector-flat
+    name: "Vector Flat"
+    description: "Flat design illustration"
+    prompt_modifier: "flat vector illustration, minimalist design, clean geometric shapes, limited flat color palette, modern graphic design, no gradients"
+    model: kontext
+    strength: 0.8
+
+  - id: charcoal
+    name: Charcoal
+    description: "Soft charcoal drawing"
+    prompt_modifier: "charcoal drawing on textured paper, rich deep blacks, dramatic smudged shading, expressive marks, fine art, tonal range"
+    model: kontext
+    strength: 0.8

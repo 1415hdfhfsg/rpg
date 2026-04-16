@@ -1,0 +1,58 @@
+category: era
+description: "Time period and vintage film aesthetics"
+filters:
+  - id: polaroid-70s
+    name: "Polaroid 70s"
+    description: "1970s Polaroid instant film look"
+    prompt_modifier: "1970s Polaroid photo, cream tones, vignetting, faded colors, warm amber cast, slightly overexposed, retro instant film"
+    model: kontext
+    strength: 0.7
+
+  - id: kodachrome-80s
+    name: "Kodachrome 80s"
+    description: "1980s Kodachrome film vivid warmth"
+    prompt_modifier: "1980s Kodachrome film, high saturation, warm reds, rich colors, slight grain, nostalgic film photography, punchy"
+    model: kontext
+    strength: 0.7
+
+  - id: vhs-90s
+    name: "VHS 90s"
+    description: "1990s VHS tape recording look"
+    prompt_modifier: "1990s VHS recording, scan lines, color bleeding, noise, tracking artifacts, low resolution, analog video distortion"
+    model: kontext
+    strength: 0.8
+
+  - id: y2k
+    name: "Y2K"
+    description: "Early 2000s digital aesthetic"
+    prompt_modifier: "early 2000s Y2K aesthetic, cyan tint, metallic shine, digital glow, futuristic retro, glossy, iridescent"
+    model: kontext
+    strength: 0.7
+
+  - id: disposable-cam
+    name: "Disposable Camera"
+    description: "Single-use camera with flash"
+    prompt_modifier: "disposable camera photo, direct flash, harsh shadows, slight color shift, grainy, candid snapshot, amateur charm"
+    model: kontext
+    strength: 0.7
+
+  - id: sepia
+    name: Sepia
+    description: "Classic brown monochrome tone"
+    prompt_modifier: "sepia tone photograph, warm brown monochrome, aged paper feel, classic vintage, timeless, antique"
+    model: kontext
+    strength: 0.7
+
+  - id: daguerreotype
+    name: Daguerreotype
+    description: "19th century photographic plate"
+    prompt_modifier: "daguerreotype 19th century photograph, silver plate, monochrome, scratched surface, aged patina, historical, Victorian era"
+    model: kontext
+    strength: 0.8
+
+  - id: super8-film
+    name: "Super 8 Film"
+    description: "Vintage home movie look"
+    prompt_modifier: "super 8mm film footage, heavy grain, color fading, light leaks, warm vintage tones, home movie aesthetic, nostalgic"
+    model: kontext
+    strength: 0.7

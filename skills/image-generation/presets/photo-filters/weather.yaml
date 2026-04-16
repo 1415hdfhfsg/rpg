@@ -1,0 +1,58 @@
+category: weather
+description: "Weather and seasonal atmosphere transformations"
+filters:
+  - id: autumn
+    name: Autumn
+    description: "Fall colors, warm orange/red tones"
+    prompt_modifier: "autumn atmosphere, orange red yellow foliage, warm fall tones, golden leaves, crisp air feeling, seasonal warmth"
+    model: kontext
+    strength: 0.7
+
+  - id: winter-snow
+    name: "Winter Snow"
+    description: "Snowy cold white landscape"
+    prompt_modifier: "winter snowscape, fresh white snow, cold blue shadows, frost, ice crystals, crisp winter air, bare branches, serene"
+    model: kontext
+    strength: 0.7
+
+  - id: spring-bloom
+    name: "Spring Bloom"
+    description: "Cherry blossom, fresh greens"
+    prompt_modifier: "spring bloom atmosphere, cherry blossoms, fresh green leaves, soft pink petals, gentle breeze, new growth, hopeful, bright"
+    model: kontext
+    strength: 0.7
+
+  - id: summer-bright
+    name: "Summer Bright"
+    description: "Vivid blue sky, intense greens"
+    prompt_modifier: "bright summer day, vivid blue sky, intense green foliage, high saturation, warm, lively, vacation feeling, clear"
+    model: kontext
+    strength: 0.6
+
+  - id: rainy
+    name: Rainy
+    description: "Wet surfaces, gray reflections"
+    prompt_modifier: "rainy day atmosphere, wet glistening surfaces, puddle reflections, gray overcast, rain drops, moody, urban rain"
+    model: kontext
+    strength: 0.7
+
+  - id: foggy
+    name: Foggy
+    description: "Low visibility, white veil"
+    prompt_modifier: "dense fog atmosphere, low visibility, white misty veil, reduced contrast, silhouettes fading, mysterious, ethereal"
+    model: kontext
+    strength: 0.7
+
+  - id: sunset
+    name: Sunset
+    description: "Orange-purple sky gradient"
+    prompt_modifier: "dramatic sunset sky, orange purple pink gradient, warm glow on everything, silhouettes, golden light, romantic evening"
+    model: kontext
+    strength: 0.7
+
+  - id: storm
+    name: Storm
+    description: "Dark dramatic clouds, tension"
+    prompt_modifier: "dramatic storm clouds, dark threatening sky, lightning atmosphere, tension, wind, cold blue-gray tones, powerful nature"
+    model: kontext
+    strength: 0.7

@@ -1,0 +1,86 @@
+category: color-grade
+description: "Color grading and tonal adjustments"
+filters:
+  - id: warm
+    name: Warm
+    description: "Warm orange/amber tones"
+    prompt_modifier: "warm color grading, orange and amber tones, golden warmth, cozy, inviting, sunlit feeling"
+    model: kontext
+    strength: 0.5
+
+  - id: cool
+    name: Cool
+    description: "Cool blue/cyan tones"
+    prompt_modifier: "cool color grading, blue and cyan tones, crisp, clean, modern, icy cool palette"
+    model: kontext
+    strength: 0.5
+
+  - id: pastel
+    name: Pastel
+    description: "Soft muted pastels"
+    prompt_modifier: "pastel color grading, soft muted colors, reduced saturation, gentle hues, light airy, cotton candy palette"
+    model: kontext
+    strength: 0.5
+
+  - id: monochrome
+    name: Monochrome
+    description: "Single color tone variation"
+    prompt_modifier: "monochrome color grading, single dominant color tone, reduced palette, artistic, unified color harmony"
+    model: kontext
+    strength: 0.6
+
+  - id: bw-classic
+    name: "B&W Classic"
+    description: "Classic black and white"
+    prompt_modifier: "classic black and white photography, full tonal range, rich grays, timeless, elegant monochrome"
+    model: kontext
+    strength: 0.7
+
+  - id: bw-high-contrast
+    name: "B&W High Contrast"
+    description: "Bold black and white with crushed blacks"
+    prompt_modifier: "high contrast black and white, crushed blacks, blown highlights, dramatic, bold, stark monochrome, graphic"
+    model: kontext
+    strength: 0.7
+
+  - id: cross-process
+    name: "Cross Process"
+    description: "Cyan shadows, yellow highlights"
+    prompt_modifier: "cross-processed film effect, cyan-blue shadows, warm yellow-green highlights, unexpected color shifts, experimental, lo-fi"
+    model: kontext
+    strength: 0.7
+
+  - id: bleach-bypass
+    name: "Bleach Bypass"
+    description: "Desaturated with high contrast"
+    prompt_modifier: "bleach bypass effect, reduced saturation, increased contrast, silver metallic look, gritty, harsh, Saving Private Ryan style"
+    model: kontext
+    strength: 0.7
+
+  - id: split-tone
+    name: "Split Tone"
+    description: "Different colors for shadows/highlights"
+    prompt_modifier: "split toning, blue-teal shadows with warm orange highlights, complementary color separation, artistic color grading"
+    model: kontext
+    strength: 0.6
+
+  - id: muted
+    name: Muted
+    description: "Low saturation, quiet palette"
+    prompt_modifier: "muted color palette, low saturation, quiet tones, subdued, understated, calm, editorial"
+    model: kontext
+    strength: 0.5
+
+  - id: high-key
+    name: "High Key"
+    description: "Bright, airy, overexposed feel"
+    prompt_modifier: "high key lighting, bright, airy, predominantly white, soft minimal shadows, overexposed feel, clean, ethereal"
+    model: kontext
+    strength: 0.6
+
+  - id: low-key
+    name: "Low Key"
+    description: "Dark, dramatic, minimal highlights"
+    prompt_modifier: "low key lighting, predominantly dark, dramatic single light source, deep blacks, minimal highlights, moody, powerful"
+    model: kontext
+    strength: 0.6

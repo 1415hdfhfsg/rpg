@@ -1,0 +1,72 @@
+category: cinematic
+description: "Film director and cinema-inspired visual styles"
+filters:
+  - id: teal-orange
+    name: "Teal & Orange"
+    description: "Hollywood blockbuster color grading"
+    prompt_modifier: "Hollywood teal and orange color grading, complementary color split, warm skin tones against cool backgrounds, blockbuster cinematic"
+    model: kontext
+    strength: 0.7
+
+  - id: wes-anderson
+    name: "Wes Anderson"
+    description: "Symmetrical, pastel, whimsical"
+    prompt_modifier: "Wes Anderson cinematography, perfectly symmetrical composition, pastel color palette, pink mustard yellow mint green, vintage 1970s aesthetic, soft even lighting, painterly, deadpan center framing"
+    model: kontext
+    strength: 0.8
+
+  - id: wong-kar-wai
+    name: "Wong Kar-wai"
+    description: "Neon-lit, motion blur, melancholy"
+    prompt_modifier: "Wong Kar-wai style, neon city lights, motion blur, deep saturated colors, melancholic urban night, step-printed film, smeared highlights, intimate"
+    model: kontext
+    strength: 0.8
+
+  - id: nolan
+    name: "Christopher Nolan"
+    description: "IMAX-scale, cool blue precision"
+    prompt_modifier: "Christopher Nolan IMAX cinematography, cool blue-gray tones, sharp detail, grand scale, precise framing, desaturated, clinical, epic"
+    model: kontext
+    strength: 0.7
+
+  - id: kubrick
+    name: "Stanley Kubrick"
+    description: "One-point perspective, cold reds"
+    prompt_modifier: "Stanley Kubrick style, one-point perspective, symmetrical composition, cold red accents, wide angle, unsettling beauty, precise geometry"
+    model: kontext
+    strength: 0.8
+
+  - id: tarantino
+    name: "Quentin Tarantino"
+    description: "Saturated 70mm, retro cool"
+    prompt_modifier: "Tarantino style, saturated 70mm film look, warm color palette, retro cool aesthetic, bold composition, pulp fiction inspired, dynamic"
+    model: kontext
+    strength: 0.7
+
+  - id: david-fincher
+    name: "David Fincher"
+    description: "Green-yellow tint, cold darkness"
+    prompt_modifier: "David Fincher visual style, green-yellow color tint, cold darkness, precise framing, clinical lighting, urban grit, meticulous"
+    model: kontext
+    strength: 0.7
+
+  - id: ghibli
+    name: "Studio Ghibli"
+    description: "Hand-drawn, warm, dreamy animation"
+    prompt_modifier: "Studio Ghibli animation style, hand-drawn watercolor backgrounds, warm soft lighting, lush green nature, gentle atmosphere, Miyazaki inspired, magical realism"
+    model: kontext
+    strength: 0.8
+
+  - id: noir
+    name: "Film Noir"
+    description: "Black & white, hard shadows, mystery"
+    prompt_modifier: "classic film noir, black and white, harsh directional lighting, deep shadows, venetian blind shadows, detective mystery atmosphere, 1940s Hollywood"
+    model: kontext
+    strength: 0.8
+
+  - id: arthouse
+    name: "Arthouse"
+    description: "Understated, natural, contemplative"
+    prompt_modifier: "arthouse cinema style, understated color grading, natural available light, contemplative, film grain, Terrence Malick inspired, poetic, slow cinema"
+    model: kontext
+    strength: 0.6

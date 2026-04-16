@@ -1,0 +1,58 @@
+category: lighting
+description: "Lighting condition and atmosphere transformations"
+filters:
+  - id: golden-hour
+    name: "Golden Hour"
+    description: "Warm sunset/sunrise side light"
+    prompt_modifier: "golden hour lighting, warm orange side light, long soft shadows, magic hour, sunset glow, beautiful warm tones"
+    model: kontext
+    strength: 0.6
+
+  - id: blue-hour
+    name: "Blue Hour"
+    description: "Cool twilight after sunset"
+    prompt_modifier: "blue hour twilight, cool blue ambient light, dusk, city lights starting to glow, serene, calm evening atmosphere"
+    model: kontext
+    strength: 0.6
+
+  - id: neon-night
+    name: "Neon Night"
+    description: "Urban neon-lit nighttime"
+    prompt_modifier: "neon night lighting, magenta and cyan neon glow, urban night, wet reflections, electric atmosphere, city nightlife"
+    model: kontext
+    strength: 0.7
+
+  - id: candlelight
+    name: Candlelight
+    description: "Warm single flame light source"
+    prompt_modifier: "candlelight illumination, warm single light source, flickering glow, intimate, dark surroundings, orange warmth, cozy"
+    model: kontext
+    strength: 0.7
+
+  - id: studio
+    name: "Studio Light"
+    description: "Professional even lighting"
+    prompt_modifier: "professional studio lighting, even soft box illumination, clean shadows, neutral background, commercial quality, well-lit"
+    model: kontext
+    strength: 0.6
+
+  - id: harsh-sun
+    name: "Harsh Sunlight"
+    description: "Midday strong directional sun"
+    prompt_modifier: "harsh midday sunlight, strong directional shadows, high contrast, bright highlights, deep shadow pools, summer noon"
+    model: kontext
+    strength: 0.6
+
+  - id: overcast
+    name: Overcast
+    description: "Soft diffused cloudy light"
+    prompt_modifier: "overcast sky diffused lighting, soft even illumination, no harsh shadows, cloudy, gentle, flat soft light, natural"
+    model: kontext
+    strength: 0.5
+
+  - id: backlit
+    name: Backlit
+    description: "Light from behind, rim glow"
+    prompt_modifier: "backlighting, strong rim light, silhouette edges glowing, light bleeding around subject, dramatic, lens flare, halo effect"
+    model: kontext
+    strength: 0.7

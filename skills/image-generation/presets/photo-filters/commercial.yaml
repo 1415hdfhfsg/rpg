@@ -1,0 +1,44 @@
+category: commercial
+description: "Product and commercial photography styles"
+filters:
+  - id: clean-white-bg
+    name: "Clean White Background"
+    description: "E-commerce product shot"
+    prompt_modifier: "product on pure clean white background, e-commerce style, even studio lighting, sharp detail, isolated subject, professional catalog"
+    model: kontext
+    strength: 0.7
+
+  - id: lifestyle
+    name: Lifestyle
+    description: "Product in everyday context"
+    prompt_modifier: "lifestyle product photography, natural setting, warm inviting atmosphere, product in everyday use, aspirational, relatable, storytelling"
+    model: kontext
+    strength: 0.6
+
+  - id: food-blog
+    name: "Food Blog"
+    description: "Appetizing overhead food shot"
+    prompt_modifier: "food photography, appetizing, overhead flat lay, warm tones, natural light from side, styled props, food blog aesthetic, delicious"
+    model: kontext
+    strength: 0.7
+
+  - id: luxury-product
+    name: "Luxury Product"
+    description: "Premium dark background display"
+    prompt_modifier: "luxury product photography, dark moody background, dramatic accent lighting, gold highlights, premium feel, sophisticated, high-end"
+    model: kontext
+    strength: 0.7
+
+  - id: tech-product
+    name: "Tech Product"
+    description: "Clean modern tech display"
+    prompt_modifier: "tech product photography, clean gradient background, cool lighting, sharp reflections, modern minimalist, futuristic, sleek"
+    model: kontext
+    strength: 0.7
+
+  - id: hand-held
+    name: "Hand-Held"
+    description: "Product held in hand for scale"
+    prompt_modifier: "hand-held product shot, human hand holding product, scale reference, natural grip, clean background, lifestyle context, relatable"
+    model: kontext
+    strength: 0.6
